@@ -4,14 +4,20 @@ def _vulkan_sdk_impl(ctx):
     for mod in ctx.modules:
         for tag in mod.tags.install:
             version = tag.version
-            url = "https://sdk.lunarg.com/sdk/download/{0}/mac/vulkansdk-macos-{0}.zip".format(version)
 
             install_sdk(
                 name = "vulkan_sdk_{}".format(version),
-                url = url,
-                sha256 = "69cdbdd8dbf7fe93b40f1b653b7b3e458bf3cbe368582b56476f6a780c662aa3",
+                url = "https://sdk.lunarg.com/sdk/download/1.4.313.0/linux/vulkansdk-linux-x86_64-1.4.313.0.tar.xz",
+                sha256 = "4e957b66ade85eeaee95932aa7e3b45aea64db373c58a5eaefc8228cc71445c2",
                 version = version,
             )
+
+            # install_sdk(
+            #     name = "vulkan_sdk_{}".format(version),
+            #     url = "https://sdk.lunarg.com/sdk/download/{0}/mac/vulkansdk-macos-{0}.zip".format(version),
+            #     sha256 = "69cdbdd8dbf7fe93b40f1b653b7b3e458bf3cbe368582b56476f6a780c662aa3",
+            #     version = version,
+            # )
 
     return ctx.extension_metadata(
         reproducible = True,

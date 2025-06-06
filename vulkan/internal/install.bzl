@@ -1,8 +1,34 @@
+def _install_linux(ctx, url, sha256, version):
+    ctx.report_progress("Downloading and unpacking tarball...")
+    ctx.download_and_extract(url, sha256 = sha256, output = "unpack", stripPrefix = version)
+
+    ctx.symlink("unpack/x86_64/", "sdk")
+
+    ctx.file("BUILD",
+"""
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "tools",
+    srcs = glob(["sdk/bin/**"]),
+)
+
+filegroup(
+    name = "headers",
+    srcs = glob(["sdk/include/**/*.h", "sdk/include/**/*.hpp"]),
+)
+
+cc_library(
+    name = "vulkan",
+    hdrs = [":headers"],
+    srcs = glob(["sdk/lib/libvulkan*.so*"]),
+    includes = ["sdk/include"],
+)
+
+""")
+
 
 def _install_macos(ctx, url, sha256, version):
-    if not version:
-        ctx.fail("Vulkan SDK version must be specified")
-
     ctx.report_progress("Downloading intaller...")
     ctx.download_and_extract(
         url,
@@ -66,7 +92,11 @@ def _install_impl(ctx):
     sha256 = ctx.attr.sha256
     version = ctx.attr.version
 
-    _install_macos(ctx, url, sha256, version)
+    if not version:
+        ctx.fail("Vulkan SDK version must be specified")
+
+    _install_linux(ctx, url, sha256, version)
+    #_install_macos(ctx, url, sha256, version)
 
 install_sdk = repository_rule(
     implementation = _install_impl,
