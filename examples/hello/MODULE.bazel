@@ -1,0 +1,11 @@
+module(name = "hello")
+
+bazel_dep(name = "rules_vulkan", version = "0.1")
+local_path_override(
+    module_name = "rules_vulkan",
+    path = "../..",
+)
+
+vulkan_sdk = use_extension("@rules_vulkan//vulkan:extensions.bzl", "vulkan_sdk")
+vulkan_sdk.install(version = "1.4.313.1")
+use_repo(vulkan_sdk, "vulkan_sdk_1.4.313.1")

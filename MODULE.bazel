@@ -1,2 +1,4 @@
-module(name = "rules_vulkan")
-
+module(
+    name = "rules_vulkan",
+    version = "0.1",
+)
