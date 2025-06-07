@@ -1,3 +1,5 @@
+load(":resolve.bzl", "resolve_url")
+
 def _install_linux(ctx, url, sha256, version):
     ctx.report_progress("Downloading and unpacking tarball...")
     ctx.download_and_extract(url, sha256 = sha256, output = "unpack", stripPrefix = version)
@@ -93,10 +95,23 @@ def _install_impl(ctx):
     version = ctx.attr.version
 
     if not version:
-        ctx.fail("Vulkan SDK version must be specified")
+        fail("Vulkan SDK version must be specified")
 
-    _install_linux(ctx, url, sha256, version)
-    #_install_macos(ctx, url, sha256, version)
+    os = ctx.os.name
+    arch = ctx.os.arch
+
+    # If no URL provided, try find one from the list of known releases.
+    if not url:
+        url, sha256 = resolve_url(version, os, arch)
+
+    if os.startswith("linux"):
+        _install_linux(ctx, url, sha256, version)
+    elif os.startswith("mac"):
+        _install_macos(ctx, url, sha256, version)
+    elif os.startswith("windows"):
+        fail("Windows support is not implemented yet")
+    else:
+        fail("Unsupported OS: {}".format(os))
 
 install_sdk = repository_rule(
     implementation = _install_impl,
