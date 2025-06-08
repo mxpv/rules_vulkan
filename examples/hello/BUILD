@@ -1,4 +1,5 @@
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@rules_vulkan//glsl:shader.bzl", "glsl_shader")
 load("@rules_vulkan//hlsl:shader.bzl", "hlsl_shader")
 
 hlsl_shader(
@@ -10,6 +11,11 @@ hlsl_shader(
     hlsl_version = "2021",
     spirv = True,
     target = "cs_6_0",
+)
+
+glsl_shader(
+    name = "hello_glsl",
+    src = "shader.glsl",
 )
 
 cc_binary(

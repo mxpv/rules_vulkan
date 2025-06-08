@@ -1,5 +1,6 @@
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@rules_vulkan//hlsl:toolchain.bzl", "hlsl_toolchain")
+load("@rules_vulkan//glsl:toolchain.bzl", "glsl_toolchain")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -19,6 +20,10 @@ cc_library(
     includes = ["{include_path}"],
 )
 
+#
+# HLSL (dxc) toolchain
+#
+
 native_binary(
     name = "dxc",
     src = "{dxc_path}",
@@ -34,9 +39,30 @@ toolchain(
     exec_compatible_with = [
         "@platforms//os:{os}",
     ],
-    target_compatible_with = [
-        "@platforms//os:{os}",
-    ],
     toolchain = ":dxc_{os}",
     toolchain_type = "@rules_vulkan//hlsl:toolchain_type",
 )
+
+#
+# GLSL toolchain
+#
+
+native_binary(
+    name = "glslc",
+    src = "{glslc_path}"
+)
+
+glsl_toolchain(
+    name = "glsl_{os}",
+    compiler = ":glslc",
+)
+
+toolchain(
+    name = "glsl_{os}_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:{os}",
+    ],
+    toolchain = ":glsl_{os}",
+    toolchain_type = "@rules_vulkan//glsl:toolchain_type",
+)
+

@@ -19,6 +19,7 @@ def _install_linux(ctx, url, sha256, version):
         "{include_path}": "sdk/include",
         "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
         "{dxc_path}": "sdk/bin/dxc",
+        "{glslc_path}": "sdk/bin/glslc",
     })
 
 def _install_macos(ctx, url, sha256, version):
@@ -63,6 +64,7 @@ def _install_macos(ctx, url, sha256, version):
         "{include_path}": "sdk/include",
         "{lib_vulkan}": "sdk/lib/libvulkan*.dylib",
         "{dxc_path}": "sdk/bin/dxc",
+        "glslc_path}": "sdk/bin/glslc",
     })
 
 def _install_windows(ctx, url, sha256):
@@ -95,6 +97,7 @@ def _install_windows(ctx, url, sha256):
         "{include_path}": "sdk/Include",
         "{lib_vulkan}": "sdk/Lib/vulkan*.lib",
         "{dxc_path}": "sdk/Bin/dxc.exe",
+        "{glslc_path}": "sdk/bin/glslc.exe",
     })
 
 def _install_impl(ctx):
