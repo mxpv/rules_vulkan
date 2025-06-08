@@ -89,6 +89,52 @@ cc_library(
 
 """)
 
+def _install_windows(ctx, url, sha256, version):
+    ctx.report_progress("Downloading installer...")
+    ctx.download(url, sha256 = sha256, output = "installer.exe")
+
+    # See https://vulkan.lunarg.com/doc/sdk/latest/windows/getting_started.html
+    ctx.report_progress("Installing components...")
+
+    ctx.execute([
+        "cmd.exe", "/c",
+        "installer.exe",
+        "--root", ctx.path("sdk"),
+        "--verbose",
+        "--accept-licenses",
+        "--default-answer",
+        "--confirm-command install",
+        # For completely unattended installation and modifications,
+        # the command prompt must be run as administrator.
+        # There is an option to only copy the SDK files and not perform any operations to the registry
+        # such as setting up new layers, creating shortcuts, and adjustments to the system path.
+        # For the copy only option, append copy_only=1 to the end of the command line installer executable.
+        "copy_only=1",
+    ], quiet = False)
+
+    ctx.file("BUILD",
+"""
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "tools",
+    srcs = glob(["sdk/Bin/**"]),
+)
+
+filegroup(
+    name = "headers",
+    srcs = glob(["sdk/Include/**/*.h", "sdk/Include/**/*.hpp"]),
+)
+
+cc_library(
+    name = "vulkan",
+    hdrs = [":headers"],
+    srcs = glob(["sdk/Lib/vulkan*.lib"]),
+    includes = ["sdk/Include"],
+)
+
+""")
+
 def _install_impl(ctx):
     url = ctx.attr.url
     sha256 = ctx.attr.sha256
@@ -109,7 +155,7 @@ def _install_impl(ctx):
     elif os.startswith("mac"):
         _install_macos(ctx, url, sha256, version)
     elif os.startswith("windows"):
-        fail("Windows support is not implemented yet")
+        _install_windows(ctx, url, sha256, version)
     else:
         fail("Unsupported OS: {}".format(os))
 
