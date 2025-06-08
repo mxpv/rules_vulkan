@@ -14,30 +14,12 @@ def _install_linux(ctx, url, sha256, version):
 
     ctx.symlink("unpack/x86_64/", "sdk")
 
-    ctx.file(
-        "BUILD",
-        """
-package(default_visibility = ["//visibility:public"])
-
-filegroup(
-    name = "tools",
-    srcs = glob(["sdk/bin/**"]),
-)
-
-filegroup(
-    name = "headers",
-    srcs = glob(["sdk/include/**/*.h", "sdk/include/**/*.hpp"]),
-)
-
-cc_library(
-    name = "vulkan",
-    hdrs = [":headers"],
-    srcs = glob(["sdk/lib/libvulkan*.so*"]),
-    includes = ["sdk/include"],
-)
-
-""",
-    )
+    ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = {
+        "{os}": "linux",
+        "{include_path}": "sdk/include",
+        "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
+        "{dxc_path}": "sdk/bin/dxc",
+    })
 
 def _install_macos(ctx, url, sha256, version):
     ctx.report_progress("Downloading intaller...")
@@ -76,51 +58,12 @@ def _install_macos(ctx, url, sha256, version):
 
         ctx.symlink("unpack/macOS/", "sdk")
 
-    # This uses workaround from https://github.com/bazelbuild/bazel/issues/4748
-    ctx.file(
-        "BUILD",
-        """
-package(default_visibility = ["//visibility:public"])
-
-load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
-load("@rules_vulkan//hlsl:toolchain.bzl", "hlsl_toolchain")
-
-filegroup(
-    name = "headers",
-    srcs = glob(["sdk/include/**/*.h", "sdk/include/**/*.hpp"]),
-)
-
-cc_library(
-    name = "vulkan",
-    hdrs = [":headers"],
-    srcs = glob(["sdk/lib/libvulkan*.dylib"]),
-    includes = ["sdk/include"],
-)
-
-native_binary(
-    name = "dxc",
-    src = "sdk/bin/dxc"
-)
-
-hlsl_toolchain(
-    name = "dxc_macos",
-    compiler = ":dxc"
-)
-
-toolchain(
-    name = "dxc_macos_toolchain",
-    exec_compatible_with = [
-        "@platforms//os:macos"
-    ],
-    target_compatible_with = [
-        "@platforms//os:macos"
-    ],
-    toolchain = ":dxc_macos",
-    toolchain_type = "@rules_vulkan//hlsl:toolchain_type"
-)
-
-""",
-    )
+    ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = {
+        "{os}": "macos",
+        "{include_path}": "sdk/include",
+        "{lib_vulkan}": "sdk/lib/libvulkan*.dylib",
+        "{dxc_path}": "sdk/bin/dxc",
+    })
 
 def _install_windows(ctx, url, sha256):
     ctx.report_progress("Downloading installer...")
@@ -147,30 +90,12 @@ def _install_windows(ctx, url, sha256):
         "copy_only=1",
     ], quiet = False)
 
-    ctx.file(
-        "BUILD",
-        """
-package(default_visibility = ["//visibility:public"])
-
-filegroup(
-    name = "tools",
-    srcs = glob(["sdk/Bin/**"]),
-)
-
-filegroup(
-    name = "headers",
-    srcs = glob(["sdk/Include/**/*.h", "sdk/Include/**/*.hpp"]),
-)
-
-cc_library(
-    name = "vulkan",
-    hdrs = [":headers"],
-    srcs = glob(["sdk/Lib/vulkan*.lib"]),
-    includes = ["sdk/Include"],
-)
-
-""",
-    )
+    ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = {
+        "{os}": "windows",
+        "{include_path}": "sdk/Include",
+        "{lib_vulkan}": "sdk/Lib/vulkan*.lib",
+        "{dxc_path}": "sdk/Bin/dxc.exe",
+    })
 
 def _install_impl(ctx):
     url = ctx.attr.url
@@ -200,5 +125,6 @@ install_sdk = repository_rule(
         "url": attr.string(mandatory = True),
         "sha256": attr.string(),
         "version": attr.string(mandatory = True),
+        "build_file": attr.label(default = Label("//vulkan/private:template.BUILD")),
     },
 )
