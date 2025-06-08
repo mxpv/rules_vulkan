@@ -82,10 +82,8 @@ def _install_macos(ctx, url, sha256, version):
         """
 package(default_visibility = ["//visibility:public"])
 
-filegroup(
-    name = "tools",
-    srcs = glob(["sdk/bin/**"]),
-)
+load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
+load("@rules_vulkan//hlsl:toolchain.bzl", "hlsl_toolchain")
 
 filegroup(
     name = "headers",
@@ -97,6 +95,28 @@ cc_library(
     hdrs = [":headers"],
     srcs = glob(["sdk/lib/libvulkan*.dylib"]),
     includes = ["sdk/include"],
+)
+
+native_binary(
+    name = "dxc",
+    src = "sdk/bin/dxc"
+)
+
+hlsl_toolchain(
+    name = "dxc_macos",
+    compiler = ":dxc"
+)
+
+toolchain(
+    name = "dxc_macos_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:macos"
+    ],
+    target_compatible_with = [
+        "@platforms//os:macos"
+    ],
+    toolchain = ":dxc_macos",
+    toolchain_type = "@rules_vulkan//hlsl:toolchain_type"
 )
 
 """,
