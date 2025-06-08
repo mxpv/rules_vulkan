@@ -87,6 +87,10 @@ for ver in versions:
 ordered_output = {k: output[k] for k in sorted(output, reverse=True)}
 
 with open("vulkan/private/versions.bzl", "w") as f:
+    f.write("\"\"\"")
+    f.write("List of SDK packages currently available for download on LunarG.\n")
+    f.write("\"\"\"")
+
     f.write("# GENERATED FILE. Do not edit.\n")
     f.write("# Use ./tools/update_versions.py to update the list of available SDK versions\n\n")
 

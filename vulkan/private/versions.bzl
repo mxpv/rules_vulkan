@@ -1,4 +1,5 @@
-# GENERATED FILE. Do not edit.
+"""List of SDK packages currently available for download on LunarG.
+"""  # GENERATED FILE. Do not edit.
 # Use ./tools/update_versions.py to update the list of available SDK versions
 
 LATEST_VERSION = "1.4.313.1"
@@ -7,238 +8,237 @@ VERSIONS = {
     "1.4.313.1": {
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.313.1/mac/vulkansdk-macos-1.4.313.1.zip",
-            "sha": "69cdbdd8dbf7fe93b40f1b653b7b3e458bf3cbe368582b56476f6a780c662aa3"
+            "sha": "69cdbdd8dbf7fe93b40f1b653b7b3e458bf3cbe368582b56476f6a780c662aa3",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.313.1/windows/vulkansdk-windows-X64-1.4.313.1.exe",
-            "sha": "2ce4c7b226d025c3be836ff667bd70c6764f407c69738c31e360dcb6352a34db"
+            "sha": "2ce4c7b226d025c3be836ff667bd70c6764f407c69738c31e360dcb6352a34db",
         },
         "warm": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.313.1/warm/vulkansdk-windows-ARM64-1.4.313.1.exe",
-            "sha": "f2a9324eaa9e1b957422cba48115a8cbce2188d14a3a898eee1b52eb711c5b91"
-        }
+            "sha": "f2a9324eaa9e1b957422cba48115a8cbce2188d14a3a898eee1b52eb711c5b91",
+        },
     },
     "1.4.313.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/linux/vulkansdk-linux-x86_64-1.4.313.0.tar.xz",
-            "sha": "4e957b66ade85eeaee95932aa7e3b45aea64db373c58a5eaefc8228cc71445c2"
+            "sha": "4e957b66ade85eeaee95932aa7e3b45aea64db373c58a5eaefc8228cc71445c2",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/mac/vulkansdk-macos-1.4.313.0.zip",
-            "sha": "782a966ef4d5d68acaa933ff45215df2e34f286df8f6077270202f218110dc20"
+            "sha": "782a966ef4d5d68acaa933ff45215df2e34f286df8f6077270202f218110dc20",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/windows/vulkansdk-windows-X64-1.4.313.0.exe",
-            "sha": "b643ca8ab4aea5c47b9c4e021a0b33b3a13871bf1d8131e162a9e48c257c4694"
+            "sha": "b643ca8ab4aea5c47b9c4e021a0b33b3a13871bf1d8131e162a9e48c257c4694",
         },
         "warm": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/warm/vulkansdk-windows-ARM64-1.4.313.0.exe",
-            "sha": "b19a8683df982d302fec07c110962153f02a2e5cf1e5118ff72d8532aa5fc567"
-        }
+            "sha": "b19a8683df982d302fec07c110962153f02a2e5cf1e5118ff72d8532aa5fc567",
+        },
     },
     "1.4.309.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.309.0/linux/vulkansdk-linux-x86_64-1.4.309.0.tar.xz",
-            "sha": "616a25a9d8b33336e83957f97ca273b8e95461649723354300d02c26ae52a1f6"
+            "sha": "616a25a9d8b33336e83957f97ca273b8e95461649723354300d02c26ae52a1f6",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.309.0/mac/vulkansdk-macos-1.4.309.0.zip",
-            "sha": "62ccc5a3585202b12bd8f796a0048aa904e2ad6ec340ed19195415699208eb77"
+            "sha": "62ccc5a3585202b12bd8f796a0048aa904e2ad6ec340ed19195415699208eb77",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.309.0/windows/VulkanSDK-1.4.309.0-Installer.exe",
-            "sha": "48b132169b64fe65cdb0f20970195335a65354e73f1ea5373032c2a8bbad4297"
+            "sha": "48b132169b64fe65cdb0f20970195335a65354e73f1ea5373032c2a8bbad4297",
         },
         "warm": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.309.0/warm/InstallVulkanARM64-1.4.309.0.exe",
-            "sha": "1b083f5f824d4f667ff92d0e01a0651f05fae5c89cd27d0d44c9bbaa32588e00"
-        }
+            "sha": "1b083f5f824d4f667ff92d0e01a0651f05fae5c89cd27d0d44c9bbaa32588e00",
+        },
     },
     "1.4.304.1": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.304.1/linux/vulkansdk-linux-x86_64-1.4.304.1.tar.xz",
-            "sha": "92d698f12a968b024e2b593037830262785b2b734553683457719d4da7c5b0d6"
+            "sha": "92d698f12a968b024e2b593037830262785b2b734553683457719d4da7c5b0d6",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.304.1/mac/vulkansdk-macos-1.4.304.1.zip",
-            "sha": "db39bb8a0dd2128f7a9b802976dd582e8f9cd20a6c8e36ad3354c70761529526"
+            "sha": "db39bb8a0dd2128f7a9b802976dd582e8f9cd20a6c8e36ad3354c70761529526",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.304.1/windows/VulkanSDK-1.4.304.1-Installer.exe",
-            "sha": "19cc78a4ba59fcd9339d83958e09662f8396a320e4a3e73660ed382627952bfb"
+            "sha": "19cc78a4ba59fcd9339d83958e09662f8396a320e4a3e73660ed382627952bfb",
         },
         "warm": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.304.1/warm/InstallVulkanARM64-1.4.304.1.exe",
-            "sha": "cd3ab7b0bea5b385c056bc5eede0be32c0f4b44f244a207a31db049abd2cfec6"
-        }
+            "sha": "cd3ab7b0bea5b385c056bc5eede0be32c0f4b44f244a207a31db049abd2cfec6",
+        },
     },
     "1.4.304.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.304.0/linux/vulkansdk-linux-x86_64-1.4.304.0.tar.xz",
-            "sha": "d9f9246353a38e432548d866758d11381ebfc208a3e4d80921988b1533a344f7"
+            "sha": "d9f9246353a38e432548d866758d11381ebfc208a3e4d80921988b1533a344f7",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.304.0/mac/vulkansdk-macos-1.4.304.0.zip",
-            "sha": "d8909362c8cd6a61a33f8ab21240c6d3f38c3818f443f52939a9ac198ad0e539"
+            "sha": "d8909362c8cd6a61a33f8ab21240c6d3f38c3818f443f52939a9ac198ad0e539",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.304.0/windows/VulkanSDK-1.4.304.0-Installer.exe",
-            "sha": "6a25ee4f2fa880eee3e1b3ac47ac93d10ac1ba459cca3bbbdad049f42d5469f5"
+            "sha": "6a25ee4f2fa880eee3e1b3ac47ac93d10ac1ba459cca3bbbdad049f42d5469f5",
         },
         "warm": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.304.0/warm/InstallVulkanARM64-1.4.304.0.exe",
-            "sha": "bb992e24b2c8698c424b51ceb3e30eb19d2cad36b45c76e407d8a29edb658c41"
-        }
+            "sha": "bb992e24b2c8698c424b51ceb3e30eb19d2cad36b45c76e407d8a29edb658c41",
+        },
     },
     "1.3.296.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.296.0/linux/vulkansdk-linux-x86_64-1.3.296.0.tar.xz",
-            "sha": "79b0a1593dadc46180526250836f3e53688a9a5fb42a0e5859eb72316dc4d53e"
+            "sha": "79b0a1593dadc46180526250836f3e53688a9a5fb42a0e5859eb72316dc4d53e",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.296.0/mac/vulkansdk-macos-1.3.296.0.zip",
-            "sha": "393fd11f65a4001f12fd34fdd009c38045220ca3f735bc686d97822152b0f33c"
+            "sha": "393fd11f65a4001f12fd34fdd009c38045220ca3f735bc686d97822152b0f33c",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.296.0/windows/VulkanSDK-1.3.296.0-Installer.exe",
-            "sha": "acb4ae0786fd3e558f8b3c36cc3eba91638984217ba8a6795ec64d2f9ffd8c4b"
+            "sha": "acb4ae0786fd3e558f8b3c36cc3eba91638984217ba8a6795ec64d2f9ffd8c4b",
         },
         "warm": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.296.0/warm/InstallVulkanARM64-1.3.296.0.exe",
-            "sha": "457f6f42d1be886fd2131fa6b212167730399e316e7ee33a9a8e9543f7f3ccc2"
-        }
+            "sha": "457f6f42d1be886fd2131fa6b212167730399e316e7ee33a9a8e9543f7f3ccc2",
+        },
     },
     "1.3.290.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.290.0/linux/vulkansdk-linux-x86_64-1.3.290.0.tar.xz",
-            "sha": "440906a95e7d42da0eaf5c3ae41471baf4aa7086df9d9b93795b0f908239a76a"
+            "sha": "440906a95e7d42da0eaf5c3ae41471baf4aa7086df9d9b93795b0f908239a76a",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.290.0/mac/vulkansdk-macos-1.3.290.0.dmg",
-            "sha": "a14f3026290c2ef0a9fc96af3f6b75135018d145748543a644107a36f1d65a71"
+            "sha": "a14f3026290c2ef0a9fc96af3f6b75135018d145748543a644107a36f1d65a71",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.290.0/windows/VulkanSDK-1.3.290.0-Installer.exe",
-            "sha": "0ba0392a78157b82354157c5c988d74ddc6bc15573cc9c8653aa60245355fe8a"
+            "sha": "0ba0392a78157b82354157c5c988d74ddc6bc15573cc9c8653aa60245355fe8a",
         },
         "warm": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.290.0/warm/InstallVulkanARM64-1.3.290.0.exe",
-            "sha": "a4365599e4fc6235296c06c900be9b13755012b066b0f409e3f4c25d7cd5b605"
-        }
+            "sha": "a4365599e4fc6235296c06c900be9b13755012b066b0f409e3f4c25d7cd5b605",
+        },
     },
     "1.3.283.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.283.0/linux/vulkansdk-linux-x86_64-1.3.283.0.tar.xz",
-            "sha": "8005e2cf3e89c80cbe1c0d0a259c88248de3257b4fc6fdefb47409edb3e43ecb"
+            "sha": "8005e2cf3e89c80cbe1c0d0a259c88248de3257b4fc6fdefb47409edb3e43ecb",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.283.0/mac/vulkansdk-macos-1.3.283.0.dmg",
-            "sha": "60ca47ad5a84a890087e7b372b5b2352bbced07966767dd30159efd49d0f7118"
+            "sha": "60ca47ad5a84a890087e7b372b5b2352bbced07966767dd30159efd49d0f7118",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.283.0/windows/VulkanSDK-1.3.283.0-Installer.exe",
-            "sha": "811fcb9b43d09248520b2f38ae9a3763fc81df950fdab874f23bd762b07a9b12"
-        }
+            "sha": "811fcb9b43d09248520b2f38ae9a3763fc81df950fdab874f23bd762b07a9b12",
+        },
     },
     "1.3.280.1": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.280.1/linux/vulkansdk-linux-x86_64-1.3.280.1.tar.xz",
-            "sha": "0bdd5dfc32891eccd38d3377570346040bbdb8921d5294c7ca0f27e0c8ba7332"
+            "sha": "0bdd5dfc32891eccd38d3377570346040bbdb8921d5294c7ca0f27e0c8ba7332",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.280.1/mac/vulkansdk-macos-1.3.280.1.dmg",
-            "sha": "e6c3c33d011852b85b60ed610a0572573c1c0232b5ef0802a300a738ab9ff876"
-        }
+            "sha": "e6c3c33d011852b85b60ed610a0572573c1c0232b5ef0802a300a738ab9ff876",
+        },
     },
     "1.3.280.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.280.0/linux/vulkansdk-linux-x86_64-1.3.280.0.tar.xz",
-            "sha": "8f140d8096e14a584b99d770a81e47f7dc98c8e5869d482f247fc96dd91c3e3b"
+            "sha": "8f140d8096e14a584b99d770a81e47f7dc98c8e5869d482f247fc96dd91c3e3b",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.280.0/mac/vulkansdk-macos-1.3.280.0.dmg",
-            "sha": "ba0c6c68b83c225a9cde760b7b1308a615e21024c8ab2b3ab3d1842caa71be7b"
+            "sha": "ba0c6c68b83c225a9cde760b7b1308a615e21024c8ab2b3ab3d1842caa71be7b",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.280.0/windows/VulkanSDK-1.3.280.0-Installer.exe",
-            "sha": "a6dc114e0ba4fb3136c00e3c52046a9daa5148fea58120fc2554abcc1d221687"
-        }
+            "sha": "a6dc114e0ba4fb3136c00e3c52046a9daa5148fea58120fc2554abcc1d221687",
+        },
     },
     "1.3.275.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.275.0/linux/vulkansdk-linux-x86_64-1.3.275.0.tar.xz",
-            "sha": "b64c5b7634e7d71e28e3ea3d0b775234cbc18ce2f4e7a031341a4f9f6e4673b5"
+            "sha": "b64c5b7634e7d71e28e3ea3d0b775234cbc18ce2f4e7a031341a4f9f6e4673b5",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.275.0/mac/vulkansdk-macos-1.3.275.0.dmg",
-            "sha": "30304b8ae47f2a7cbacab470e70fe1346235f319784550551866c1879d775695"
+            "sha": "30304b8ae47f2a7cbacab470e70fe1346235f319784550551866c1879d775695",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.275.0/windows/VulkanSDK-1.3.275.0-Installer.exe",
-            "sha": "1cb064a84c62bf3476763199b7a07d6b9e3510ac66653d3b5ec0bba05d1b3266"
-        }
+            "sha": "1cb064a84c62bf3476763199b7a07d6b9e3510ac66653d3b5ec0bba05d1b3266",
+        },
     },
     "1.3.268.1": {
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.268.1/mac/vulkansdk-macos-1.3.268.1.dmg",
-            "sha": "900c019ffac72564d7c4e9e52dd08ef7d4eb2b4425084fd4d2c3e35b36958646"
-        }
+            "sha": "900c019ffac72564d7c4e9e52dd08ef7d4eb2b4425084fd4d2c3e35b36958646",
+        },
     },
     "1.3.268.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.268.0/linux/vulkansdk-linux-x86_64-1.3.268.0.tar.xz",
-            "sha": "d23343736247828ff5b3b6b1b7fd83a72b5df1a54b2527ae3663cebdfee75842"
+            "sha": "d23343736247828ff5b3b6b1b7fd83a72b5df1a54b2527ae3663cebdfee75842",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.268.0/mac/vulkansdk-macos-1.3.268.0.dmg",
-            "sha": "659609af6ee1d32fa6abfcd9aa8e93069481dc62da84d2e78a8159fa2fb7b215"
+            "sha": "659609af6ee1d32fa6abfcd9aa8e93069481dc62da84d2e78a8159fa2fb7b215",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.268.0/windows/VulkanSDK-1.3.268.0-Installer.exe",
-            "sha": "8459ef49bd06b697115ddd3d97c9aec729e849cd775f5be70897718a9b3b9db5"
-        }
+            "sha": "8459ef49bd06b697115ddd3d97c9aec729e849cd775f5be70897718a9b3b9db5",
+        },
     },
     "1.3.261.1": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.261.1/linux/vulkansdk-linux-x86_64-1.3.261.1.tar.xz",
-            "sha": "d72e6c05c05e4ffc30a11fb52758bd67b04d76601d5c42a5306b58a0099dd9bc"
+            "sha": "d72e6c05c05e4ffc30a11fb52758bd67b04d76601d5c42a5306b58a0099dd9bc",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.261.1/mac/vulkansdk-macos-1.3.261.1.dmg",
-            "sha": "69a1f8a463b5f39ef2a7bf7f437aaa84140ab5be41b6577d9edb05ea636cb65c"
+            "sha": "69a1f8a463b5f39ef2a7bf7f437aaa84140ab5be41b6577d9edb05ea636cb65c",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.261.1/windows/VulkanSDK-1.3.261.1-Installer.exe",
-            "sha": "646857f7ce76b2eaa2064d9c2c7eb22970fddd5328f09523a88c32b785686a20"
-        }
+            "sha": "646857f7ce76b2eaa2064d9c2c7eb22970fddd5328f09523a88c32b785686a20",
+        },
     },
     "1.3.250.1": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.250.1/linux/vulkansdk-linux-x86_64-1.3.250.1.tar.gz",
-            "sha": "29047cf5fca5001f9eee7384422404fd470950d961e3668ea2c5c5c1adee4b74"
+            "sha": "29047cf5fca5001f9eee7384422404fd470950d961e3668ea2c5c5c1adee4b74",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.250.1/mac/vulkansdk-macos-1.3.250.1.dmg",
-            "sha": "753a8052355eb3771b355f187e5c99bbcd415c50993f0345d4a9098335ac3441"
+            "sha": "753a8052355eb3771b355f187e5c99bbcd415c50993f0345d4a9098335ac3441",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.250.1/windows/VulkanSDK-1.3.250.1-Installer.exe",
-            "sha": "fab945cdae8ab5d8f983ff9cda39d80cfe7ab644660e577e977566dd73380785"
-        }
+            "sha": "fab945cdae8ab5d8f983ff9cda39d80cfe7ab644660e577e977566dd73380785",
+        },
     },
     "1.3.243.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.243.0/linux/vulkansdk-linux-x86_64-1.3.243.0.tar.gz",
-            "sha": "3bc06935f3363307daf68eb744e11e46d31f6b0a9e9f1d0d59271471ea27ad7c"
+            "sha": "3bc06935f3363307daf68eb744e11e46d31f6b0a9e9f1d0d59271471ea27ad7c",
         },
         "mac": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.243.0/mac/vulkansdk-macos-1.3.243.0.dmg",
-            "sha": "fd92f1cddcb33e4b9faf8a36ee392fe92a1a7f95ac66992fd978a64161765230"
+            "sha": "fd92f1cddcb33e4b9faf8a36ee392fe92a1a7f95ac66992fd978a64161765230",
         },
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.3.243.0/windows/VulkanSDK-1.3.243.0-Installer.exe",
-            "sha": "a45954b5f0ae682d43268df6e548168de58809240efb021f52531a631760caaf"
-        }
-    }
+            "sha": "a45954b5f0ae682d43268df6e548168de58809240efb021f52531a631760caaf",
+        },
+    },
 }
-

@@ -1,3 +1,7 @@
+"""
+Module extension for installing Vulkan SDKs.
+"""
+
 load("//vulkan:defs.bzl", "install_sdk")
 
 def _vulkan_sdk_impl(ctx):
@@ -14,13 +18,12 @@ def _vulkan_sdk_impl(ctx):
         reproducible = True,
     )
 
-
 _install_tag = tag_class(
     attrs = {
         "version": attr.string(mandatory = True),
         "url": attr.string(),
         "sha256": attr.string(),
-    }
+    },
 )
 
 vulkan_sdk = module_extension(
@@ -31,4 +34,3 @@ vulkan_sdk = module_extension(
     os_dependent = True,
     arch_dependent = True,
 )
-

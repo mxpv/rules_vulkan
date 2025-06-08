@@ -1,3 +1,11 @@
+"""
+Module to handle download and unpack of the SDK for each major platform (Windows, Linux, MacOS).
+
+These rely on command line installation described in "Getting started" docs on LunarG.
+- https://vulkan.lunarg.com/doc/view/1.3.283.0/mac/getting_started.html
+
+"""
+
 load(":resolve.bzl", "resolve_url")
 
 def _install_linux(ctx, url, sha256, version):
@@ -6,8 +14,9 @@ def _install_linux(ctx, url, sha256, version):
 
     ctx.symlink("unpack/x86_64/", "sdk")
 
-    ctx.file("BUILD",
-"""
+    ctx.file(
+        "BUILD",
+        """
 package(default_visibility = ["//visibility:public"])
 
 filegroup(
@@ -27,8 +36,8 @@ cc_library(
     includes = ["sdk/include"],
 )
 
-""")
-
+""",
+    )
 
 def _install_macos(ctx, url, sha256, version):
     ctx.report_progress("Downloading intaller...")
@@ -52,10 +61,12 @@ def _install_macos(ctx, url, sha256, version):
         ctx.execute(
             [
                 "./vulkansdk-macOS-{0}.app/Contents/MacOS/vulkansdk-macOS-{0}".format(version),
-                "--root", ctx.path("unpack"), # Warning: The installation path cannot be relative, please specify an absolute path.
+                "--root",
+                ctx.path("unpack"),  # Warning: The installation path cannot be relative, please specify an absolute path.
                 "--accept-licenses",
                 "--default-answer",
-                "--confirm-command", "install",
+                "--confirm-command",
+                "install",
                 # Optional components to install.
                 # TODO: Make optional components configurable.
                 "com.lunarg.vulkan.vma",
@@ -66,8 +77,9 @@ def _install_macos(ctx, url, sha256, version):
         ctx.symlink("unpack/macOS/", "sdk")
 
     # This uses workaround from https://github.com/bazelbuild/bazel/issues/4748
-    ctx.file("BUILD",
-"""
+    ctx.file(
+        "BUILD",
+        """
 package(default_visibility = ["//visibility:public"])
 
 filegroup(
@@ -87,9 +99,10 @@ cc_library(
     includes = ["sdk/include"],
 )
 
-""")
+""",
+    )
 
-def _install_windows(ctx, url, sha256, version):
+def _install_windows(ctx, url, sha256):
     ctx.report_progress("Downloading installer...")
     ctx.download(url, sha256 = sha256, output = "installer.exe")
 
@@ -97,9 +110,11 @@ def _install_windows(ctx, url, sha256, version):
     ctx.report_progress("Installing components...")
 
     ctx.execute([
-        "cmd.exe", "/c",
+        "cmd.exe",
+        "/c",
         "installer.exe",
-        "--root", ctx.path("sdk"),
+        "--root",
+        ctx.path("sdk"),
         "--verbose",
         "--accept-licenses",
         "--default-answer",
@@ -112,8 +127,9 @@ def _install_windows(ctx, url, sha256, version):
         "copy_only=1",
     ], quiet = False)
 
-    ctx.file("BUILD",
-"""
+    ctx.file(
+        "BUILD",
+        """
 package(default_visibility = ["//visibility:public"])
 
 filegroup(
@@ -133,7 +149,8 @@ cc_library(
     includes = ["sdk/Include"],
 )
 
-""")
+""",
+    )
 
 def _install_impl(ctx):
     url = ctx.attr.url
@@ -143,27 +160,25 @@ def _install_impl(ctx):
     if not version:
         fail("Vulkan SDK version must be specified")
 
-    os = ctx.os.name
-    arch = ctx.os.arch
-
     # If no URL provided, try find one from the list of known releases.
     if not url:
-        url, sha256 = resolve_url(version, os, arch)
+        url, sha256 = resolve_url(ctx, version)
 
+    os = ctx.os.name
     if os.startswith("linux"):
         _install_linux(ctx, url, sha256, version)
     elif os.startswith("mac"):
         _install_macos(ctx, url, sha256, version)
     elif os.startswith("windows"):
-        _install_windows(ctx, url, sha256, version)
+        _install_windows(ctx, url, sha256)
     else:
         fail("Unsupported OS: {}".format(os))
 
 install_sdk = repository_rule(
     implementation = _install_impl,
     attrs = {
-        "url": attr.string(mandatory=True),
+        "url": attr.string(mandatory = True),
         "sha256": attr.string(),
-        "version": attr.string(mandatory=True)
-    }
+        "version": attr.string(mandatory = True),
+    },
 )
