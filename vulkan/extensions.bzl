@@ -2,12 +2,12 @@
 Module extension for installing Vulkan SDKs.
 """
 
-load("//vulkan:defs.bzl", "install_sdk")
+load("//vulkan:defs.bzl", "download_sdk")
 
 def _vulkan_sdk_impl(ctx):
     for mod in ctx.modules:
-        for tag in mod.tags.install:
-            install_sdk(
+        for tag in mod.tags.download:
+            download_sdk(
                 name = "vulkan_sdk_{}".format(tag.version),
                 url = tag.url,
                 sha256 = tag.sha256,
@@ -18,7 +18,7 @@ def _vulkan_sdk_impl(ctx):
         reproducible = True,
     )
 
-_install_tag = tag_class(
+_download_tag = tag_class(
     attrs = {
         "version": attr.string(mandatory = True),
         "url": attr.string(),
@@ -29,7 +29,7 @@ _install_tag = tag_class(
 vulkan_sdk = module_extension(
     implementation = _vulkan_sdk_impl,
     tag_classes = {
-        "install": _install_tag,
+        "download": _download_tag,
     },
     os_dependent = True,
     arch_dependent = True,

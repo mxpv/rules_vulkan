@@ -103,7 +103,7 @@ def _install_windows(ctx, url, sha256):
         "{bin_slangc}": "sdk/Bin/slangc.exe",
     })
 
-def _install_impl(ctx):
+def _download_impl(ctx):
     url = ctx.attr.url
     sha256 = ctx.attr.sha256
     version = ctx.attr.version
@@ -125,8 +125,8 @@ def _install_impl(ctx):
     else:
         fail("Unsupported OS: {}".format(os))
 
-install_sdk = repository_rule(
-    implementation = _install_impl,
+download_sdk = repository_rule(
+    implementation = _download_impl,
     attrs = {
         "url": attr.string(mandatory = True),
         "sha256": attr.string(),
