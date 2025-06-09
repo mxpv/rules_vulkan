@@ -19,3 +19,21 @@ jobs:
       - run: go install github.com/bazelbuild/buildtools/buildifier@latest
       - run: buildifier -mode check -lint=warn -r .
 
+  tests:
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+      - run: bazelisk run //vulkan/tests:version_tests
+
