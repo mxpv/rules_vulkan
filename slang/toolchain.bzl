@@ -1,3 +1,7 @@
+"""
+Slang Toolchain
+"""
+
 SlangInfo = provider(
     doc = """Information about Slang compiler""",
     fields = ["compiler"],

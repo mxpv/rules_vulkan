@@ -1,3 +1,7 @@
+"""
+HLSL Toolchain
+"""
+
 HlslInfo = provider(
     doc = """Information about HLSL compiler""",
     fields = ["compiler"],

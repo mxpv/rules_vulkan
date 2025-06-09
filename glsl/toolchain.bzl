@@ -1,3 +1,7 @@
+"""
+GLSL Toolchain
+"""
+
 GlslInfo = provider(
     doc = """Information about GLSL compiler""",
     fields = ["compiler"],
