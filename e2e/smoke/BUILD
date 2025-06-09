@@ -32,7 +32,7 @@ slang_shader(
 )
 
 cc_binary(
-    name = "hello",
+    name = "smoke",
     srcs = ["main.c"],
     data = [
         ":hello_glsl",
