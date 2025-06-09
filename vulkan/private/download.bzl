@@ -20,7 +20,7 @@ def _install_linux(ctx, url, sha256, version):
         "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
         "{bin_dxc}": "sdk/bin/dxc",
         "{bin_glslc}": "sdk/bin/glslc",
-        "{bin_slang}": "sdk/bin/slangc",
+        "{bin_slangc}": "sdk/bin/slangc",
     })
 
 def _install_macos(ctx, url, sha256, version):

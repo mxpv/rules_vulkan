@@ -32,12 +32,11 @@ slang_shader(
 )
 
 cc_binary(
-    name = "smoke",
+    name = "app",
     srcs = ["main.c"],
     data = [
         ":hello_glsl",
         ":hello_hlsl",
-        ":hello_slang",
     ],
     deps = ["@vulkan_sdk_1.4.313.0//:vulkan"],
 )
