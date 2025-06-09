@@ -8,6 +8,7 @@
 It streamlines downloading, installing, and using Vulkan SDKs across major platforms.
 
 ## Features
-- Automatically downloads and installs the appropriate `Vulkan SDK`.
-- Contains a list of [currently available](./vulkan/private/versions.bzl) SDK versions from `LunarG`.
+- Fully automatic SDK installation.
+- Maintains a list of [currently available](./vulkan/private/versions.bzl) SDK versions on `LunarG`.
+- Toolchains for `GLSL`, `HLSL`, and `Slang`.
 
