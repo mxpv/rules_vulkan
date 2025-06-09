@@ -1,6 +1,7 @@
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@rules_vulkan//hlsl:toolchain.bzl", "hlsl_toolchain")
 load("@rules_vulkan//glsl:toolchain.bzl", "glsl_toolchain")
+load("@rules_vulkan//slang:toolchain.bzl", "slang_toolchain")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -26,7 +27,7 @@ cc_library(
 
 native_binary(
     name = "dxc",
-    src = "{dxc_path}",
+    src = "{bin_dxc}",
 )
 
 hlsl_toolchain(
@@ -49,7 +50,7 @@ toolchain(
 
 native_binary(
     name = "glslc",
-    src = "{glslc_path}"
+    src = "{bin_glslc}"
 )
 
 glsl_toolchain(
@@ -64,5 +65,28 @@ toolchain(
     ],
     toolchain = ":glsl_{os}",
     toolchain_type = "@rules_vulkan//glsl:toolchain_type",
+)
+
+#
+# Slang toolchain
+#
+
+native_binary(
+    name = "slangc",
+    src = "{bin_slangc}"
+)
+
+slang_toolchain(
+    name = "slang_{os}",
+    compiler = ":slangc",
+)
+
+toolchain(
+    name = "slang_{os}_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:{os}",
+    ],
+    toolchain = ":slang_{os}",
+    toolchain_type = "@rules_vulkan//slang:toolchain_type",
 )
 

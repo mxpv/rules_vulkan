@@ -18,8 +18,9 @@ def _install_linux(ctx, url, sha256, version):
         "{os}": "linux",
         "{include_path}": "sdk/include",
         "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
-        "{dxc_path}": "sdk/bin/dxc",
-        "{glslc_path}": "sdk/bin/glslc",
+        "{bin_dxc}": "sdk/bin/dxc",
+        "{bin_glslc}": "sdk/bin/glslc",
+        "{bin_slang}": "sdk/bin/slangc",
     })
 
 def _install_macos(ctx, url, sha256, version):
@@ -63,8 +64,9 @@ def _install_macos(ctx, url, sha256, version):
         "{os}": "macos",
         "{include_path}": "sdk/include",
         "{lib_vulkan}": "sdk/lib/libvulkan*.dylib",
-        "{dxc_path}": "sdk/bin/dxc",
-        "glslc_path}": "sdk/bin/glslc",
+        "{bin_dxc}": "sdk/bin/dxc",
+        "{bin_glslc}": "sdk/bin/glslc",
+        "{bin_slangc}": "sdk/bin/slangc",
     })
 
 def _install_windows(ctx, url, sha256):
@@ -96,8 +98,9 @@ def _install_windows(ctx, url, sha256):
         "{os}": "windows",
         "{include_path}": "sdk/Include",
         "{lib_vulkan}": "sdk/Lib/vulkan*.lib",
-        "{dxc_path}": "sdk/Bin/dxc.exe",
-        "{glslc_path}": "sdk/bin/glslc.exe",
+        "{bin_dxc}": "sdk/Bin/dxc.exe",
+        "{bin_glslc}": "sdk/Bin/glslc.exe",
+        "{bin_slangc}": "sdk/Bin/slangc.exe",
     })
 
 def _install_impl(ctx):

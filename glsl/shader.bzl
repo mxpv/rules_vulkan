@@ -7,10 +7,12 @@ def _hlsl_shader_impl(ctx):
 
     out = ctx.actions.declare_file(ctx.label.name + ".spv")
     src = ctx.file.src
+    stage = ctx.attr.stage
 
     args = [
         "-o",
         out.path,
+        "-fshader-stage={}".format(stage),
     ]
 
     for define in ctx.attr.defines:
@@ -42,6 +44,10 @@ glsl_shader = rule(
             allow_single_file = True,
             mandatory = True,
             doc = "Input GLSL shader source to compile",
+        ),
+        "stage": attr.string(
+            mandatory = True,
+            doc = "Shader stage (vertex, vert, fragment, frag, etc)",
         ),
         "includes": attr.string_list(
             doc = "Add directory to include search path",
