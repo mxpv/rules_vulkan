@@ -4,6 +4,8 @@
 
 # rules_vulkan
 
+[![CI](https://github.com/mxpv/rules_vulkan/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mxpv/rules_vulkan/actions/workflows/ci.yml)
+
 `rules_vulkan` is a set of Bazel rules for integrating the [Vulkan SDK](https://vulkan.lunarg.com/) into your builds.
 It streamlines downloading, installing, and using Vulkan SDKs across major platforms.
 
