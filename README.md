@@ -5,7 +5,6 @@
 # rules_vulkan
 
 [![CI](https://github.com/mxpv/rules_vulkan/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mxpv/rules_vulkan/actions/workflows/ci.yml)
-
 [![License](https://img.shields.io/github/license/mxpv/rules_vulkan)](./LICENSE)
 
 
@@ -20,7 +19,7 @@ into your builds. It streamlines downloading, installing, and using Vulkan SDKs 
 - A nice-looking AI-generated logo!
 
 
-## Getting started
+## :beginner: Getting started
 
 To get started, you’ll need to fetch the Vulkan SDK and register the toolchains.
 Add the following to your `MODULE.bazel` file:
@@ -67,7 +66,7 @@ Refer to `e2e` project [here](./e2e/smoke/) for a more complete setup.
   which is not included in the SDK package. This DLL is distributed separately as part of the Vulkan "runtime"
   package and requires additional handling.
 - On Windows, `dxc.exe` fails due to symlink issues—native_binary does not copy `dxcompiler.dll` to the output directory.
-  See [failed CI job](https://github.com/mxpv/rules_vulkan/actions/runs/15526978807/job/43708453464)) for details.
+  See [failed CI job](https://github.com/mxpv/rules_vulkan/actions/runs/15526978807/job/43708453464) for details.
 - Slang doesn't like Linux (see [failed CI job](https://github.com/mxpv/rules_vulkan/actions/runs/15544365318/job/43762431714))
   and requires deeper investigation.
 
