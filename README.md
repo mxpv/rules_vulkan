@@ -12,7 +12,7 @@
 into your builds. It streamlines downloading, installing, and using Vulkan SDKs across major platforms.
 
 - [Documentation](./docs/index.md)
-- [Download SDK](https://vulkan.lunarg.com)
+- [Download SDKs](https://vulkan.lunarg.com)
 
 ## Features
 - Fully automated SDK installation.
@@ -28,8 +28,6 @@ To get started, you’ll need to fetch the Vulkan SDK and register the toolchain
 Add the following to your `MODULE.bazel` file:
 
 ```bazel
-module(name = "hello")
-
 bazel_dep(name = "rules_vulkan", version = "0.1")
 
 vulkan_sdk = use_extension("@rules_vulkan//vulkan:extensions.bzl", "vulkan_sdk")
