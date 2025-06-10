@@ -1,3 +1,7 @@
+"""
+A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
+"""
+
 def _hlsl_shader_impl(ctx):
     dxc = ctx.toolchains["//hlsl:toolchain_type"].hlslinfo
     out = ctx.actions.declare_file(ctx.label.name + ".cso")

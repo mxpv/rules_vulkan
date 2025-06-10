@@ -1,3 +1,7 @@
+"""
+A rule to compile Slang shaders.
+"""
+
 def _slang_shader_impl(ctx):
     slang = ctx.toolchains["//slang:toolchain_type"].slanginfo
 

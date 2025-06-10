@@ -1,3 +1,7 @@
+"""
+Module extension to manage Vulkan SDKs.
+"""
+
 load("//vulkan:defs.bzl", "download_sdk")
 
 def _vulkan_sdk_impl(ctx):

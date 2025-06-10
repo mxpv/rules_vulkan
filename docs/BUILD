@@ -1,4 +1,3 @@
-load("@aspect_bazel_lib//lib:docs.bzl", "stardoc_with_diff_test", "update_docs")
 load("@stardoc//stardoc:stardoc.bzl", "stardoc")
 
 stardoc(

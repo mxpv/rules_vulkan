@@ -1,3 +1,7 @@
+"""
+A rule to compile GLSL shaders.
+"""
+
 def _hlsl_shader_impl(ctx):
     glsl = ctx.toolchains["//glsl:toolchain_type"].glslinfo
 

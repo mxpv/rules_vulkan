@@ -1,3 +1,7 @@
+"""
+All project entries to generate documentation for.
+"""
+
 load("//glsl:shader.bzl", _glsl_shader = "glsl_shader")
 load("//glsl:toolchain.bzl", _glsl_toolchain = "glsl_toolchain")
 load("//hlsl:shader.bzl", _hlsl_shader = "hlsl_shader")
