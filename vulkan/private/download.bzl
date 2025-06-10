@@ -1,4 +1,3 @@
-
 load(":resolve.bzl", "resolve_url")
 
 def _install_linux(ctx, url, sha256, version):

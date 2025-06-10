@@ -1,4 +1,3 @@
-
 load("//vulkan/private:download.bzl", _download_sdk = "download_sdk")
 load("//vulkan/private:versions.bzl", _VERSIONS = "VERSIONS")
 

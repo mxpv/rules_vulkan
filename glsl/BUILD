@@ -7,7 +7,9 @@ toolchain_type(
 
 bzl_library(
     name = "bzl_lib",
-    srcs = ["shader.bzl", "toolchain.bzl"],
+    srcs = [
+        "shader.bzl",
+        "toolchain.bzl",
+    ],
     visibility = ["//docs:__subpackages__"],
 )
-
