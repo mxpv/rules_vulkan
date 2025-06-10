@@ -27,6 +27,7 @@ stardoc(
 
 write_source_files(
     name = "update",
+    diff_test = False,
     files = {
         "index.md": ":docs",
     },
