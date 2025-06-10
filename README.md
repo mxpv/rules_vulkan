@@ -11,6 +11,9 @@
 `rules_vulkan` is a set of [Bazel](https://bazel.build) rules for integrating the [Vulkan SDK](https://vulkan.lunarg.com/)
 into your builds. It streamlines downloading, installing, and using Vulkan SDKs across major platforms.
 
+- [Documentation](./docs/index.md)
+- [Download SDK](https://vulkan.lunarg.com)
+
 ## Features
 - Fully automated SDK installation.
 - Maintains a list of [currently available](./vulkan/private/versions.bzl) SDK versions on `LunarG`.
