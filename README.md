@@ -63,12 +63,11 @@ cc_binary(
 Refer to `e2e` project [here](./e2e/smoke/) for a more complete setup.
 
 ## :cockroach: Known issues
-- End-to-end tests on `Windows` are currently disabled in CI due to the missing `vulkan-1.dll`,
+- https://github.com/mxpv/rules_vulkan/issues/1 End-to-end tests on `Windows` are currently disabled in CI due to the missing `vulkan-1.dll`,
   which is not included in the SDK package. This DLL is distributed separately as part of the Vulkan "runtime"
   package and requires additional handling.
-- On Windows, `dxc.exe` fails due to symlink issues—native_binary does not copy `dxcompiler.dll` to the output directory.
-  See [failed CI job](https://github.com/mxpv/rules_vulkan/actions/runs/15526978807/job/43708453464) for details.
-- Slang doesn't like Linux (see [failed CI job](https://github.com/mxpv/rules_vulkan/actions/runs/15544365318/job/43762431714))
+- https://github.com/mxpv/rules_vulkan/issues/2 On Windows, `dxc.exe` fails due to symlink issues—native_binary does not copy `dxcompiler.dll` to the output directory.
+- https://github.com/mxpv/rules_vulkan/issues/3 Slang doesn't like Linux (see [failed CI job](https://github.com/mxpv/rules_vulkan/actions/runs/15544365318/job/43762431714))
   and requires deeper investigation.
 
 ## License
