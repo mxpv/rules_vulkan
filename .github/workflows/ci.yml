@@ -28,6 +28,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
+        bazel: [7.6.1, 8.2.1]
 
     steps:
       - uses: actions/checkout@v2
@@ -36,7 +37,10 @@ jobs:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
           repository-cache: true
+
       - run: bazelisk run //vulkan/tests:version_tests
+        env:
+          USE_BAZEL_VERSION: ${{ matrix.bazel }}
 
   e2e:
     name: Integration Tests
