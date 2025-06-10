@@ -34,7 +34,9 @@ PLATFORMS = [
 CHECKSUM_URL = "https://sdk.lunarg.com/sdk/sha/{version}/{platform}/{file}.json"
 DOWNLOAD_URL = "https://sdk.lunarg.com/sdk/download/{version}/{platform}/{file}"
 
-def make_file_name(plat, ver):
+# Make package name for download.
+# This takes into account name changes that happened in the past.
+def make_sdk_name(plat, ver):
     match plat:
         case "linux":
             if version_tuple(ver) <= (1, 3, 250, 1):
@@ -59,29 +61,63 @@ def make_file_name(plat, ver):
         case _:
             raise ValueError(f"Unknown platform: {plat}")
 
+def make_rt_name(plat, ver):
+    template = "VulkanRT-X64-{}-Components.zip" if plat == "windows" else "VulkanRT-ARM64-{}-Components.zip"
+    if version_tuple(ver) <= (1, 4, 309, 0) and plat == "windows":
+        template = "VulkanRT-{}-Components.zip"
+    elif version_tuple(ver) <= (1, 3, 296, 0) and plat == "warm":
+        template = "VulkanRT-{}-Components.zip"
+
+    return template.format(ver)
+
+def query(ver, plat, file):
+    print(f"Fetching checksum for {ver} on {plat} for file {file}...")
+
+    url = CHECKSUM_URL.format(version=ver, platform=plat, file=file)
+    print(f"  URL: {url}")
+
+    # Query checksum URL.
+    resp = requests.get(url)
+    resp.raise_for_status
+
+    data = resp.json()
+    print(f"  Result: {data}")
+
+    if isinstance(data, dict) and data.get("ok") is False and data.get("title") == "Not Found":
+        return None
+
+    # Extract URL and checksum
+    url = DOWNLOAD_URL.format(version=ver, platform=plat, file=data["file"])
+    sha = data["sha"]
+
+    return url, sha
+
 output = {}
 for ver in versions:
     for plat in PLATFORMS:
-        print(f"Fetching checksum for {ver} on {plat}...")
+        result = query(ver, plat, make_sdk_name(plat, ver))
 
-        url = CHECKSUM_URL.format(version=ver, platform=plat, file=make_file_name(plat, ver))
-        print(f"  URL: {url}")
-
-        # Query checksum URL.
-        resp = requests.get(url)
-        resp.raise_for_status
-
-        data = resp.json()
-        print(f"  Result: {data}")
-
-        # Skip if not found.
-        if isinstance(data, dict) and data.get("ok") is False and data.get("title") == "Not Found":
+        # Skip if no such package
+        if not result:
             continue
 
+        url, sha = result
+
         output.setdefault(ver, {})[plat] = {
-            "url": DOWNLOAD_URL.format(version=ver, platform=plat, file=data["file"]),
-            "sha": data["sha"],
+            "url": url,
+            "sha": sha,
         }
+
+        # Check runtime packages on Windows.
+        if plat == "windows" or plat == "warm":
+            result = query(ver, plat, make_rt_name(plat, ver))
+            if result:
+                url, sha = result
+                output[ver][plat].update({
+                    "runtime_url": url,
+                    "runtime_sha": sha,
+                })
+
 
 # Sort top-level version keys descending, keep nested dicts as-is
 ordered_output = {k: output[k] for k in sorted(output, reverse=True)}
