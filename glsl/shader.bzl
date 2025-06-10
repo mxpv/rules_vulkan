@@ -1,7 +1,3 @@
-"""
-Rule to compile GLSL shaders.
-"""
-
 def _hlsl_shader_impl(ctx):
     glsl = ctx.toolchains["//glsl:toolchain_type"].glslinfo
 
@@ -39,6 +35,9 @@ def _hlsl_shader_impl(ctx):
 
 glsl_shader = rule(
     implementation = _hlsl_shader_impl,
+    doc = """
+    Rule to compile GLSL shader.
+    """,
     attrs = {
         "src": attr.label(
             allow_single_file = True,

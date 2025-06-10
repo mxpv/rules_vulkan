@@ -1,10 +1,3 @@
-"""
-Module to handle download and unpack of the SDK for each major platform (Windows, Linux, MacOS).
-
-These rely on command line installation described in "Getting started" docs on LunarG.
-- https://vulkan.lunarg.com/doc/view/1.3.283.0/mac/getting_started.html
-
-"""
 
 load(":resolve.bzl", "resolve_url")
 
@@ -127,6 +120,13 @@ def _download_impl(ctx):
 
 download_sdk = repository_rule(
     implementation = _download_impl,
+    doc = """
+    A rule to handle download and unpack of the SDK for each major platform (Windows, Linux, MacOS).
+
+    These rely on command line installation described in "Getting started" docs on LunarG.
+    - https://vulkan.lunarg.com/doc/view/1.3.283.0/mac/getting_started.html
+
+    """,
     attrs = {
         "url": attr.string(mandatory = True),
         "sha256": attr.string(),

@@ -1,6 +1,3 @@
-"""
-Module extension for installing Vulkan SDKs.
-"""
 
 load("//vulkan:defs.bzl", "download_sdk")
 
@@ -28,6 +25,9 @@ _download_tag = tag_class(
 
 vulkan_sdk = module_extension(
     implementation = _vulkan_sdk_impl,
+    doc = """
+    Module extension to manage Vulkan SDKs.
+    """,
     tag_classes = {
         "download": _download_tag,
     },

@@ -1,9 +1,5 @@
-"""
-GLSL Toolchain
-"""
-
 GlslInfo = provider(
-    doc = """Information about GLSL compiler""",
+    doc = "Information about GLSL compiler",
     fields = ["compiler"],
 )
 
@@ -18,11 +14,15 @@ def _glsl_toolchain_impl(ctx):
 
 glsl_toolchain = rule(
     implementation = _glsl_toolchain_impl,
+    doc = """
+    GLSL Toolchain
+    """,
     attrs = {
         "compiler": attr.label(
             executable = True,
             mandatory = True,
             cfg = "exec",
+            doc = "Path to compiler executable",
         ),
     },
 )

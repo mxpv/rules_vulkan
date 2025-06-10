@@ -1,6 +1,3 @@
-"""
-Rule to compile Slang shaders.
-"""
 
 def _slang_shader_impl(ctx):
     slang = ctx.toolchains["//slang:toolchain_type"].slanginfo
@@ -52,6 +49,9 @@ def _slang_shader_impl(ctx):
 
 slang_shader = rule(
     implementation = _slang_shader_impl,
+    doc = """
+    Rule to compile Slang shaders.
+    """,
     attrs = {
         "src": attr.label(
             allow_single_file = True,
