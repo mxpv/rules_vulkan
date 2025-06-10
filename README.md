@@ -6,6 +6,9 @@
 
 [![CI](https://github.com/mxpv/rules_vulkan/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mxpv/rules_vulkan/actions/workflows/ci.yml)
 
+[![License](https://img.shields.io/github/license/mxpv/rules_vulkan)](./LICENSE)
+
+
 `rules_vulkan` is a set of [Bazel](https://bazel.build) rules for integrating the [Vulkan SDK](https://vulkan.lunarg.com/)
 into your builds. It streamlines downloading, installing, and using Vulkan SDKs across major platforms.
 
@@ -13,7 +16,7 @@ into your builds. It streamlines downloading, installing, and using Vulkan SDKs 
 - Fully automated SDK installation.
 - Maintains a list of [currently available](./vulkan/private/versions.bzl) SDK versions on `LunarG`.
 - Toolchains for `GLSL`, `HLSL`, and `Slang`.
-- Unit and integration tests on GitHub Actions
+- Unit and integration tests on CI.
 - A nice-looking AI-generated logo!
 
 
