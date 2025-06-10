@@ -19,6 +19,7 @@ into your builds. It streamlines downloading, installing, and using Vulkan SDKs 
 - Maintains a list of [currently available](./vulkan/private/versions.bzl) SDK versions on `LunarG`.
 - Toolchains for `GLSL`, `HLSL`, and `Slang`.
 - Unit and integration tests on CI.
+- Available on [BCR](https://registry.bazel.build/modules/rules_vulkan).
 - A nice-looking AI-generated logo!
 
 
