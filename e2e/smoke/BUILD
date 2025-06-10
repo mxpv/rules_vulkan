@@ -36,11 +36,12 @@ cc_binary(
     srcs = ["main.c"],
     data = [
         ":hello_glsl",
-        ":hello_hlsl",
     ] + select({
         # TODO: Run slang everywhere, see https://github.com/mxpv/rules_vulkan/actions/runs/15544365318/job/43762431714
         "@platforms//os:macos": [":hello_slang"],
-        "//conditions:default": [],
+        "@platforms//os:windows": [],
+        # TODO: Enable HLSL everywhere.
+        "//conditions:default": [":hello_hlsl"],
     }),
     deps = ["@vulkan_sdk_1.4.313.0//:vulkan"],
 )
