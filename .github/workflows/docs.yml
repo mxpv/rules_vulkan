@@ -25,7 +25,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         id: deployment
         with:
-          path: bazel-bin/docs/docs.md
+          path: bazel-bin/docs/
 
   deploy:
     name: Deploy
