@@ -1,12 +1,36 @@
+matrix:
+  platform:
+  - ubuntu2004
+  - windows
+  - macos
+  bazel:
+  - 8.x
+  - 7.x
+tasks:
+  verify_targets:
+    name: Verify build targets
+    platform: ${{ platform }}
+    bazel: ${{ bazel }}
+    build_targets:
+    - //vulkan/...
+    - //hlsl/...
+    - //glsl/...
+    - //slang/...
+
 bcr_test_module:
-  module_path: "e2e/smoke"
+  module_path: e2e/smoke
   matrix:
-    platform: ["macos", "ubuntu2004"]
-    bazel: [8.x]
+    platform:
+    - ubuntu2004
+    - macos
+    - windows
+    bazel:
+    - 8.x
   tasks:
-    run_tests:
-      name: "Run e2e module"
+    run_test_module:
+      name: Run test module
       platform: ${{ platform }}
       bazel: ${{ bazel }}
       build_targets:
-        - "//..."
+      - :app
+
