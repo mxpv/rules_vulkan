@@ -1,8 +1,9 @@
 load("@stardoc//stardoc:stardoc.bzl", "stardoc")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 stardoc(
     name = "docs",
-    out = "docs.md",
+    out = "index.md",
     input = "docs_hub.bzl",
     symbol_names = [
         # Rules
@@ -22,4 +23,11 @@ stardoc(
         "//slang:bzl_lib",
         "//vulkan:bzl_lib",
     ],
+)
+
+write_source_files(
+	name = "update",
+	files = {
+		"index.md": ":docs",
+	}
 )
