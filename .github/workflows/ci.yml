@@ -19,6 +19,26 @@ jobs:
       - run: go install github.com/bazelbuild/buildtools/buildifier@latest
       - run: buildifier -mode check -lint=warn -r .
 
+  docs:
+    name: Docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+      - run: bazelisk build //docs
+      - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: Docs
+          path: bazel-bin/docs/docs.md
+          if-no-files-found: error
+
   tests:
     name: Unit Tests
     runs-on: ${{ matrix.os }}
