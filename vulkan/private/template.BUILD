@@ -27,7 +27,7 @@ cc_library(
     srcs = glob(["{lib_vulkan}"]),
     hdrs = [":headers"],
     includes = ["{include_path}"],
-    {vulkan_deps}
+    deps = [{vulkan_deps}]
 )
 
 #
