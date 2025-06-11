@@ -42,6 +42,7 @@ native_binary(
 hlsl_toolchain(
     name = "dxc_{os}",
     compiler = ":dxc",
+    env = { {dxc_env} },
 )
 
 toolchain(
