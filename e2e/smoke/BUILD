@@ -36,13 +36,8 @@ cc_binary(
     srcs = ["main.c"],
     data = [
         ":hello_glsl",
+        ":hello_hlsl",
         ":hello_slang",
-    ] + select({
-        # TODO: Enable HLSL on Windows.
-        "@platforms//os:windows": [],
-        "//conditions:default": [
-            ":hello_hlsl",
-        ],
-    }),
+    ],
     deps = ["@vulkan_sdk_1.4.313//:vulkan"],
 )

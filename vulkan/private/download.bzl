@@ -106,6 +106,7 @@ def _install_windows(ctx, version, sdk_url, sdk_sha256, attrs):
         "{bin_glslc}": "sdk/Bin/glslc.exe",
         "{bin_slangc}": "sdk/Bin/slangc.exe",
         "{slang_env}": "'PATH': '{}'".format(ctx.path("sdk/Bin")),
+        "{dxc_env}": "'PATH': '{}'".format(ctx.path("sdk/Bin")),
     })
 
 def _download_impl(ctx):
@@ -135,6 +136,7 @@ def _download_impl(ctx):
         "{bin_slangc}": "sdk/bin/slangc",
         "{vulkan_deps}": "",  # Windows only
         "{slang_env}": "",
+        "{dxc_env}": "",
     }
 
     if is_linux:
