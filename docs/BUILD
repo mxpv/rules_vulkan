@@ -3,7 +3,7 @@ load("@stardoc//stardoc:stardoc.bzl", "stardoc")
 
 stardoc(
     name = "docs",
-    out = "index.md",
+    out = "index_generated.md",
     input = "docs_hub.bzl",
     symbol_names = [
         # Rules
@@ -27,7 +27,6 @@ stardoc(
 
 write_source_files(
     name = "update",
-    diff_test = False,
     files = {
         "index.md": ":docs",
     },

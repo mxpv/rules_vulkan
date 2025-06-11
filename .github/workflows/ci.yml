@@ -20,6 +20,21 @@ jobs:
       - run: go install github.com/bazelbuild/buildtools/buildifier@latest
       - run: buildifier -mode check -lint=warn -r .
 
+  docs:
+    name: Verify Docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+
+      - run: bazelisk run //docs:update_test
+
   tests:
     name: Unit Tests
     runs-on: ${{ matrix.os }}
