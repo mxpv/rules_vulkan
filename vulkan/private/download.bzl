@@ -2,7 +2,7 @@
 Vulkan SDK downloader.
 """
 
-load(":resolve.bzl", "normalize_version", "resolve_url")
+load(":resolve.bzl", "normalize_version", "resolve_sdk_url", "resolve_rt_url")
 
 def _install_linux(ctx, url, sha256, version):
     ctx.report_progress("Downloading and unpacking tarball...")
@@ -66,9 +66,20 @@ def _install_macos(ctx, url, sha256, version):
         "{bin_slangc}": "sdk/bin/slangc",
     })
 
-def _install_windows(ctx, url, sha256):
+def _install_windows(ctx, version, sdk_url, sdk_sha256):
     ctx.report_progress("Downloading installer...")
-    ctx.download(url, sha256 = sha256, output = "installer.exe")
+    ctx.download(sdk_url, sha256 = sdk_sha256, output = "installer.exe")
+
+    skip_rt = ctx.attr.windows_skip_runtime
+
+    if not skip_rt:
+        rt_url, rt_sha256 = resolve_rt_url(ctx, version)
+
+        ctx.report_progress("Downloading runtime...")
+        ctx.download_and_extract(
+            rt_url,
+            sha256 = rt_sha256,
+            strip_prefix = "VulkanRT-{}-{}-Components\\x64".format("ARM64" if ctx.os.arch.startswith("arm") else "X64", version))
 
     # See https://vulkan.lunarg.com/doc/sdk/latest/windows/getting_started.html
     ctx.report_progress("Installing components...")
@@ -98,10 +109,10 @@ def _install_windows(ctx, url, sha256):
         "{bin_dxc}": "sdk/Bin/dxc.exe",
         "{bin_glslc}": "sdk/Bin/glslc.exe",
         "{bin_slangc}": "sdk/Bin/slangc.exe",
+        "{vulkan_deps}": "" if skip_rt else "\":vulkan_dll\"", # Skip runtime dependency if not installed.
     })
 
 def _download_impl(ctx):
-    url = ctx.attr.url
     sha256 = ctx.attr.sha256
     version = ctx.attr.version
 
@@ -111,8 +122,9 @@ def _download_impl(ctx):
     version = normalize_version(version)
 
     # If no URL provided, try find one from the list of known releases.
+    url = ctx.attr.url
     if not url:
-        url, sha256 = resolve_url(ctx, version)
+        url, sha256 = resolve_sdk_url(ctx, version)
 
     os = ctx.os.name
     if os.startswith("linux"):
@@ -120,7 +132,7 @@ def _download_impl(ctx):
     elif os.startswith("mac"):
         _install_macos(ctx, url, sha256, version)
     elif os.startswith("windows"):
-        _install_windows(ctx, url, sha256)
+        _install_windows(ctx, version, url, sha256)
     else:
         fail("Unsupported OS: {}".format(os))
 
@@ -153,6 +165,17 @@ download_sdk = repository_rule(
 	    This expects a version in the format of `1.4.313.0` or `1.4.313`.
 	    When 3 components are provided, `.0` will be appended automatically to make it 4 components.
             """,
+        ),
+        "windows_skip_runtime": attr.bool(
+            default = False,
+            doc = """
+            Do not download and install Vulkan runtime package (e.g. `vulkan-1.dll` dependency) on Windows.
+
+            When `True`, the downloader with put `vulkan-1.dll` into the repository root directory.
+
+            This is useful if there is a system-wide Vulkan runtime already installed, otherwise this
+            might lead to link/runtime issues when building CC targets.
+            """
         ),
         "build_file": attr.label(default = Label("//vulkan/private:template.BUILD")),
     },

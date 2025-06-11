@@ -13,12 +13,21 @@ filegroup(
     ]),
 )
 
+cc_import(
+    name = "vulkan_dll",
+    shared_library = "vulkan-1.dll",
+    target_compatible_with = [
+        "@platforms//os:windows",
+    ],
+)
+
 # This uses workaround from https://github.com/bazelbuild/bazel/issues/4748
 cc_library(
     name = "vulkan",
     srcs = glob(["{lib_vulkan}"]),
     hdrs = [":headers"],
     includes = ["{include_path}"],
+    deps = [{vulkan_deps}],
 )
 
 #

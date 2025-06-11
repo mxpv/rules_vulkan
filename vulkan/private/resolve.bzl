@@ -56,9 +56,9 @@ def _find_exact(ctx, version):
 
     return info
 
-def resolve_url(ctx, version):
+def resolve_sdk_url(ctx, version):
     """
-    Finds download Vulakn SDK URL and checksum from version string.
+    Finds download Vulkan SDK URL and checksum from version string.
 
     Args:
         ctx: The repository context.
@@ -73,3 +73,16 @@ def resolve_url(ctx, version):
         fail("Unknown Vulkan SDK version {} on {} {}", version, ctx.os.name, ctx.os.arch)
 
     return info["url"], info["sha"]
+
+def resolve_rt_url(ctx, version):
+    """
+    Finds download URL for the runtime package (only applicable for Windows).
+    """
+
+    # TODO: LunarG often provides runtime package for 0 patch version, e.g. 1.4.313.0, but not for 1.4.313.1.
+    # So if not found, try to find runtime package for the 0 patch version.
+    info = _find_exact(ctx, version)
+    if not info:
+        fail("Unknown Vulkan SDK runtime version {} on {} {}", version, ctx.os.name, ctx.os.arch)
+    
+    return info["runtime_url"], info["runtime_sha"]
