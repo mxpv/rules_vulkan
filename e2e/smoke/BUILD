@@ -37,11 +37,12 @@ cc_binary(
     data = [
         ":hello_glsl",
     ] + select({
-        # TODO: Run slang everywhere, see https://github.com/mxpv/rules_vulkan/actions/runs/15544365318/job/43762431714
-        "@platforms//os:macos": [":hello_slang"],
+        # TODO: Enable HLSL and Slang on Windows.
         "@platforms//os:windows": [],
-        # TODO: Enable HLSL everywhere.
-        "//conditions:default": [":hello_hlsl"],
+        "//conditions:default": [
+            ":hello_hlsl",
+            ":hello_slang",
+        ],
     }),
     deps = ["@vulkan_sdk_1.4.313.0//:vulkan"],
 )

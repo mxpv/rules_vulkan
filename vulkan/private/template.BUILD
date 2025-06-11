@@ -79,6 +79,7 @@ native_binary(
 slang_toolchain(
     name = "slang_{os}",
     compiler = ":slangc",
+    lib_path = "{lib_path}",
 )
 
 toolchain(

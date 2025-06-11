@@ -14,6 +14,7 @@ def _install_linux(ctx, url, sha256, version):
         "{os}": "linux",
         "{include_path}": "sdk/include",
         "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
+        "{lib_path}": str(ctx.path("sdk/lib")),
         "{bin_dxc}": "sdk/bin/dxc",
         "{bin_glslc}": "sdk/bin/glslc",
         "{bin_slangc}": "sdk/bin/slangc",
