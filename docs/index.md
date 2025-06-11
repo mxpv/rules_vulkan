@@ -171,8 +171,8 @@ These rely on command line installation described in "Getting started" docs on L
 | <a id="download_sdk-name"></a>name |  A unique name for this repository.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="download_sdk-build_file"></a>build_file |  -   | <a href="https://bazel.build/concepts/labels">Label</a> | optional |  `"@rules_vulkan//vulkan/private:template.BUILD"`  |
 | <a id="download_sdk-repo_mapping"></a>repo_mapping |  In `WORKSPACE` context only: a dictionary from local repository name to global repository name. This allows controls over workspace dependency resolution for dependencies of this repository.<br><br>For example, an entry `"@foo": "@bar"` declares that, for any time this repository depends on `@foo` (such as a dependency on `@foo//some:target`, it should actually resolve that dependency within globally-declared `@bar` (`@bar//some:target`).<br><br>This attribute is _not_ supported in `MODULE.bazel` context (when invoking a repository rule inside a module extension's implementation function).   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  |
-| <a id="download_sdk-sha256"></a>sha256 |  -   | String | optional |  `""`  |
-| <a id="download_sdk-url"></a>url |  -   | String | required |  |
-| <a id="download_sdk-version"></a>version |  -   | String | required |  |
+| <a id="download_sdk-sha256"></a>sha256 |  SDK package checksum   | String | optional |  `""`  |
+| <a id="download_sdk-url"></a>url |  URL to download the SDK package from.<br><br>Can be empty, in this case the download URL will be inherited from the provided version.   | String | required |  |
+| <a id="download_sdk-version"></a>version |  Vulkan SDK version to download and install.<br><br>This expects a version in the format of `1.4.313.0` or `1.4.313`. When 3 components are provided, `.0` will be appended automatically to make it 4 components.   | String | required |  |
 
 
