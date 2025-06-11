@@ -44,5 +44,5 @@ cc_binary(
             ":hello_slang",
         ],
     }),
-    deps = ["@vulkan_sdk_1.4.313.0//:vulkan"],
+    deps = ["@vulkan_sdk_1.4.313//:vulkan"],
 )

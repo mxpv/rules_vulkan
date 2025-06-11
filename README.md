@@ -33,10 +33,10 @@ bazel_dep(name = "rules_vulkan", version = "0.1")
 
 vulkan_sdk = use_extension("@rules_vulkan//vulkan:extensions.bzl", "vulkan_sdk")
 
-vulkan_sdk.download(version = "1.4.313.0")
-use_repo(vulkan_sdk, "vulkan_sdk_1.4.313.0")
+vulkan_sdk.download(version = "1.4.313")
+use_repo(vulkan_sdk, "vulkan_sdk_1.4.313")
 
-register_toolchains("@vulkan_sdk_1.4.313.0//:all")
+register_toolchains("@vulkan_sdk_1.4.313//:all")
 ```
 
 Then use it in your `BUILD` files:
@@ -56,7 +56,7 @@ cc_binary(
     name = "app",
     srcs = ["main.c"],
     data = [":hello_hlsl"],
-    deps = ["@vulkan_sdk_1.4.313.0//:vulkan"],
+    deps = ["@vulkan_sdk_1.4.313//:vulkan"],
 )
 
 ```

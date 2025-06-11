@@ -17,28 +17,59 @@ def _normalize_os(os, arch):
     else:
         fail("Unsupported OS: {}".format(os))
 
-def resolve_url(repository_ctx, version):
+def normalize_version(version):
     """
-    Finds download URL and checksum from version string.
+    Normalize SDK version string to ensure it has 4 components.
 
     Args:
-        repository_ctx: The repository context.
-        version: 4 components Vulkan SDK version string (e.g., "1.4.313.0").
+        version: Version string in the format 'X.Y.Z' or 'X.Y.Z.W'
+    Returns:
+        Version as 'X.Y.Z.0' if only three components, else returns as-is."""
+    parts = version.split(".")
+    if len(parts) == 3:
+        return version + ".0"
+
+    return version
+
+def _find_exact(ctx, version):
+    """
+    Find exact record in the VERSIONS table from the provided version and OS/arch retrieved from the `ctx`
+
+    Args:
+        ctx: repository context.
+        version: exact version string to fetch info.
+
+    Returns:
+    `None` if no record found, otherwise a struct with 'url' and 'sha' fields.
+    """
+    platforms = VERSIONS.get(version, None)
+    if not platforms:
+        return None
+
+    os = ctx.os.name
+    arch = ctx.os.arch
+
+    target = _normalize_os(os, arch)
+    info = platforms.get(target, None)
+    if not info:
+        return None
+
+    return info
+
+def resolve_url(ctx, version):
+    """
+    Finds download Vulakn SDK URL and checksum from version string.
+
+    Args:
+        ctx: The repository context.
+        version: 4 components Vulkan SDK version string (e.g., "1.4.313.1").
 
     Returns:
 	A tuple containing the download URL and SHA256 checksum.
     """
 
-    os = repository_ctx.os.name
-    arch = repository_ctx.os.arch
-
-    platforms = VERSIONS.get(version, None)
-    if not platforms:
-        fail("Unknown Vulkan SDK version: {}".format(version))
-
-    target = _normalize_os(os, arch)
-    info = platforms.get(target, None)
+    info = _find_exact(ctx, version)
     if not info:
-        fail("Unsupported target architecture {} for SDK {}", os, version)
+        fail("Unknown Vulkan SDK version {} on {} {}", version, ctx.os.name, ctx.os.arch)
 
     return info["url"], info["sha"]

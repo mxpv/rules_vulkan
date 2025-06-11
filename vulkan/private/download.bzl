@@ -2,7 +2,7 @@
 Vulkan SDK downloader.
 """
 
-load(":resolve.bzl", "resolve_url")
+load(":resolve.bzl", "normalize_version", "resolve_url")
 
 def _install_linux(ctx, url, sha256, version):
     ctx.report_progress("Downloading and unpacking tarball...")
@@ -108,6 +108,8 @@ def _download_impl(ctx):
     if not version:
         fail("Vulkan SDK version must be specified")
 
+    version = normalize_version(version)
+
     # If no URL provided, try find one from the list of known releases.
     if not url:
         url, sha256 = resolve_url(ctx, version)
@@ -132,9 +134,26 @@ download_sdk = repository_rule(
 
     """,
     attrs = {
-        "url": attr.string(mandatory = True),
-        "sha256": attr.string(),
-        "version": attr.string(mandatory = True),
+        "url": attr.string(
+            mandatory = True,
+            doc = """
+	    URL to download the SDK package from.
+
+	    Can be empty, in this case the download URL will be inherited from the provided version.
+	    """,
+        ),
+        "sha256": attr.string(
+            doc = "SDK package checksum",
+        ),
+        "version": attr.string(
+            mandatory = True,
+            doc = """
+	    Vulkan SDK version to download and install.
+
+	    This expects a version in the format of `1.4.313.0` or `1.4.313`.
+	    When 3 components are provided, `.0` will be appended automatically to make it 4 components.
+            """,
+        ),
         "build_file": attr.label(default = Label("//vulkan/private:template.BUILD")),
     },
 )
