@@ -63,12 +63,6 @@ cc_binary(
 
 Refer to `e2e` project [here](./e2e/smoke/) for a more complete setup.
 
-## :cockroach: Known issues
-- https://github.com/mxpv/rules_vulkan/issues/1 End-to-end tests on `Windows` are currently disabled in CI due to the missing `vulkan-1.dll`,
-  which is not included in the SDK package. This DLL is distributed separately as part of the Vulkan "runtime"
-  package and requires additional handling.
-- https://github.com/mxpv/rules_vulkan/issues/2 On Windows, `dxc.exe` fails due to symlink issues—native_binary does not copy `dxcompiler.dll` to the output directory.
-
 ## License
 
 The project itself is licensed under [`Apache 2.0`](./LICENSE) license.
