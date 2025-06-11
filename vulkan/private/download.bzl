@@ -4,24 +4,19 @@ Vulkan SDK downloader.
 
 load(":resolve.bzl", "normalize_version", "resolve_rt_url", "resolve_sdk_url")
 
-def _install_linux(ctx, url, sha256, version):
+def _install_linux(ctx, url, sha256, version, attrs):
     ctx.report_progress("Downloading and unpacking tarball...")
     ctx.download_and_extract(url, sha256 = sha256, output = "unpack", stripPrefix = version)
 
     ctx.symlink("unpack/x86_64/", "sdk")
 
-    ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = {
+    attrs.update({
         "{os}": "linux",
-        "{include_path}": "sdk/include",
         "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
         "{lib_path}": str(ctx.path("sdk/lib")),
-        "{bin_dxc}": "sdk/bin/dxc",
-        "{bin_glslc}": "sdk/bin/glslc",
-        "{bin_slangc}": "sdk/bin/slangc",
-        "{vulkan_deps}": "",
     })
 
-def _install_macos(ctx, url, sha256, version):
+def _install_macos(ctx, url, sha256, version, attrs):
     ctx.report_progress("Downloading intaller...")
     ctx.download_and_extract(
         url,
@@ -58,17 +53,12 @@ def _install_macos(ctx, url, sha256, version):
 
         ctx.symlink("unpack/macOS/", "sdk")
 
-    ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = {
+    attrs.update({
         "{os}": "macos",
-        "{include_path}": "sdk/include",
         "{lib_vulkan}": "sdk/lib/libvulkan*.dylib",
-        "{bin_dxc}": "sdk/bin/dxc",
-        "{bin_glslc}": "sdk/bin/glslc",
-        "{bin_slangc}": "sdk/bin/slangc",
-        "{vulkan_deps}": "",
     })
 
-def _install_windows(ctx, version, sdk_url, sdk_sha256):
+def _install_windows(ctx, version, sdk_url, sdk_sha256, attrs):
     ctx.report_progress("Downloading installer...")
     ctx.download(sdk_url, sha256 = sdk_sha256, output = "installer.exe")
 
@@ -83,6 +73,8 @@ def _install_windows(ctx, version, sdk_url, sdk_sha256):
             sha256 = rt_sha256,
             strip_prefix = "VulkanRT-{}-{}-Components\\x64".format("ARM64" if ctx.os.arch.startswith("arm") else "X64", version),
         )
+
+        attrs.update({"{vulkan_deps}": "\":vulkan_dll\""})
 
     # See https://vulkan.lunarg.com/doc/sdk/latest/windows/getting_started.html
     ctx.report_progress("Installing components...")
@@ -105,14 +97,13 @@ def _install_windows(ctx, version, sdk_url, sdk_sha256):
         "copy_only=1",
     ], quiet = False)
 
-    ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = {
+    attrs.update({
         "{os}": "windows",
         "{include_path}": "sdk/Include",
         "{lib_vulkan}": "sdk/Lib/vulkan*.lib",
         "{bin_dxc}": "sdk/Bin/dxc.exe",
         "{bin_glslc}": "sdk/Bin/glslc.exe",
         "{bin_slangc}": "sdk/Bin/slangc.exe",
-        "{vulkan_deps}": "" if skip_rt else repr(deps = [":vulkan_dll"]),  # Skip runtime dependency if not installed.
     })
 
 def _download_impl(ctx):
@@ -133,14 +124,27 @@ def _download_impl(ctx):
     is_mac = ctx.os.name.startswith("mac")
     is_windows = ctx.os.name.startswith("windows")
 
+    attrs = {
+        "{os}": "",
+        "{include_path}": "sdk/include",
+        "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
+        "{lib_path}": "",  # Linux only
+        "{bin_dxc}": "sdk/bin/dxc",
+        "{bin_glslc}": "sdk/bin/glslc",
+        "{bin_slangc}": "sdk/bin/slangc",
+        "{vulkan_deps}": "",  # Windows only
+    }
+
     if is_linux:
-        _install_linux(ctx, url, sha256, version)
+        _install_linux(ctx, url, sha256, version, attrs)
     elif is_mac:
-        _install_macos(ctx, url, sha256, version)
+        _install_macos(ctx, url, sha256, version, attrs)
     elif is_windows:
-        _install_windows(ctx, version, url, sha256)
+        _install_windows(ctx, version, url, sha256, attrs)
     else:
         fail("Unsupported OS: {}".format(ctx.os.name))
+
+    ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = attrs)
 
 download_sdk = repository_rule(
     implementation = _download_impl,
