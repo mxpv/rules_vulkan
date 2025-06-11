@@ -84,5 +84,5 @@ def resolve_rt_url(ctx, version):
     info = _find_exact(ctx, version)
     if not info:
         fail("Unknown Vulkan SDK runtime version {} on {} {}", version, ctx.os.name, ctx.os.arch)
-    
+
     return info["runtime_url"], info["runtime_sha"]
