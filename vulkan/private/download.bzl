@@ -2,7 +2,7 @@
 Vulkan SDK downloader.
 """
 
-load(":resolve.bzl", "normalize_version", "resolve_sdk_url", "resolve_rt_url")
+load(":resolve.bzl", "normalize_version", "resolve_rt_url", "resolve_sdk_url")
 
 def _install_linux(ctx, url, sha256, version):
     ctx.report_progress("Downloading and unpacking tarball...")
@@ -79,7 +79,8 @@ def _install_windows(ctx, version, sdk_url, sdk_sha256):
         ctx.download_and_extract(
             rt_url,
             sha256 = rt_sha256,
-            strip_prefix = "VulkanRT-{}-{}-Components\\x64".format("ARM64" if ctx.os.arch.startswith("arm") else "X64", version))
+            strip_prefix = "VulkanRT-{}-{}-Components\\x64".format("ARM64" if ctx.os.arch.startswith("arm") else "X64", version),
+        )
 
     # See https://vulkan.lunarg.com/doc/sdk/latest/windows/getting_started.html
     ctx.report_progress("Installing components...")
@@ -109,7 +110,7 @@ def _install_windows(ctx, version, sdk_url, sdk_sha256):
         "{bin_dxc}": "sdk/Bin/dxc.exe",
         "{bin_glslc}": "sdk/Bin/glslc.exe",
         "{bin_slangc}": "sdk/Bin/slangc.exe",
-        "{vulkan_deps}": "" if skip_rt else "\":vulkan_dll\"", # Skip runtime dependency if not installed.
+        "{vulkan_deps}": "" if skip_rt else "\":vulkan_dll\"",  # Skip runtime dependency if not installed.
     })
 
 def _download_impl(ctx):
@@ -175,7 +176,7 @@ download_sdk = repository_rule(
 
             This is useful if there is a system-wide Vulkan runtime already installed, otherwise this
             might lead to link/runtime issues when building CC targets.
-            """
+            """,
         ),
         "build_file": attr.label(default = Label("//vulkan/private:template.BUILD")),
     },
