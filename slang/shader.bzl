@@ -39,16 +39,12 @@ def _slang_shader_impl(ctx):
 
     args.append(src.path)
 
-    env = {}
-    if slang.lib_path:
-        env.update({"LD_LIBRARY_PATH": slang.lib_path})
-
     ctx.actions.run(
         inputs = [src],
         outputs = [out],
         arguments = args,
         executable = slang.compiler,
-        env = env,
+        env = slang.env,
         progress_message = "Compiling Slang shader %s" % src.path,
         mnemonic = "SlangCompile",
     )

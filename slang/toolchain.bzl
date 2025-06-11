@@ -4,14 +4,14 @@ Slang Toolchain
 
 SlangInfo = provider(
     doc = """Information about Slang compiler""",
-    fields = ["compiler", "lib_path"],
+    fields = ["compiler", "env"],
 )
 
 def _slang_toolchain_impl(ctx):
     toolchain_info = platform_common.ToolchainInfo(
         slanginfo = SlangInfo(
             compiler = ctx.executable.compiler,
-            lib_path = ctx.attr.lib_path,
+            env = ctx.attr.env,
         ),
     )
 
@@ -25,11 +25,11 @@ slang_toolchain = rule(
             mandatory = True,
             cfg = "exec",
         ),
-        "lib_path": attr.string(
+        "env": attr.string_dict(
             doc = """
-            Absolute path to Vulkan SDK lib directory.
+            Environment variables to set for the Slang compiler.
 
-            This will be added to `LD_LIBRARY_PATH`.
+            This can be used to set additional paths or configurations needed by the Slang compiler.
             """,
         ),
     },

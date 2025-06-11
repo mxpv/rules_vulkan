@@ -14,6 +14,7 @@ def _install_linux(ctx, url, sha256, version, attrs):
         "{os}": "linux",
         "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
         "{lib_path}": str(ctx.path("sdk/lib")),
+        "{slang_env}": "'LD_LIBRARY_PATH': '{}'".format(ctx.path("sdk/lib")),
     })
 
 def _install_macos(ctx, url, sha256, version, attrs):
@@ -104,6 +105,7 @@ def _install_windows(ctx, version, sdk_url, sdk_sha256, attrs):
         "{bin_dxc}": "sdk/Bin/dxc.exe",
         "{bin_glslc}": "sdk/Bin/glslc.exe",
         "{bin_slangc}": "sdk/Bin/slangc.exe",
+        "{slang_env}": "'PATH': '{}'".format(ctx.path("sdk/Bin")),
     })
 
 def _download_impl(ctx):
@@ -128,11 +130,11 @@ def _download_impl(ctx):
         "{os}": "",
         "{include_path}": "sdk/include",
         "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
-        "{lib_path}": "",  # Linux only
         "{bin_dxc}": "sdk/bin/dxc",
         "{bin_glslc}": "sdk/bin/glslc",
         "{bin_slangc}": "sdk/bin/slangc",
         "{vulkan_deps}": "",  # Windows only
+        "{slang_env}": "",
     }
 
     if is_linux:
