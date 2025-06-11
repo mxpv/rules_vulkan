@@ -83,7 +83,7 @@ Rule to compile HLSL shaders using DirectXShaderCompiler.
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "hlsl_toolchain")
 
-hlsl_toolchain(<a href="#hlsl_toolchain-name">name</a>, <a href="#hlsl_toolchain-compiler">compiler</a>)
+hlsl_toolchain(<a href="#hlsl_toolchain-name">name</a>, <a href="#hlsl_toolchain-compiler">compiler</a>, <a href="#hlsl_toolchain-env">env</a>)
 </pre>
 
 
@@ -94,7 +94,8 @@ hlsl_toolchain(<a href="#hlsl_toolchain-name">name</a>, <a href="#hlsl_toolchain
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="hlsl_toolchain-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="hlsl_toolchain-compiler"></a>compiler |  -   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="hlsl_toolchain-compiler"></a>compiler |  Path to the HLSL compiler executable (e.g., dxc)   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="hlsl_toolchain-env"></a>env |  Environment variables to set for the HLSL compiler.<br><br>This can be used to set additional paths or configurations needed by the HLSL compiler.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
 
 
 <a id="slang_shader"></a>
@@ -133,7 +134,7 @@ Rule to compile Slang shaders.
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "slang_toolchain")
 
-slang_toolchain(<a href="#slang_toolchain-name">name</a>, <a href="#slang_toolchain-compiler">compiler</a>, <a href="#slang_toolchain-lib_path">lib_path</a>)
+slang_toolchain(<a href="#slang_toolchain-name">name</a>, <a href="#slang_toolchain-compiler">compiler</a>, <a href="#slang_toolchain-env">env</a>)
 </pre>
 
 
@@ -145,7 +146,7 @@ slang_toolchain(<a href="#slang_toolchain-name">name</a>, <a href="#slang_toolch
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="slang_toolchain-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="slang_toolchain-compiler"></a>compiler |  -   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
-| <a id="slang_toolchain-lib_path"></a>lib_path |  Absolute path to Vulkan SDK lib directory.<br><br>This will be added to `LD_LIBRARY_PATH`.   | String | optional |  `""`  |
+| <a id="slang_toolchain-env"></a>env |  Environment variables to set for the Slang compiler.<br><br>This can be used to set additional paths or configurations needed by the Slang compiler.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
 
 
 <a id="download_sdk"></a>
