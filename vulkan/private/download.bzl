@@ -68,11 +68,17 @@ def _install_windows(ctx, version, sdk_url, sdk_sha256, attrs):
     if not skip_rt:
         rt_url, rt_sha256 = resolve_rt_url(ctx, version)
 
+        is_arm = ctx.os.arch.startswith("arm")
+
         ctx.report_progress("Downloading runtime...")
         ctx.download_and_extract(
             rt_url,
             sha256 = rt_sha256,
-            strip_prefix = "VulkanRT-{}-{}-Components\\x64".format("ARM64" if ctx.os.arch.startswith("arm") else "X64", version),
+            strip_prefix = "VulkanRT-{}-{}-Components\\{}".format(
+                "ARM64" if is_arm else "X64",
+                version,
+                "" if is_arm else "x64",  # on x64 there is an additional x64 subdirectory
+            ),
         )
 
         attrs.update({"{vulkan_deps}": "\":vulkan_dll\""})
