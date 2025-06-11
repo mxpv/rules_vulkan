@@ -155,7 +155,7 @@ slang_toolchain(<a href="#slang_toolchain-name">name</a>, <a href="#slang_toolch
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "download_sdk")
 
-download_sdk(<a href="#download_sdk-name">name</a>, <a href="#download_sdk-build_file">build_file</a>, <a href="#download_sdk-repo_mapping">repo_mapping</a>, <a href="#download_sdk-sha256">sha256</a>, <a href="#download_sdk-url">url</a>, <a href="#download_sdk-version">version</a>)
+download_sdk(<a href="#download_sdk-name">name</a>, <a href="#download_sdk-build_file">build_file</a>, <a href="#download_sdk-repo_mapping">repo_mapping</a>, <a href="#download_sdk-sha256">sha256</a>, <a href="#download_sdk-url">url</a>, <a href="#download_sdk-version">version</a>, <a href="#download_sdk-windows_skip_runtime">windows_skip_runtime</a>)
 </pre>
 
 A rule to handle download and unpack of the SDK for each major platform (Windows, Linux, MacOS).
@@ -174,5 +174,6 @@ These rely on command line installation described in "Getting started" docs on L
 | <a id="download_sdk-sha256"></a>sha256 |  SDK package checksum   | String | optional |  `""`  |
 | <a id="download_sdk-url"></a>url |  URL to download the SDK package from.<br><br>Can be empty, in this case the download URL will be inherited from the provided version.   | String | required |  |
 | <a id="download_sdk-version"></a>version |  Vulkan SDK version to download and install.<br><br>This expects a version in the format of `1.4.313.0` or `1.4.313`. When 3 components are provided, `.0` will be appended automatically to make it 4 components.   | String | required |  |
+| <a id="download_sdk-windows_skip_runtime"></a>windows_skip_runtime |  Do not download and install Vulkan runtime package (e.g. `vulkan-1.dll` dependency) on Windows.<br><br>When `True`, the downloader with put `vulkan-1.dll` into the repository root directory.<br><br>This is useful if there is a system-wide Vulkan runtime already installed, otherwise this might lead to link/runtime issues when building CC targets.   | Boolean | optional |  `False`  |
 
 
