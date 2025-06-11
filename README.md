@@ -68,8 +68,6 @@ Refer to `e2e` project [here](./e2e/smoke/) for a more complete setup.
   which is not included in the SDK package. This DLL is distributed separately as part of the Vulkan "runtime"
   package and requires additional handling.
 - https://github.com/mxpv/rules_vulkan/issues/2 On Windows, `dxc.exe` fails due to symlink issues—native_binary does not copy `dxcompiler.dll` to the output directory.
-- https://github.com/mxpv/rules_vulkan/issues/3 Slang doesn't like Linux (see [failed CI job](https://github.com/mxpv/rules_vulkan/actions/runs/15544365318/job/43762431714))
-  and requires deeper investigation.
 
 ## License
 
