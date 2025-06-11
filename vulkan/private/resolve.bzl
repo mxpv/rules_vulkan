@@ -77,6 +77,13 @@ def resolve_sdk_url(ctx, version):
 def resolve_rt_url(ctx, version):
     """
     Finds download URL for the runtime package (only applicable for Windows).
+
+    Args:
+        ctx: The repository context.
+        version: 4 components Vulkan SDK version string (e.g., "1.4.313.1").
+
+    Returns:
+	A tuple containing the download URL and SHA256 checksum for the runtime package.
     """
 
     # TODO: LunarG often provides runtime package for 0 patch version, e.g. 1.4.313.0, but not for 1.4.313.1.

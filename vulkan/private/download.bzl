@@ -18,6 +18,7 @@ def _install_linux(ctx, url, sha256, version):
         "{bin_dxc}": "sdk/bin/dxc",
         "{bin_glslc}": "sdk/bin/glslc",
         "{bin_slangc}": "sdk/bin/slangc",
+        "{vulkan_deps}": "",
     })
 
 def _install_macos(ctx, url, sha256, version):
@@ -64,6 +65,7 @@ def _install_macos(ctx, url, sha256, version):
         "{bin_dxc}": "sdk/bin/dxc",
         "{bin_glslc}": "sdk/bin/glslc",
         "{bin_slangc}": "sdk/bin/slangc",
+        "{vulkan_deps}": "",
     })
 
 def _install_windows(ctx, version, sdk_url, sdk_sha256):
@@ -110,7 +112,7 @@ def _install_windows(ctx, version, sdk_url, sdk_sha256):
         "{bin_dxc}": "sdk/Bin/dxc.exe",
         "{bin_glslc}": "sdk/Bin/glslc.exe",
         "{bin_slangc}": "sdk/Bin/slangc.exe",
-        "{vulkan_deps}": "" if skip_rt else "\":vulkan_dll\"",  # Skip runtime dependency if not installed.
+        "{vulkan_deps}": "" if skip_rt else repr(deps = [":vulkan_dll"]),  # Skip runtime dependency if not installed.
     })
 
 def _download_impl(ctx):
@@ -127,15 +129,18 @@ def _download_impl(ctx):
     if not url:
         url, sha256 = resolve_sdk_url(ctx, version)
 
-    os = ctx.os.name
-    if os.startswith("linux"):
+    is_linux = ctx.os.name.startswith("linux")
+    is_mac = ctx.os.name.startswith("mac")
+    is_windows = ctx.os.name.startswith("windows")
+
+    if is_linux:
         _install_linux(ctx, url, sha256, version)
-    elif os.startswith("mac"):
+    elif is_mac:
         _install_macos(ctx, url, sha256, version)
-    elif os.startswith("windows"):
+    elif is_windows:
         _install_windows(ctx, version, url, sha256)
     else:
-        fail("Unsupported OS: {}".format(os))
+        fail("Unsupported OS: {}".format(ctx.os.name))
 
 download_sdk = repository_rule(
     implementation = _download_impl,
