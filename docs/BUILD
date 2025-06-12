@@ -22,6 +22,7 @@ stardoc(
         "//hlsl:bzl_lib",
         "//slang:bzl_lib",
         "//vulkan:bzl_lib",
+        "@bazel_skylib//lib:paths",
     ],
 )
 

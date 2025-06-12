@@ -55,7 +55,8 @@ GLSL Toolchain
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "hlsl_shader")
 
-hlsl_shader(<a href="#hlsl_shader-name">name</a>, <a href="#hlsl_shader-src">src</a>, <a href="#hlsl_shader-defines">defines</a>, <a href="#hlsl_shader-entry">entry</a>, <a href="#hlsl_shader-extra_args">extra_args</a>, <a href="#hlsl_shader-hlsl_version">hlsl_version</a>, <a href="#hlsl_shader-includes">includes</a>, <a href="#hlsl_shader-spirv">spirv</a>, <a href="#hlsl_shader-target">target</a>)
+hlsl_shader(<a href="#hlsl_shader-name">name</a>, <a href="#hlsl_shader-src">src</a>, <a href="#hlsl_shader-out">out</a>, <a href="#hlsl_shader-copts">copts</a>, <a href="#hlsl_shader-defines">defines</a>, <a href="#hlsl_shader-entry">entry</a>, <a href="#hlsl_shader-hlsl">hlsl</a>, <a href="#hlsl_shader-includes">includes</a>, <a href="#hlsl_shader-out_asm">out_asm</a>, <a href="#hlsl_shader-out_hash">out_hash</a>, <a href="#hlsl_shader-out_reflect">out_reflect</a>,
+            <a href="#hlsl_shader-root_sig">root_sig</a>, <a href="#hlsl_shader-spirv">spirv</a>, <a href="#hlsl_shader-target">target</a>)
 </pre>
 
 Rule to compile HLSL shaders using DirectXShaderCompiler.
@@ -67,11 +68,16 @@ Rule to compile HLSL shaders using DirectXShaderCompiler.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="hlsl_shader-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="hlsl_shader-src"></a>src |  Input HLSL shader source file   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="hlsl_shader-out"></a>out |  Compiled shader output file. If not specified, defaults to the source file name with '.cso' extension   | String | optional |  `""`  |
+| <a id="hlsl_shader-copts"></a>copts |  Additional arguments to pass to the DXC compiler   | List of strings | optional |  `[]`  |
 | <a id="hlsl_shader-defines"></a>defines |  List of macro defines   | List of strings | optional |  `[]`  |
 | <a id="hlsl_shader-entry"></a>entry |  Entry point name   | String | optional |  `""`  |
-| <a id="hlsl_shader-extra_args"></a>extra_args |  Additional arguments to pass to the DXC compiler   | List of strings | optional |  `[]`  |
-| <a id="hlsl_shader-hlsl_version"></a>hlsl_version |  HLSL version to use (2016, 2017, 2018, 2021)   | String | optional |  `""`  |
+| <a id="hlsl_shader-hlsl"></a>hlsl |  HLSL version to use (2016, 2017, 2018, 2021)   | String | optional |  `""`  |
 | <a id="hlsl_shader-includes"></a>includes |  Add directory to include search path   | List of strings | optional |  `[]`  |
+| <a id="hlsl_shader-out_asm"></a>out_asm |  Output assembly code listing file (-Fc <file>)   | String | optional |  `""`  |
+| <a id="hlsl_shader-out_hash"></a>out_hash |  Output shader hash to the given file (-Fsh <file>)   | String | optional |  `""`  |
+| <a id="hlsl_shader-out_reflect"></a>out_reflect |  Output reflection to the given file (-Fre <file>)   | String | optional |  `""`  |
+| <a id="hlsl_shader-root_sig"></a>root_sig |  Read root signature from a #define (-rootsig-define <value>)   | String | optional |  `""`  |
 | <a id="hlsl_shader-spirv"></a>spirv |  Generate SPIR-V code   | Boolean | optional |  `False`  |
 | <a id="hlsl_shader-target"></a>target |  Target profile (e.g., cs_6_0, ps_6_0, etc.)   | String | required |  |
 

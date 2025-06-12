@@ -2,46 +2,85 @@
 A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 """
 
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 def _hlsl_shader_impl(ctx):
     dxc = ctx.toolchains["//hlsl:toolchain_type"].hlslinfo
-    out = ctx.actions.declare_file(ctx.label.name + ".cso")
-
     src = ctx.file.src
+
+    # Declare output file
+    out = ctx.attr.out
+    if not out:
+        out = paths.replace_extension(src.basename, ".cso")
+    out = ctx.actions.declare_file(out)
+
+    outs = [out]
+
     entry = ctx.attr.entry
     target = ctx.attr.target
 
-    args = [
-        "-T",
-        target,
-        "-Fo",
-        out.path,
-    ]
+    args = ctx.actions.args()
 
+    # Target + shader output path (required).
+    args.add_all(["-T", target, "-Fo", out.path])
+
+    # Entry point
     if entry:
-        args += ["-E", entry]
+        args.add("-E")
+        args.add(entry)
 
     # Append macro defines
     for define in ctx.attr.defines:
-        args += ["-D", define]
+        args.add("-D")
+        args.add(define)
 
     for path in ctx.attr.includes:
-        args += ["-I", path]
+        args.add("-I")
+        args.add(path)
 
-    if ctx.attr.hlsl_version:
-        args += ["-HV", ctx.attr.hlsl_version]
+    # Specify HLSL version
+    if ctx.attr.hlsl:
+        args.add("-HV")
+        args.add(ctx.attr.hlsl)
+
+    # Specify root signature from #define
+    if ctx.attr.root_sig:
+        args.add("-rootsig-define")
+        args.add(ctx.attr.root_sig)
+
+    # Output assembly code
+    if ctx.attr.out_asm:
+        out_asm = ctx.actions.declare_file(ctx.attr.out_asm)
+        args.add("-Fc")
+        args.add(out_asm)
+        outs.append(out_asm)
+
+    # Reflect shader
+    if ctx.attr.out_reflect:
+        out_reflect = ctx.actions.declare_file(ctx.attr.out_reflect)
+        args.add("-Fre")
+        args.add(out_reflect)
+        outs.append(out_reflect)
+
+    if ctx.attr.out_hash:
+        out_hash = ctx.actions.declare_file(ctx.attr.out_hash)
+        args.add("-Fsh")
+        args.add(out_hash)
+        outs.append(out_hash)
 
     if ctx.attr.spirv:
-        args.append("-spirv")
+        args.add("-spirv")
 
     # Append user-defined extra arguments
-    args += ctx.attr.extra_args
+    args.add_all(ctx.attr.copts)
 
-    args.append(src.path)
+    # Output bytecode file path.
+    args.add(src.path)
 
     ctx.actions.run(
         inputs = [src],
-        outputs = [out],
-        arguments = args,
+        outputs = outs,
+        arguments = [args],
         executable = dxc.compiler,
         env = dxc.env,
         progress_message = "Compiling HLSL shader %s" % src.path,
@@ -61,6 +100,9 @@ hlsl_shader = rule(
             mandatory = True,
             doc = "Input HLSL shader source file",
         ),
+        "out": attr.string(
+            doc = "Compiled shader output file. If not specified, defaults to the source file name with '.cso' extension",
+        ),
         "entry": attr.string(
             doc = "Entry point name",
         ),
@@ -74,14 +116,26 @@ hlsl_shader = rule(
         "includes": attr.string_list(
             doc = "Add directory to include search path",
         ),
-        "hlsl_version": attr.string(
+        "hlsl": attr.string(
             doc = "HLSL version to use (2016, 2017, 2018, 2021)",
+        ),
+        "root_sig": attr.string(
+            doc = "Read root signature from a #define (-rootsig-define <value>)",
         ),
         "spirv": attr.bool(
             doc = "Generate SPIR-V code",
         ),
-        "extra_args": attr.string_list(
+        "copts": attr.string_list(
             doc = "Additional arguments to pass to the DXC compiler",
+        ),
+        "out_asm": attr.string(
+            doc = "Output assembly code listing file (-Fc <file>)",
+        ),
+        "out_reflect": attr.string(
+            doc = "Output reflection to the given file (-Fre <file>)",
+        ),
+        "out_hash": attr.string(
+            doc = "Output shader hash to the given file (-Fsh <file>)",
         ),
     },
     toolchains = [":toolchain_type"],

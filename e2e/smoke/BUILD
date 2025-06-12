@@ -6,11 +6,14 @@ load("@rules_vulkan//slang:shader.bzl", "slang_shader")
 hlsl_shader(
     name = "hello_hlsl",
     src = "shader.hlsl",
+    out = "hello_hlsl.cso",  # (Optional) Bytecode output file.
+    copts = ["-Ges"],  # Additional compiler options.
     defines = ["USE_VULKAN"],
     entry = "CSMain",
-    extra_args = ["-Ges"],
-    hlsl_version = "2021",
-    spirv = True,
+    hlsl = "2021",
+    out_asm = "hello_hlsl.asm",  # Output assembly code
+    out_hash = "hello_hlsl.hash",  # Output shader hash
+    out_reflect = "hello_hlsl.reflect",  # Output reflection file
     target = "cs_6_0",
 )
 
