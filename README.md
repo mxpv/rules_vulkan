@@ -65,7 +65,7 @@ cc_binary(
 
 ```
 
-Refer to `e2e` project [here](./e2e/smoke/) for a more complete setup.
+Refer to `e2e` project [here](./e2e/smoke/BUILD) for a more complete setup.
 
 ## License
 
