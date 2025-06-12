@@ -2,47 +2,65 @@
 A rule to compile Slang shaders.
 """
 
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 def _slang_shader_impl(ctx):
     slang = ctx.toolchains["//slang:toolchain_type"].slanginfo
 
     src = ctx.file.src
-    entry = ctx.attr.entry
-    target = ctx.attr.target
-    stage = ctx.attr.stage
-    lang = ctx.attr.lang
 
-    out = ctx.actions.declare_file(ctx.label.name + "." + target)
+    # Declare output file
+    out = ctx.attr.out
+    if not out:
+        out = paths.replace_extension(src.basename, ".out")
+    out = ctx.actions.declare_file(out)
 
-    args = [
+    outs = [out]
+
+    args = ctx.actions.args()
+    args.add_all([
         "-profile",
         ctx.attr.profile,
         "-target",
-        target,
+        ctx.attr.target,
         "-o",
         out.path,
-    ]
+    ])
 
-    if stage:
-        args += ["-stage", stage]
+    if ctx.attr.stage:
+        args.add("-stage")
+        args.add(ctx.attr.stage)
 
-    if entry:
-        args += ["-entry", entry]
+    if ctx.attr.entry:
+        args.add("-entry")
+        args.add(ctx.attr.entry)
 
-    if lang:
-        args += ["-lang", lang]
+    if ctx.attr.lang:
+        args.add("-lang")
+        args.add(ctx.attr.lang)
 
     for define in ctx.attr.defines:
-        args += ["-D", define]
+        args.add("-D")
+        args.add(define)
 
     for path in ctx.attr.includes:
-        args += ["-I", path]
+        args.add("-I")
+        args.add(path)
 
-    args.append(src.path)
+    # Emit reflection data to a file
+    if ctx.attr.out_reflect:
+        out_reflect = ctx.actions.declare_file(ctx.attr.out_reflect)
+        args.add("-reflection-json")
+        args.add(out_reflect)
+        outs.append(out_reflect)
+
+    # Input shader source file
+    args.add(src.path)
 
     ctx.actions.run(
         inputs = [src],
-        outputs = [out],
-        arguments = args,
+        outputs = outs,
+        arguments = [args],
         executable = slang.compiler,
         env = slang.env,
         progress_message = "Compiling Slang shader %s" % src.path,
@@ -60,7 +78,13 @@ slang_shader = rule(
         "src": attr.label(
             allow_single_file = True,
             mandatory = True,
-            doc = "Input GLSL shader source to compile",
+            doc = "Input shader source to compile",
+        ),
+        "out": attr.string(
+            doc = "Compiled shader output file. If not specified, defaults to the source file name with '.out' extension",
+        ),
+        "out_reflect": attr.string(
+            doc = "Emit reflection data in JSON format to a file",
         ),
         "entry": attr.string(
             doc = "Entry point name",
@@ -72,7 +96,7 @@ slang_shader = rule(
             doc = "Insert a preprocessor macro",
         ),
         "stage": attr.string(
-            doc = "Stage of an entry point function",
+            doc = "Stage of an entry point function (vertex, pixel, compute, etc)",
         ),
         "profile": attr.string(
             mandatory = True,
@@ -85,7 +109,7 @@ slang_shader = rule(
         "lang": attr.string(
             doc = "Set language for the shader",
         ),
-        "extra_args": attr.string_list(
+        "copts": attr.string_list(
             doc = "Additional arguments to pass to the compiler",
         ),
     },

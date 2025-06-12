@@ -1,4 +1,5 @@
 
+[[vk::binding(0)]]
 RWStructuredBuffer<uint> OutputBuffer : register(u0);
 
 [numthreads(1, 1, 1)]

@@ -17,21 +17,24 @@ hlsl_shader(
     target = "cs_6_0",
 )
 
+slang_shader(
+    name = "hello_slang",
+    src = "shader.hlsl",
+    out = "hello_slang.spv",
+    copts = ["-warnings-as-errors=all"],
+    defines = ["USE_VULKAN"],
+    entry = "CSMain",
+    lang = "slang",
+    out_reflect = "hello_slang.json",
+    profile = "glsl_450",
+    stage = "compute",
+    target = "spirv",
+)
+
 glsl_shader(
     name = "hello_glsl",
     src = "shader.glsl",
     stage = "comp",
-)
-
-slang_shader(
-    name = "hello_slang",
-    src = "shader.slang",
-    defines = ["USE_VULKAN"],
-    entry = "computeMain",
-    extra_args = ["-warnings-as-errors=all"],
-    lang = "slang",
-    profile = "glsl_450",
-    target = "spirv",
 )
 
 cc_binary(
