@@ -111,7 +111,8 @@ hlsl_toolchain(<a href="#hlsl_toolchain-name">name</a>, <a href="#hlsl_toolchain
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "slang_shader")
 
-slang_shader(<a href="#slang_shader-name">name</a>, <a href="#slang_shader-src">src</a>, <a href="#slang_shader-defines">defines</a>, <a href="#slang_shader-entry">entry</a>, <a href="#slang_shader-extra_args">extra_args</a>, <a href="#slang_shader-includes">includes</a>, <a href="#slang_shader-lang">lang</a>, <a href="#slang_shader-profile">profile</a>, <a href="#slang_shader-stage">stage</a>, <a href="#slang_shader-target">target</a>)
+slang_shader(<a href="#slang_shader-name">name</a>, <a href="#slang_shader-src">src</a>, <a href="#slang_shader-out">out</a>, <a href="#slang_shader-copts">copts</a>, <a href="#slang_shader-defines">defines</a>, <a href="#slang_shader-entry">entry</a>, <a href="#slang_shader-includes">includes</a>, <a href="#slang_shader-lang">lang</a>, <a href="#slang_shader-out_reflect">out_reflect</a>, <a href="#slang_shader-profile">profile</a>, <a href="#slang_shader-stage">stage</a>,
+             <a href="#slang_shader-target">target</a>)
 </pre>
 
 Rule to compile Slang shaders.
@@ -122,14 +123,16 @@ Rule to compile Slang shaders.
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="slang_shader-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="slang_shader-src"></a>src |  Input GLSL shader source to compile   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="slang_shader-src"></a>src |  Input shader source to compile   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="slang_shader-out"></a>out |  Compiled shader output file. If not specified, defaults to the source file name with '.out' extension   | String | optional |  `""`  |
+| <a id="slang_shader-copts"></a>copts |  Additional arguments to pass to the compiler   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-defines"></a>defines |  Insert a preprocessor macro   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-entry"></a>entry |  Entry point name   | String | optional |  `""`  |
-| <a id="slang_shader-extra_args"></a>extra_args |  Additional arguments to pass to the compiler   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-includes"></a>includes |  Add a path to be used in resolved #include or #import operations   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-lang"></a>lang |  Set language for the shader   | String | optional |  `""`  |
+| <a id="slang_shader-out_reflect"></a>out_reflect |  Emit reflection data in JSON format to a file   | String | optional |  `""`  |
 | <a id="slang_shader-profile"></a>profile |  Shader profile for code generation   | String | required |  |
-| <a id="slang_shader-stage"></a>stage |  Stage of an entry point function   | String | optional |  `""`  |
+| <a id="slang_shader-stage"></a>stage |  Stage of an entry point function (vertex, pixel, compute, etc)   | String | optional |  `""`  |
 | <a id="slang_shader-target"></a>target |  Format in which code should be generated   | String | required |  |
 
 
