@@ -12,6 +12,10 @@
 into your builds. It streamlines downloading, installing, and using Vulkan SDKs across major platforms.
 
 - [Documentation](./docs/index.md)
+  + [glsl_shader](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#glsl_shader)
+  + [hlsl_shader](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#hlsl_shader)
+  + [slang_shader](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#slang_shader)
+  + [download_sdk](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#download_sdk)
 - [Download SDKs](https://vulkan.lunarg.com)
 
 ## Features
