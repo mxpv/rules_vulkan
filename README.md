@@ -17,7 +17,7 @@ into your builds. It streamlines downloading, installing, and using Vulkan SDKs 
 ## Features
 - Fully automated SDK installation.
 - Maintains a list of [currently available](./vulkan/private/versions.bzl) SDK versions on `LunarG`.
-- Toolchains for `GLSL`, `HLSL`, and `Slang`.
+- Toolchains and rules for [`GLSL`](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#glsl_shader), [`HLSL`](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#hlsl_shader), and [`Slang`](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#slang_shader).
 - Unit and integration tests on CI.
 - Available on [BCR](https://registry.bazel.build/modules/rules_vulkan).
 - A nice-looking AI-generated logo!
