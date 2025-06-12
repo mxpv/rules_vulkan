@@ -58,7 +58,7 @@ def _slang_shader_impl(ctx):
     args.add(src.path)
 
     ctx.actions.run(
-        inputs = [src],
+        inputs = [src] + ctx.files.hdrs,
         outputs = outs,
         arguments = [args],
         executable = slang.compiler,
@@ -90,7 +90,11 @@ slang_shader = rule(
             doc = "Entry point name",
         ),
         "includes": attr.string_list(
-            doc = "Add a path to be used in resolved #include or #import operations",
+            doc = "Add a path to CLI to be used to search #include or #import operations",
+        ),
+        "hdrs": attr.label_list(
+            allow_files = True,
+            doc = "List of header files dependencies to be included in the shader compilation",
         ),
         "defines": attr.string_list(
             doc = "Insert a preprocessor macro",

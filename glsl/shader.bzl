@@ -47,7 +47,7 @@ def _hlsl_shader_impl(ctx):
     args.add(src.path)
 
     ctx.actions.run(
-        inputs = [src],
+        inputs = [src] + ctx.files.hdrs,
         outputs = outs,
         arguments = [args],
         executable = glsl.compiler,
@@ -76,7 +76,11 @@ glsl_shader = rule(
             doc = "Shader stage (vertex, vert, fragment, frag, etc)",
         ),
         "includes": attr.string_list(
-            doc = "Add directory to include search path",
+            doc = "Add directory to include search path to CLI",
+        ),
+        "hdrs": attr.label_list(
+            allow_files = True,
+            doc = "List of header files dependencies to be included in the shader compilation",
         ),
         "defines": attr.string_list(
             doc = "List of macro defines",

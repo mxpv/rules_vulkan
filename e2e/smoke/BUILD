@@ -7,6 +7,7 @@ hlsl_shader(
     name = "hello_hlsl",
     src = "shader.hlsl",
     out = "hello_hlsl.cso",  # (Optional) Bytecode output file.
+    hdrs = ["//common:common_headers"],
     copts = ["-Ges"],  # Additional compiler options.
     defines = ["USE_VULKAN"],
     entry = "CSMain",
@@ -21,6 +22,7 @@ slang_shader(
     name = "hello_slang",
     src = "shader.hlsl",
     out = "hello_slang.spv",
+    hdrs = ["//common:common_headers"],
     copts = ["-warnings-as-errors=all"],
     defines = ["USE_VULKAN"],
     entry = "CSMain",
@@ -35,6 +37,7 @@ glsl_shader(
     name = "hello_glsl",
     src = "shader.glsl",
     out = "hello_glsl.spv",
+    hdrs = ["//common:common_headers"],
     stage = "comp",
     std = "450core",
     target_env = "vulkan1.4",

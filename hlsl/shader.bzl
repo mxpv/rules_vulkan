@@ -78,7 +78,7 @@ def _hlsl_shader_impl(ctx):
     args.add(src.path)
 
     ctx.actions.run(
-        inputs = [src],
+        inputs = [src] + ctx.files.hdrs,
         outputs = outs,
         arguments = [args],
         executable = dxc.compiler,
@@ -114,7 +114,11 @@ hlsl_shader = rule(
             doc = "List of macro defines",
         ),
         "includes": attr.string_list(
-            doc = "Add directory to include search path",
+            doc = "List of directories to be added to the CLI to search for include files",
+        ),
+        "hdrs": attr.label_list(
+            allow_files = True,
+            doc = "List of header files dependencies to be included in the shader compilation",
         ),
         "hlsl": attr.string(
             doc = "HLSL version to use (2016, 2017, 2018, 2021)",
