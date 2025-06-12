@@ -9,7 +9,7 @@ All project entries to generate documentation for.
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "glsl_shader")
 
-glsl_shader(<a href="#glsl_shader-name">name</a>, <a href="#glsl_shader-src">src</a>, <a href="#glsl_shader-defines">defines</a>, <a href="#glsl_shader-extra_args">extra_args</a>, <a href="#glsl_shader-includes">includes</a>, <a href="#glsl_shader-stage">stage</a>)
+glsl_shader(<a href="#glsl_shader-name">name</a>, <a href="#glsl_shader-src">src</a>, <a href="#glsl_shader-out">out</a>, <a href="#glsl_shader-copts">copts</a>, <a href="#glsl_shader-defines">defines</a>, <a href="#glsl_shader-includes">includes</a>, <a href="#glsl_shader-stage">stage</a>, <a href="#glsl_shader-std">std</a>, <a href="#glsl_shader-target_env">target_env</a>, <a href="#glsl_shader-target_spv">target_spv</a>)
 </pre>
 
 Rule to compile GLSL shader.
@@ -21,10 +21,14 @@ Rule to compile GLSL shader.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="glsl_shader-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="glsl_shader-src"></a>src |  Input GLSL shader source to compile   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="glsl_shader-out"></a>out |  Compiled shader output file. If not specified, defaults to the source file name with '.spv' extension   | String | optional |  `""`  |
+| <a id="glsl_shader-copts"></a>copts |  Additional arguments to pass to the compiler   | List of strings | optional |  `[]`  |
 | <a id="glsl_shader-defines"></a>defines |  List of macro defines   | List of strings | optional |  `[]`  |
-| <a id="glsl_shader-extra_args"></a>extra_args |  Additional arguments to pass to the compiler   | List of strings | optional |  `[]`  |
 | <a id="glsl_shader-includes"></a>includes |  Add directory to include search path   | List of strings | optional |  `[]`  |
 | <a id="glsl_shader-stage"></a>stage |  Shader stage (vertex, vert, fragment, frag, etc)   | String | required |  |
+| <a id="glsl_shader-std"></a>std |  Version and profile for GLSL input files.<br><br>Possible values are concatenations of version and profile, e.g. `310es`, `450core`, etc.   | String | optional |  `""`  |
+| <a id="glsl_shader-target_env"></a>target_env |  Set the target client environment, and the semantics of warnings and errors.<br><br>An optional suffix can specify the client version.   | String | optional |  `""`  |
+| <a id="glsl_shader-target_spv"></a>target_spv |  Set the SPIR-V version to be used for the generated SPIR-V module.<br><br>The default is the highest version of SPIR-V required to be supported for the target environment. For example, default for `vulkan1.0` is `spv1.0`.   | String | optional |  `""`  |
 
 
 <a id="glsl_toolchain"></a>

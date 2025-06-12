@@ -34,7 +34,11 @@ slang_shader(
 glsl_shader(
     name = "hello_glsl",
     src = "shader.glsl",
+    out = "hello_glsl.spv",
     stage = "comp",
+    std = "450core",
+    target_env = "vulkan1.4",
+    target_spv = "spv1.6",
 )
 
 cc_binary(
