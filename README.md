@@ -54,6 +54,7 @@ hlsl_shader(
     entry = "CSMain",
     target = "cs_6_0",
     spirv = True,
+    hdrs = [":common_headers"],
 )
 
 cc_binary(
