@@ -2,14 +2,14 @@
 HLSL Toolchain
 """
 
-HlslInfo = provider(
+HlslCompilerInfo = provider(
     doc = """Information about HLSL compiler""",
     fields = ["compiler", "env"],
 )
 
 def _hlsl_toolchain_impl(ctx):
     toolchain_info = platform_common.ToolchainInfo(
-        hlslinfo = HlslInfo(
+        info = HlslCompilerInfo(
             compiler = ctx.executable.compiler,
             env = ctx.attr.env,
         ),

@@ -2,14 +2,14 @@
 Slang Toolchain
 """
 
-SlangInfo = provider(
+SlangCompilerInfo = provider(
     doc = """Information about Slang compiler""",
     fields = ["compiler", "env"],
 )
 
 def _slang_toolchain_impl(ctx):
     toolchain_info = platform_common.ToolchainInfo(
-        slanginfo = SlangInfo(
+        info = SlangCompilerInfo(
             compiler = ctx.executable.compiler,
             env = ctx.attr.env,
         ),

@@ -16,6 +16,11 @@ stardoc(
         "glsl_toolchain",
         "hlsl_toolchain",
         "slang_toolchain",
+
+        # Compiler info providers
+        "GlslCompilerInfo",
+        "HlslCompilerInfo",
+        "SlangCompilerInfo",
     ],
     deps = [
         "//glsl:bzl_lib",

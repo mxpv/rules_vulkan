@@ -2,14 +2,14 @@
 GLSL Toolchain
 """
 
-GlslInfo = provider(
+GlslCompilerInfo = provider(
     doc = "Information about GLSL compiler",
     fields = ["compiler"],
 )
 
 def _glsl_toolchain_impl(ctx):
     toolchain_info = platform_common.ToolchainInfo(
-        glslinfo = GlslInfo(
+        info = GlslCompilerInfo(
             compiler = ctx.executable.compiler,
         ),
     )

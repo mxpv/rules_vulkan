@@ -5,7 +5,7 @@ A rule to compile Slang shaders.
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def _slang_shader_impl(ctx):
-    slang = ctx.toolchains["//slang:toolchain_type"].slanginfo
+    slang = ctx.toolchains["//slang:toolchain_type"].info
 
     src = ctx.file.src
 

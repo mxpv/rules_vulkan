@@ -5,7 +5,7 @@ A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def _hlsl_shader_impl(ctx):
-    dxc = ctx.toolchains["//hlsl:toolchain_type"].hlslinfo
+    dxc = ctx.toolchains["//hlsl:toolchain_type"].info
     src = ctx.file.src
 
     # Declare output file

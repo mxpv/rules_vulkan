@@ -5,7 +5,7 @@ A rule to compile GLSL shaders.
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def _hlsl_shader_impl(ctx):
-    glsl = ctx.toolchains["//glsl:toolchain_type"].glslinfo
+    glsl = ctx.toolchains["//glsl:toolchain_type"].info
 
     src = ctx.file.src
 

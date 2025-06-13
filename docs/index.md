@@ -165,6 +165,25 @@ slang_toolchain(<a href="#slang_toolchain-name">name</a>, <a href="#slang_toolch
 | <a id="slang_toolchain-env"></a>env |  Environment variables to set for the Slang compiler.<br><br>This can be used to set additional paths or configurations needed by the Slang compiler.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
 
 
+<a id="GlslCompilerInfo"></a>
+
+## GlslCompilerInfo
+
+<pre>
+load("@rules_vulkan//docs:docs_hub.bzl", "GlslCompilerInfo")
+
+GlslCompilerInfo(<a href="#GlslCompilerInfo-compiler">compiler</a>)
+</pre>
+
+Information about GLSL compiler
+
+**FIELDS**
+
+| Name  | Description |
+| :------------- | :------------- |
+| <a id="GlslCompilerInfo-compiler"></a>compiler |  -    |
+
+
 <a id="download_sdk"></a>
 
 ## download_sdk
