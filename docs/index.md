@@ -184,6 +184,46 @@ Information about GLSL compiler
 | <a id="GlslCompilerInfo-compiler"></a>compiler |  -    |
 
 
+<a id="HlslCompilerInfo"></a>
+
+## HlslCompilerInfo
+
+<pre>
+load("@rules_vulkan//docs:docs_hub.bzl", "HlslCompilerInfo")
+
+HlslCompilerInfo(<a href="#HlslCompilerInfo-compiler">compiler</a>, <a href="#HlslCompilerInfo-env">env</a>)
+</pre>
+
+Information about HLSL compiler
+
+**FIELDS**
+
+| Name  | Description |
+| :------------- | :------------- |
+| <a id="HlslCompilerInfo-compiler"></a>compiler |  -    |
+| <a id="HlslCompilerInfo-env"></a>env |  -    |
+
+
+<a id="SlangCompilerInfo"></a>
+
+## SlangCompilerInfo
+
+<pre>
+load("@rules_vulkan//docs:docs_hub.bzl", "SlangCompilerInfo")
+
+SlangCompilerInfo(<a href="#SlangCompilerInfo-compiler">compiler</a>, <a href="#SlangCompilerInfo-env">env</a>)
+</pre>
+
+Information about Slang compiler
+
+**FIELDS**
+
+| Name  | Description |
+| :------------- | :------------- |
+| <a id="SlangCompilerInfo-compiler"></a>compiler |  -    |
+| <a id="SlangCompilerInfo-env"></a>env |  -    |
+
+
 <a id="download_sdk"></a>
 
 ## download_sdk
