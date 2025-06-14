@@ -1,6 +1,8 @@
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
-load("@rules_vulkan//hlsl:toolchain.bzl", "hlsl_toolchain")
+load("@rules_cc//cc:cc_import.bzl", "cc_import")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_vulkan//glsl:toolchain.bzl", "glsl_toolchain")
+load("@rules_vulkan//hlsl:toolchain.bzl", "hlsl_toolchain")
 load("@rules_vulkan//slang:toolchain.bzl", "slang_toolchain")
 
 package(default_visibility = ["//visibility:public"])
@@ -24,10 +26,11 @@ cc_import(
 # This uses workaround from https://github.com/bazelbuild/bazel/issues/4748
 cc_library(
     name = "vulkan",
+    # buildifier: disable=constant-glob
     srcs = glob(["{lib_vulkan}"]),
     hdrs = [":headers"],
     includes = ["{include_path}"],
-    deps = [{vulkan_deps}]
+    deps = [{vulkan_deps}],
 )
 
 #
@@ -42,7 +45,7 @@ native_binary(
 hlsl_toolchain(
     name = "dxc_{os}",
     compiler = ":dxc",
-    env = { {dxc_env} },
+    env = {{dxc_env}},
 )
 
 toolchain(
@@ -60,7 +63,7 @@ toolchain(
 
 native_binary(
     name = "glslc",
-    src = "{bin_glslc}"
+    src = "{bin_glslc}",
 )
 
 glsl_toolchain(
@@ -83,13 +86,13 @@ toolchain(
 
 native_binary(
     name = "slangc",
-    src = "{bin_slangc}"
+    src = "{bin_slangc}",
 )
 
 slang_toolchain(
     name = "slang_{os}",
     compiler = ":slangc",
-    env = { {slang_env} },
+    env = {{slang_env}},
 )
 
 toolchain(
@@ -100,4 +103,3 @@ toolchain(
     toolchain = ":slang_{os}",
     toolchain_type = "@rules_vulkan//slang:toolchain_type",
 )
-
