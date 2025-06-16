@@ -58,7 +58,12 @@ def _hlsl_shader_impl(ctx):
 
     return [
         DefaultInfo(files = depset([out])),
-        ShaderInfo(),
+        ShaderInfo(
+            entry = "main",
+            stage = ctx.attr.stage,
+            defines = ctx.attr.defines,
+            target = ctx.attr.target_spv,
+        ),
     ]
 
 glsl_shader = rule(

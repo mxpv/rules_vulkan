@@ -8,11 +8,10 @@ ShaderInfo = provider(
 
     This is useful for building all kind of shader databases.
     """,
-    fields = [
-        "entry",  # Entry point of the shader
-        "stage",  # Shader stage (e.g., vertex, fragment)
-        "target",  # Shader target (this is compiler specific)
-        "defines",  # Preprocessor definitions
-        "includes",  # Include paths for shader compilation
-    ],
+    fields = {
+        "entry": "Shader entry point function name",
+        "stage": "Shader stage",
+        "defines": "List of shader defines used during compilation",
+        "target": "Compilation target (note: this depends on compiler used)",
+    },
 )
