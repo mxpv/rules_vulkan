@@ -59,6 +59,7 @@ def _hlsl_shader_impl(ctx):
     return [
         DefaultInfo(files = depset([out])),
         ShaderInfo(
+            label = str(ctx.label),
             entry = "main",
             stage = ctx.attr.stage,
             defines = ctx.attr.defines,

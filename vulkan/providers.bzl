@@ -9,6 +9,7 @@ ShaderInfo = provider(
     This is useful for building all kind of shader databases.
     """,
     fields = {
+        "label": "Target's label this metadata belongs to",
         "entry": "Shader entry point function name",
         "stage": "Shader stage",
         "defines": "List of shader defines used during compilation",
