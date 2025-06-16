@@ -3,6 +3,7 @@ load("@rules_vulkan//glsl:shader.bzl", "glsl_shader")
 load("@rules_vulkan//hlsl:shader.bzl", "hlsl_shader")
 load("@rules_vulkan//slang:shader.bzl", "slang_shader")
 load("@rules_vulkan//vulkan:rules.bzl", "shader_group")
+load(":metadata.bzl", "gather_metadata")
 
 hlsl_shader(
     name = "hello_hlsl",
@@ -54,9 +55,18 @@ shader_group(
     ],
 )
 
+gather_metadata(
+    name = "all_shaders_metadata",
+    out = "metadata.json",
+    deps = [":all_shaders"],
+)
+
 cc_binary(
     name = "app",
     srcs = ["main.c"],
-    data = [":all_shaders"],
+    data = [
+        ":all_shaders",
+        ":all_shaders_metadata",
+    ],
     deps = ["@vulkan_sdk_1.4.313//:vulkan"],
 )

@@ -71,6 +71,7 @@ def _slang_shader_impl(ctx):
     return [
         DefaultInfo(files = depset(outs)),
         ShaderInfo(
+            label = str(ctx.label),
             entry = ctx.attr.entry or "main",
             stage = ctx.attr.stage,
             defines = ctx.attr.defines,

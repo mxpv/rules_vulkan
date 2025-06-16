@@ -236,7 +236,7 @@ Information about HLSL compiler
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "ShaderInfo")
 
-ShaderInfo(<a href="#ShaderInfo-entry">entry</a>, <a href="#ShaderInfo-stage">stage</a>, <a href="#ShaderInfo-defines">defines</a>, <a href="#ShaderInfo-target">target</a>)
+ShaderInfo(<a href="#ShaderInfo-label">label</a>, <a href="#ShaderInfo-entry">entry</a>, <a href="#ShaderInfo-stage">stage</a>, <a href="#ShaderInfo-defines">defines</a>, <a href="#ShaderInfo-target">target</a>)
 </pre>
 
 Shader metadata returned by the shader targets during compilation.
@@ -247,6 +247,7 @@ This is useful for building all kind of shader databases.
 
 | Name  | Description |
 | :------------- | :------------- |
+| <a id="ShaderInfo-label"></a>label |  Target's label this metadata belongs to    |
 | <a id="ShaderInfo-entry"></a>entry |  Shader entry point function name    |
 | <a id="ShaderInfo-stage"></a>stage |  Shader stage    |
 | <a id="ShaderInfo-defines"></a>defines |  List of shader defines used during compilation    |
