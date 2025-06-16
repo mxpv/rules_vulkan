@@ -11,6 +11,7 @@ stardoc(
         "hlsl_shader",
         "slang_shader",
         "download_sdk",
+        "shader_group",
 
         # Toolchains
         "glsl_toolchain",

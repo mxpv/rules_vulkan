@@ -110,6 +110,31 @@ hlsl_toolchain(<a href="#hlsl_toolchain-name">name</a>, <a href="#hlsl_toolchain
 | <a id="hlsl_toolchain-env"></a>env |  Environment variables to set for the HLSL compiler.<br><br>This can be used to set additional paths or configurations needed by the HLSL compiler.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
 
 
+<a id="shader_group"></a>
+
+## shader_group
+
+<pre>
+load("@rules_vulkan//docs:docs_hub.bzl", "shader_group")
+
+shader_group(<a href="#shader_group-name">name</a>, <a href="#shader_group-deps">deps</a>)
+</pre>
+
+`shadergroup` is a rule to group multiple shaders together.
+
+This is a kin of `filegroup`, which forwards providers.
+
+Roughly the motivation for this is described in this [issue](https://github.com/bazelbuild/bazel/issues/8904).
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="shader_group-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="shader_group-deps"></a>deps |  List of shader targets to group together.<br><br>This can depend either on a shader target directly (HLSL, GLSL, or Slang) or any other `shader_group`.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
+
+
 <a id="slang_shader"></a>
 
 ## slang_shader
@@ -211,7 +236,7 @@ Information about HLSL compiler
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "ShaderInfo")
 
-ShaderInfo(<a href="#ShaderInfo-entry">entry</a>, <a href="#ShaderInfo-stage">stage</a>, <a href="#ShaderInfo-target">target</a>, <a href="#ShaderInfo-defines">defines</a>, <a href="#ShaderInfo-includes">includes</a>)
+ShaderInfo(<a href="#ShaderInfo-entry">entry</a>, <a href="#ShaderInfo-stage">stage</a>, <a href="#ShaderInfo-defines">defines</a>, <a href="#ShaderInfo-target">target</a>)
 </pre>
 
 Shader metadata returned by the shader targets during compilation.
@@ -222,11 +247,10 @@ This is useful for building all kind of shader databases.
 
 | Name  | Description |
 | :------------- | :------------- |
-| <a id="ShaderInfo-entry"></a>entry |  -    |
-| <a id="ShaderInfo-stage"></a>stage |  -    |
-| <a id="ShaderInfo-target"></a>target |  -    |
-| <a id="ShaderInfo-defines"></a>defines |  -    |
-| <a id="ShaderInfo-includes"></a>includes |  -    |
+| <a id="ShaderInfo-entry"></a>entry |  Shader entry point function name    |
+| <a id="ShaderInfo-stage"></a>stage |  Shader stage    |
+| <a id="ShaderInfo-defines"></a>defines |  List of shader defines used during compilation    |
+| <a id="ShaderInfo-target"></a>target |  Compilation target (note: this depends on compiler used)    |
 
 
 <a id="SlangCompilerInfo"></a>

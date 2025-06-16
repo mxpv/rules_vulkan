@@ -2,6 +2,7 @@ load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_vulkan//glsl:shader.bzl", "glsl_shader")
 load("@rules_vulkan//hlsl:shader.bzl", "hlsl_shader")
 load("@rules_vulkan//slang:shader.bzl", "slang_shader")
+load("@rules_vulkan//vulkan:rules.bzl", "shader_group")
 
 hlsl_shader(
     name = "hello_hlsl",
@@ -44,13 +45,18 @@ glsl_shader(
     target_spv = "spv1.6",
 )
 
-cc_binary(
-    name = "app",
-    srcs = ["main.c"],
-    data = [
+shader_group(
+    name = "all_shaders",
+    deps = [
         ":hello_glsl",
         ":hello_hlsl",
         ":hello_slang",
     ],
+)
+
+cc_binary(
+    name = "app",
+    srcs = ["main.c"],
+    data = [":all_shaders"],
     deps = ["@vulkan_sdk_1.4.313//:vulkan"],
 )
