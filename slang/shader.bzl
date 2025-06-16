@@ -3,6 +3,7 @@ A rule to compile Slang shaders.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("//vulkan:providers.bzl", "ShaderInfo")
 
 def _slang_shader_impl(ctx):
     slang = ctx.toolchains["//slang:toolchain_type"].info
@@ -67,7 +68,10 @@ def _slang_shader_impl(ctx):
         mnemonic = "SlangCompile",
     )
 
-    return [DefaultInfo(files = depset([out]))]
+    return [
+        DefaultInfo(files = depset(outs)),
+        ShaderInfo(),
+    ]
 
 slang_shader = rule(
     implementation = _slang_shader_impl,

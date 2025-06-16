@@ -3,6 +3,7 @@ A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("//vulkan:providers.bzl", "ShaderInfo")
 
 def _hlsl_shader_impl(ctx):
     dxc = ctx.toolchains["//hlsl:toolchain_type"].info
@@ -87,7 +88,10 @@ def _hlsl_shader_impl(ctx):
         mnemonic = "HlslCompile",
     )
 
-    return [DefaultInfo(files = depset([out]))]
+    return [
+        DefaultInfo(files = depset(outs)),
+        ShaderInfo(),
+    ]
 
 hlsl_shader = rule(
     implementation = _hlsl_shader_impl,
