@@ -5,6 +5,26 @@ A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//vulkan:providers.bzl", "ShaderInfo")
 
+def _map_stage(target):
+    if target.startswith("vs"):
+        return "vertex"
+    elif target.startswith("ps"):
+        return "pixel"
+    elif target.startswith("cs"):
+        return "compute"
+    elif target.startswith("gs"):
+        return "geometry"
+    elif target.startswith("hs"):
+        return "hull"
+    elif target.startswith("ds"):
+        return "domain"
+    elif target.startswith("ms"):
+        return "mesh"
+    elif target.startswith("as"):
+        return "amplification"
+    else:
+        return "unknown"
+
 def _hlsl_shader_impl(ctx):
     dxc = ctx.toolchains["//hlsl:toolchain_type"].info
     src = ctx.file.src
@@ -90,7 +110,12 @@ def _hlsl_shader_impl(ctx):
 
     return [
         DefaultInfo(files = depset(outs)),
-        ShaderInfo(),
+        ShaderInfo(
+            entry = ctx.attr.entry or "main",
+            stage = _map_stage(ctx.attr.target),
+            defines = ctx.attr.defines,
+            target = ctx.attr.target,
+        ),
     ]
 
 hlsl_shader = rule(
