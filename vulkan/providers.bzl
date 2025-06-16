@@ -15,3 +15,12 @@ ShaderInfo = provider(
         "target": "Compilation target (note: this depends on compiler used)",
     },
 )
+
+ShaderGroupInfo = provider(
+    doc = """
+    A collection of shader infos.
+    """,
+    fields = {
+        "list": "List of ShaderInfo structures",
+    },
+)

@@ -127,4 +127,5 @@ slang_shader = rule(
         ),
     },
     toolchains = [":toolchain_type"],
+    provides = [ShaderInfo],
 )
