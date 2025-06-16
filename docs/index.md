@@ -126,6 +126,10 @@ This is a kin of `filegroup`, which forwards providers.
 
 Roughly the motivation for this is described in this [issue](https://github.com/bazelbuild/bazel/issues/8904).
 
+There are a few use cases where this can be useful:
+- Group a few related shaders together (e.g. vertex + pixel shader).
+- Group lots of shaders to build a library or a database. Refer to `e2e/smoke` example how to approach this.
+
 **ATTRIBUTES**
 
 
