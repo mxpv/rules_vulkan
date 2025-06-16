@@ -5,6 +5,7 @@ bzl_library(
     srcs = [
         "defs.bzl",
         "extensions.bzl",
+        "providers.bzl",
     ],
     visibility = ["//docs:__subpackages__"],
     deps = ["//vulkan/private:bzl_lib"],

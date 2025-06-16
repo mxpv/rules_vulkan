@@ -3,6 +3,7 @@ A rule to compile GLSL shaders.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("//vulkan:providers.bzl", "ShaderInfo")
 
 def _hlsl_shader_impl(ctx):
     glsl = ctx.toolchains["//glsl:toolchain_type"].info
@@ -55,7 +56,10 @@ def _hlsl_shader_impl(ctx):
         mnemonic = "GlslCompile",
     )
 
-    return [DefaultInfo(files = depset([out]))]
+    return [
+        DefaultInfo(files = depset([out])),
+        ShaderInfo(),
+    ]
 
 glsl_shader = rule(
     implementation = _hlsl_shader_impl,

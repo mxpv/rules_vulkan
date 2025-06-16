@@ -21,6 +21,9 @@ stardoc(
         "GlslCompilerInfo",
         "HlslCompilerInfo",
         "SlangCompilerInfo",
+
+        # Providers
+        "ShaderInfo",
     ],
     deps = [
         "//glsl:bzl_lib",

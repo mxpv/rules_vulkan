@@ -204,6 +204,31 @@ Information about HLSL compiler
 | <a id="HlslCompilerInfo-env"></a>env |  -    |
 
 
+<a id="ShaderInfo"></a>
+
+## ShaderInfo
+
+<pre>
+load("@rules_vulkan//docs:docs_hub.bzl", "ShaderInfo")
+
+ShaderInfo(<a href="#ShaderInfo-entry">entry</a>, <a href="#ShaderInfo-stage">stage</a>, <a href="#ShaderInfo-target">target</a>, <a href="#ShaderInfo-defines">defines</a>, <a href="#ShaderInfo-includes">includes</a>)
+</pre>
+
+Shader metadata returned by the shader targets during compilation.
+
+This is useful for building all kind of shader databases.
+
+**FIELDS**
+
+| Name  | Description |
+| :------------- | :------------- |
+| <a id="ShaderInfo-entry"></a>entry |  -    |
+| <a id="ShaderInfo-stage"></a>stage |  -    |
+| <a id="ShaderInfo-target"></a>target |  -    |
+| <a id="ShaderInfo-defines"></a>defines |  -    |
+| <a id="ShaderInfo-includes"></a>includes |  -    |
+
+
 <a id="SlangCompilerInfo"></a>
 
 ## SlangCompilerInfo
