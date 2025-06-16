@@ -113,6 +113,7 @@ def _hlsl_shader_impl(ctx):
         ShaderInfo(
             label = str(ctx.label),
             entry = ctx.attr.entry or "main",
+            outs = [f.short_path for f in outs],
             stage = _map_stage(ctx.attr.target),
             defines = ctx.attr.defines,
             target = ctx.attr.target,

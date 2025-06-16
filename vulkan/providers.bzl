@@ -10,6 +10,7 @@ ShaderInfo = provider(
     """,
     fields = {
         "label": "Target's label this metadata belongs to",
+        "outs": "List of compiler outputs",
         "entry": "Shader entry point function name",
         "stage": "Shader stage",
         "defines": "List of shader defines used during compilation",
