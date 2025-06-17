@@ -1,8 +1,8 @@
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_pkg//:pkg.bzl", "pkg_zip")
-load("@rules_vulkan//glsl:shader.bzl", "glsl_shader")
-load("@rules_vulkan//hlsl:shader.bzl", "hlsl_shader")
-load("@rules_vulkan//slang:shader.bzl", "slang_shader")
+load("@rules_vulkan//glsl:rules.bzl", "glsl_shader")
+load("@rules_vulkan//hlsl:rules.bzl", "hlsl_shader")
+load("@rules_vulkan//slang:rules.bzl", "slang_shader")
 load("@rules_vulkan//vulkan:rules.bzl", "shader_group")
 load(":metadata.bzl", "gather_metadata")
 
