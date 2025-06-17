@@ -11,18 +11,23 @@ def _shader_group_impl(ctx):
     all_infos = []
     src_map = {}
 
-    prefix = ctx.attr.pkg_prefix
+    prefix = ctx.attr.pkg_prefix or ""
 
     for dep in ctx.attr.deps:
-        files = dep[DefaultInfo].files.to_list()
-        all_files.extend(files)
-        for f in files:
-            src_map[paths.join(prefix, f.basename)] = f
-
         if ShaderInfo in dep:
             all_infos.append(dep[ShaderInfo])
         elif ShaderGroupInfo in dep:
             all_infos.extend(dep[ShaderGroupInfo].list)
+
+        # Recursively merge dest_src_map if dep already provides PackageFilesInfo
+        if PackageFilesInfo in dep:
+            for k, v in dep[PackageFilesInfo].dest_src_map.items():
+                src_map[paths.join(prefix, k)] = v
+        else:
+            for f in dep[DefaultInfo].files.to_list():
+                src_map[paths.join(prefix, f.basename)] = f
+
+    all_files.extend(src_map.values())
 
     return [
         DefaultInfo(files = depset(all_files)),
