@@ -2,14 +2,22 @@
 Common Vulkan rules.
 """
 
+load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@rules_pkg//pkg:providers.bzl", "PackageFilesInfo")
 load("//vulkan:providers.bzl", "ShaderGroupInfo", "ShaderInfo")
 
 def _shader_group_impl(ctx):
     all_files = []
     all_infos = []
+    src_map = {}
+
+    prefix = ctx.attr.pkg_prefix
 
     for dep in ctx.attr.deps:
-        all_files.extend(dep[DefaultInfo].files.to_list())
+        files = dep[DefaultInfo].files.to_list()
+        all_files.extend(files)
+        for f in files:
+            src_map[paths.join(prefix, f.basename)] = f
 
         if ShaderInfo in dep:
             all_infos.append(dep[ShaderInfo])
@@ -19,6 +27,7 @@ def _shader_group_impl(ctx):
     return [
         DefaultInfo(files = depset(all_files)),
         ShaderGroupInfo(list = all_infos),
+        PackageFilesInfo(dest_src_map = src_map),
     ]
 
 shader_group = rule(
@@ -44,6 +53,9 @@ shader_group = rule(
             allow_files = True,
             providers = [[ShaderInfo], [ShaderGroupInfo]],
         ),
+        "pkg_prefix": attr.string(
+            doc = "If using with `rules_pkg`, sub-directory in the destination archive",
+        ),
     },
-    provides = [ShaderGroupInfo],
+    provides = [ShaderGroupInfo, PackageFilesInfo],
 )
