@@ -1,4 +1,5 @@
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@rules_pkg//:pkg.bzl", "pkg_zip")
 load("@rules_vulkan//glsl:shader.bzl", "glsl_shader")
 load("@rules_vulkan//hlsl:shader.bzl", "hlsl_shader")
 load("@rules_vulkan//slang:shader.bzl", "slang_shader")
@@ -48,6 +49,10 @@ glsl_shader(
 
 shader_group(
     name = "all_shaders",
+    # Shader groups play nicely with `rules_pkg` and allow specifying location inside of an arhive.
+    # See https://github.com/bazelbuild/rules_pkg/blob/main/docs/0.10.0/reference.md#pkg_files-prefix
+    # Essentially, shader groups can be used inplace of `pkg_files` to bundle shader outputs.
+    pkg_prefix = "shaders/",
     deps = [
         ":hello_glsl",
         ":hello_hlsl",
@@ -56,17 +61,27 @@ shader_group(
 )
 
 gather_metadata(
-    name = "all_shaders_metadata",
+    name = "metadata",
     out = "metadata.json",
     deps = [":all_shaders"],
+)
+
+# This produces a new ZIP archive with metadata.json at root and ./shaders subdirectory with all shader outputs.
+pkg_zip(
+    name = "database",
+    srcs = [
+        ":all_shaders",
+        ":metadata",
+    ],
+    out = "database.zip",
+    compression_level = 0,  # Don't compress, just bundle files.
 )
 
 cc_binary(
     name = "app",
     srcs = ["main.c"],
     data = [
-        ":all_shaders",
-        ":all_shaders_metadata",
+        ":database",
     ],
     deps = ["@vulkan_sdk_1.4.313//:vulkan"],
 )

@@ -117,7 +117,7 @@ hlsl_toolchain(<a href="#hlsl_toolchain-name">name</a>, <a href="#hlsl_toolchain
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "shader_group")
 
-shader_group(<a href="#shader_group-name">name</a>, <a href="#shader_group-deps">deps</a>)
+shader_group(<a href="#shader_group-name">name</a>, <a href="#shader_group-deps">deps</a>, <a href="#shader_group-pkg_prefix">pkg_prefix</a>)
 </pre>
 
 `shadergroup` is a rule to group multiple shaders together.
@@ -137,6 +137,7 @@ There are a few use cases where this can be useful:
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="shader_group-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="shader_group-deps"></a>deps |  List of shader targets to group together.<br><br>This can depend either on a shader target directly (HLSL, GLSL, or Slang) or any other `shader_group`.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
+| <a id="shader_group-pkg_prefix"></a>pkg_prefix |  If using with `rules_pkg`, sub-directory in the destination archive   | String | optional |  `""`  |
 
 
 <a id="slang_shader"></a>
