@@ -76,6 +76,12 @@ jobs:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
           repository-cache: true
-      - run: bazelisk run :app --verbose_failures
+      - run: |
+          # Build test app
+          bazelisk run :app --verbose_failures
+          # Compilers must be callable directly
+          bazelisk run "@vulkan_sdk_1.4.313//:dxc" -- -help
+          bazelisk run "@vulkan_sdk_1.4.313//:slangc" -- -help
+
         working-directory: e2e/smoke
 

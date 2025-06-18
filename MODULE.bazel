@@ -7,6 +7,16 @@ module(
 bazel_dep(name = "platforms", version = "1.0.0")
 bazel_dep(name = "rules_cc", version = "0.1.1")
 bazel_dep(name = "bazel_skylib", version = "1.7.1")
+
+# Remove this once a new release of bazel_skylib (> 1.7.1 is out),
+# we need `env` in `native_binary` rule.
+# See https://github.com/bazelbuild/bazel-skylib/pull/561
+git_override(
+    module_name = "bazel_skylib",
+    commit = "25a8e9d60687fee887e54dcb9560ef08777235de",
+    remote = "https://github.com/bazelbuild/bazel-skylib.git",
+)
+
 bazel_dep(name = "rules_pkg", version = "1.1.0")
 
 bazel_dep(name = "stardoc", version = "0.8.0", dev_dependency = True)
