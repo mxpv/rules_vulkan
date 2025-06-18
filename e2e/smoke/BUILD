@@ -30,6 +30,7 @@ slang_shader(
     defines = ["USE_VULKAN"],
     entry = "CSMain",
     lang = "slang",
+    out_depfile = "hello_slang.dep",
     out_reflect = "hello_slang.json",
     profile = "glsl_450",
     stage = "compute",

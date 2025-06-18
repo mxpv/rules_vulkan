@@ -29,31 +29,30 @@ def _slang_shader_impl(ctx):
     ])
 
     if ctx.attr.stage:
-        args.add("-stage")
-        args.add(ctx.attr.stage)
+        args.add("-stage", ctx.attr.stage)
 
     if ctx.attr.entry:
-        args.add("-entry")
-        args.add(ctx.attr.entry)
+        args.add("-entry", ctx.attr.entry)
 
     if ctx.attr.lang:
-        args.add("-lang")
-        args.add(ctx.attr.lang)
+        args.add("-lang", ctx.attr.lang)
 
     for define in ctx.attr.defines:
-        args.add("-D")
-        args.add(define)
+        args.add("-D", define)
 
     for path in ctx.attr.includes:
-        args.add("-I")
-        args.add(path)
+        args.add("-I", path)
 
     # Emit reflection data to a file
     if ctx.attr.out_reflect:
         out_reflect = ctx.actions.declare_file(ctx.attr.out_reflect)
-        args.add("-reflection-json")
-        args.add(out_reflect)
+        args.add("-reflection-json", out_reflect)
         outs.append(out_reflect)
+
+    if ctx.attr.out_depfile:
+        out_depfile = ctx.actions.declare_file(ctx.attr.out_depfile)
+        args.add("-depfile", out_depfile)
+        outs.append(out_depfile)
 
     # Input shader source file
     args.add(src.path)
@@ -97,6 +96,9 @@ slang_shader = rule(
         "out_reflect": attr.string(
             doc = "Emit reflection data in JSON format to a file",
         ),
+        "out_depfile": attr.string(
+            doc = "Save the source file dependency list in a file (-depfile <path>)",
+        ),
         "entry": attr.string(
             doc = "Entry point name",
         ),
@@ -115,14 +117,14 @@ slang_shader = rule(
         ),
         "profile": attr.string(
             mandatory = True,
-            doc = "Shader profile for code generation",
+            doc = "Shader profile for code generation (sm_6_6, vs_6_6, glsl_460, etc)",
         ),
         "target": attr.string(
             mandatory = True,
-            doc = "Format in which code should be generated",
+            doc = "Format in which code should be generated (hlsl, dxil, dxil-asm, glsl, spirv, metal, metallib, etc)",
         ),
         "lang": attr.string(
-            doc = "Set language for the shader",
+            doc = "Set source language for the shader (slang, hlsl, glsl, cpp, etc)",
         ),
         "copts": attr.string_list(
             doc = "Additional arguments to pass to the compiler",
