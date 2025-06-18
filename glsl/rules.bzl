@@ -2,6 +2,7 @@
 A rule to compile GLSL shaders.
 """
 
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
 
 def _hlsl_shader_impl(ctx):
@@ -34,7 +35,11 @@ def _hlsl_shader_impl(ctx):
         args.add(ctx.attr.target_spv, format = "--target-spv=%s")
 
     # Append user-defined extra arguments
-    args.add_all(ctx.attr.copts)
+    args.add_all(ctx.attr.opts)
+
+    # Append build settings options.
+    extra_opts = ctx.attr._extra_opts[BuildSettingInfo].value
+    args.add_all(extra_opts, uniquify = True)
 
     # Specify shader inputs.
     src = ctx.file.src
@@ -108,8 +113,12 @@ glsl_shader = rule(
             For example, default for `vulkan1.0` is `spv1.0`.
             """,
         ),
-        "copts": attr.string_list(
+        "opts": attr.string_list(
             doc = "Additional arguments to pass to the compiler",
+        ),
+        "_extra_opts": attr.label(
+            default = ":extra_opts",
+            doc = "Add extra options provided via Bazel's build settings.",
         ),
     },
     toolchains = [":toolchain_type"],

@@ -11,11 +11,11 @@ hlsl_shader(
     src = "shader.hlsl",
     hdrs = ["//common:common_headers"],
     asm = True,  # Output assembly code
-    copts = ["-Ges"],  # Additional compiler options.
     defines = ["USE_VULKAN"],
     entry = "CSMain",
     hash = True,  # Output shader hash
     hlsl = "2021",
+    opts = ["-Ges"],  # Additional compiler options.
     reflect = True,  # Output reflection file
     target = "cs_6_0",
 )
@@ -24,11 +24,14 @@ slang_shader(
     name = "hello_slang",
     src = "shader.hlsl",
     hdrs = ["//common:common_headers"],
-    copts = ["-warnings-as-errors=all"],
     defines = ["USE_VULKAN"],
     depfile = True,
     entry = "CSMain",
-    lang = "slang",
+    lang = "hlsl",
+    opts = [
+        "-warnings-as-errors",
+        "all",
+    ],
     profile = "glsl_450",
     reflect = True,
     stage = "compute",

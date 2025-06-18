@@ -2,6 +2,7 @@
 A rule to compile Slang shaders.
 """
 
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
 
 def _slang_shader_impl(ctx):
@@ -45,6 +46,13 @@ def _slang_shader_impl(ctx):
         out = ctx.actions.declare_file(ctx.label.name + ".dep")
         args.add("-depfile", out.path)
         outs.append(out)
+
+    # Append user-defined extra arguments
+    args.add_all(ctx.attr.opts)
+
+    # Append build settings options.
+    extra_opts = ctx.attr._extra_opts[BuildSettingInfo].value
+    args.add_all(extra_opts, uniquify = True)
 
     # Input shader source file
     src = ctx.file.src
@@ -116,8 +124,12 @@ slang_shader = rule(
         "lang": attr.string(
             doc = "Set source language for the shader (slang, hlsl, glsl, cpp, etc)",
         ),
-        "copts": attr.string_list(
+        "opts": attr.string_list(
             doc = "Additional arguments to pass to the compiler",
+        ),
+        "_extra_opts": attr.label(
+            default = ":extra_opts",
+            doc = "Add extra options provided via Bazel's build settings.",
         ),
     },
     toolchains = [":toolchain_type"],

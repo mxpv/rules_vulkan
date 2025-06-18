@@ -32,6 +32,7 @@ stardoc(
         "//slang:bzl_lib",
         "//vulkan:bzl_lib",
         "@bazel_skylib//lib:paths",
+        "@bazel_skylib//rules:common_settings",
         "@rules_pkg//pkg:providers.bzl",
     ],
 )

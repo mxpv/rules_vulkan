@@ -2,6 +2,7 @@
 A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 """
 
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
 
 def _map_stage(target):
@@ -56,27 +57,31 @@ def _hlsl_shader_impl(ctx):
 
     # Output assembly code
     if ctx.attr.asm:
-        out_asm = ctx.actions.declare_file(ctx.label.name + ".asm")
-        args.add("-Fc", out_asm)
-        outs.append(out_asm)
+        out = ctx.actions.declare_file(ctx.label.name + ".asm")
+        args.add("-Fc", out)
+        outs.append(out)
 
     # Output reflection
     if ctx.attr.reflect:
         out = ctx.actions.declare_file(ctx.label.name + ".reflect")
-        args.add("-Fre", out.path)
+        args.add("-Fre", out)
         outs.append(out)
 
     # Output hash.
     if ctx.attr.hash:
         out = ctx.actions.declare_file(ctx.label.name + ".hash")
-        args.add("-Fsh", out.path)
+        args.add("-Fsh", out)
         outs.append(out)
 
     if ctx.attr.spirv:
         args.add("-spirv")
 
     # Append user-defined extra arguments
-    args.add_all(ctx.attr.copts)
+    args.add_all(ctx.attr.opts)
+
+    # Append build settings options.
+    extra_opts = ctx.attr._extra_opts[BuildSettingInfo].value
+    args.add_all(extra_opts, uniquify = True)
 
     # Specify input shader source file
     src = ctx.file.src
@@ -144,7 +149,7 @@ hlsl_shader = rule(
         "spirv": attr.bool(
             doc = "Generate SPIR-V code",
         ),
-        "copts": attr.string_list(
+        "opts": attr.string_list(
             doc = "Additional arguments to pass to the DXC compiler",
         ),
         "asm": attr.bool(
@@ -155,6 +160,10 @@ hlsl_shader = rule(
         ),
         "hash": attr.bool(
             doc = "Output shader hash to the given file (-Fsh <file>). This will produce <name>.hash file",
+        ),
+        "_extra_opts": attr.label(
+            default = ":extra_opts",
+            doc = "Add extra options provided via Bazel's build settings.",
         ),
     },
     toolchains = [":toolchain_type"],
