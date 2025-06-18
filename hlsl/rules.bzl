@@ -2,7 +2,6 @@
 A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 """
 
-load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//vulkan:providers.bzl", "ShaderInfo")
 
 def _map_stage(target):
@@ -27,27 +26,18 @@ def _map_stage(target):
 
 def _hlsl_shader_impl(ctx):
     dxc = ctx.toolchains["//hlsl:toolchain_type"].info
-    src = ctx.file.src
 
-    # Declare output file
-    out = ctx.attr.out
-    if not out:
-        out = paths.replace_extension(src.basename, ".cso")
-    out = ctx.actions.declare_file(out)
-
-    outs = [out]
-
-    entry = ctx.attr.entry
-    target = ctx.attr.target
+    out_obj = ctx.actions.declare_file(ctx.label.name + ".cso")
+    outs = [out_obj]
 
     args = ctx.actions.args()
 
     # Target + shader output path (required).
-    args.add_all(["-T", target, "-Fo", out.path])
+    args.add_all(["-T", ctx.attr.target, "-Fo", out_obj.path])
 
     # Entry point
-    if entry:
-        args.add("-E", entry)
+    if ctx.attr.entry:
+        args.add("-E", ctx.attr.entry)
 
     # Append macro defines
     for define in ctx.attr.defines:
@@ -61,25 +51,26 @@ def _hlsl_shader_impl(ctx):
         args.add("-HV", ctx.attr.hlsl)
 
     # Specify root signature from #define
-    if ctx.attr.root_sig:
-        args.add("-rootsig-define", ctx.attr.root_sig)
+    if ctx.attr.def_root_sig:
+        args.add("-rootsig-define", ctx.attr.def_root_sig)
 
     # Output assembly code
-    if ctx.attr.out_asm:
-        out_asm = ctx.actions.declare_file(ctx.attr.out_asm)
+    if ctx.attr.asm:
+        out_asm = ctx.actions.declare_file(ctx.label.name + ".asm")
         args.add("-Fc", out_asm)
         outs.append(out_asm)
 
-    # Reflect shader
-    if ctx.attr.out_reflect:
-        out_reflect = ctx.actions.declare_file(ctx.attr.out_reflect)
-        args.add("-Fre", out_reflect)
-        outs.append(out_reflect)
+    # Output reflection
+    if ctx.attr.reflect:
+        out = ctx.actions.declare_file(ctx.label.name + ".reflect")
+        args.add("-Fre", out.path)
+        outs.append(out)
 
-    if ctx.attr.out_hash:
-        out_hash = ctx.actions.declare_file(ctx.attr.out_hash)
-        args.add("-Fsh", out_hash)
-        outs.append(out_hash)
+    # Output hash.
+    if ctx.attr.hash:
+        out = ctx.actions.declare_file(ctx.label.name + ".hash")
+        args.add("-Fsh", out.path)
+        outs.append(out)
 
     if ctx.attr.spirv:
         args.add("-spirv")
@@ -87,7 +78,8 @@ def _hlsl_shader_impl(ctx):
     # Append user-defined extra arguments
     args.add_all(ctx.attr.copts)
 
-    # Output bytecode file path.
+    # Specify input shader source file
+    src = ctx.file.src
     args.add(src.path)
 
     ctx.actions.run(
@@ -104,7 +96,7 @@ def _hlsl_shader_impl(ctx):
         DefaultInfo(files = depset(outs)),
         ShaderInfo(
             label = str(ctx.label),
-            entry = ctx.attr.entry or "main",
+            entry = ctx.attr.entry,
             outs = [f.short_path for f in outs],
             stage = _map_stage(ctx.attr.target),
             defines = ctx.attr.defines,
@@ -116,6 +108,8 @@ hlsl_shader = rule(
     implementation = _hlsl_shader_impl,
     doc = """
     Rule to compile HLSL shaders using DirectXShaderCompiler.
+
+    The target will output <name>.cso file with bytecode output.
     """,
     attrs = {
         "src": attr.label(
@@ -123,10 +117,8 @@ hlsl_shader = rule(
             mandatory = True,
             doc = "Input HLSL shader source file",
         ),
-        "out": attr.string(
-            doc = "Compiled shader output file. If not specified, defaults to the source file name with '.cso' extension",
-        ),
         "entry": attr.string(
+            default = "main",
             doc = "Entry point name",
         ),
         "target": attr.string(
@@ -146,7 +138,7 @@ hlsl_shader = rule(
         "hlsl": attr.string(
             doc = "HLSL version to use (2016, 2017, 2018, 2021)",
         ),
-        "root_sig": attr.string(
+        "def_root_sig": attr.string(
             doc = "Read root signature from a #define (-rootsig-define <value>)",
         ),
         "spirv": attr.bool(
@@ -155,14 +147,14 @@ hlsl_shader = rule(
         "copts": attr.string_list(
             doc = "Additional arguments to pass to the DXC compiler",
         ),
-        "out_asm": attr.string(
-            doc = "Output assembly code listing file (-Fc <file>)",
+        "asm": attr.bool(
+            doc = "Output assembly code listing file (-Fc <file>). This will produce <name>.asm file",
         ),
-        "out_reflect": attr.string(
-            doc = "Output reflection to the given file (-Fre <file>)",
+        "reflect": attr.bool(
+            doc = "Output reflection to the given file (-Fre <file>). This will produce <name>.reflect file",
         ),
-        "out_hash": attr.string(
-            doc = "Output shader hash to the given file (-Fsh <file>)",
+        "hash": attr.bool(
+            doc = "Output shader hash to the given file (-Fsh <file>). This will produce <name>.hash file",
         ),
     },
     toolchains = [":toolchain_type"],

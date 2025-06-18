@@ -9,30 +9,28 @@ load(":metadata.bzl", "gather_metadata")
 hlsl_shader(
     name = "hello_hlsl",
     src = "shader.hlsl",
-    out = "hello_hlsl.cso",  # (Optional) Bytecode output file.
     hdrs = ["//common:common_headers"],
+    asm = True,  # Output assembly code
     copts = ["-Ges"],  # Additional compiler options.
     defines = ["USE_VULKAN"],
     entry = "CSMain",
+    hash = True,  # Output shader hash
     hlsl = "2021",
-    out_asm = "hello_hlsl.asm",  # Output assembly code
-    out_hash = "hello_hlsl.hash",  # Output shader hash
-    out_reflect = "hello_hlsl.reflect",  # Output reflection file
+    reflect = True,  # Output reflection file
     target = "cs_6_0",
 )
 
 slang_shader(
     name = "hello_slang",
     src = "shader.hlsl",
-    out = "hello_slang.spv",
     hdrs = ["//common:common_headers"],
     copts = ["-warnings-as-errors=all"],
     defines = ["USE_VULKAN"],
+    depfile = True,
     entry = "CSMain",
     lang = "slang",
-    out_depfile = "hello_slang.dep",
-    out_reflect = "hello_slang.json",
     profile = "glsl_450",
+    reflect = True,
     stage = "compute",
     target = "spirv",
 )
@@ -40,7 +38,6 @@ slang_shader(
 glsl_shader(
     name = "hello_glsl",
     src = "shader.glsl",
-    out = "hello_glsl.spv",
     hdrs = ["//common:common_headers"],
     stage = "comp",
     std = "450core",

@@ -48,6 +48,7 @@ Then use it in your `BUILD` files:
 
 ```bazel
 load("@rules_vulkan//hlsl:rules.bzl", "hlsl_shader")
+load("@rules_vulkan//glsl:rules.bzl", "glsl_shader")
 
 hlsl_shader(
     name = "hello_hlsl",
@@ -58,10 +59,16 @@ hlsl_shader(
     hdrs = [":common_headers"],
 )
 
+glsl_shader(
+    name = "hello_glsl",
+    src = "shader.glsl",
+    stage = "comp",
+)
+
 cc_binary(
     name = "app",
     srcs = ["main.c"],
-    data = [":hello_hlsl"],
+    data = [":hello_hlsl", ":hello_glsl"],
     deps = ["@vulkan_sdk_1.4.313//:vulkan"],
 )
 

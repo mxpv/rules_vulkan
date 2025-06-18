@@ -9,7 +9,7 @@ All project entries to generate documentation for.
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "glsl_shader")
 
-glsl_shader(<a href="#glsl_shader-name">name</a>, <a href="#glsl_shader-src">src</a>, <a href="#glsl_shader-out">out</a>, <a href="#glsl_shader-hdrs">hdrs</a>, <a href="#glsl_shader-copts">copts</a>, <a href="#glsl_shader-defines">defines</a>, <a href="#glsl_shader-includes">includes</a>, <a href="#glsl_shader-stage">stage</a>, <a href="#glsl_shader-std">std</a>, <a href="#glsl_shader-target_env">target_env</a>, <a href="#glsl_shader-target_spv">target_spv</a>)
+glsl_shader(<a href="#glsl_shader-name">name</a>, <a href="#glsl_shader-src">src</a>, <a href="#glsl_shader-hdrs">hdrs</a>, <a href="#glsl_shader-copts">copts</a>, <a href="#glsl_shader-defines">defines</a>, <a href="#glsl_shader-includes">includes</a>, <a href="#glsl_shader-stage">stage</a>, <a href="#glsl_shader-std">std</a>, <a href="#glsl_shader-target_env">target_env</a>, <a href="#glsl_shader-target_spv">target_spv</a>)
 </pre>
 
 Rule to compile GLSL shader.
@@ -21,7 +21,6 @@ Rule to compile GLSL shader.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="glsl_shader-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="glsl_shader-src"></a>src |  Input GLSL shader source to compile   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
-| <a id="glsl_shader-out"></a>out |  Compiled shader output file. If not specified, defaults to the source file name with '.spv' extension   | String | optional |  `""`  |
 | <a id="glsl_shader-hdrs"></a>hdrs |  List of header files dependencies to be included in the shader compilation   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="glsl_shader-copts"></a>copts |  Additional arguments to pass to the compiler   | List of strings | optional |  `[]`  |
 | <a id="glsl_shader-defines"></a>defines |  List of macro defines   | List of strings | optional |  `[]`  |
@@ -60,11 +59,13 @@ GLSL Toolchain
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "hlsl_shader")
 
-hlsl_shader(<a href="#hlsl_shader-name">name</a>, <a href="#hlsl_shader-src">src</a>, <a href="#hlsl_shader-out">out</a>, <a href="#hlsl_shader-hdrs">hdrs</a>, <a href="#hlsl_shader-copts">copts</a>, <a href="#hlsl_shader-defines">defines</a>, <a href="#hlsl_shader-entry">entry</a>, <a href="#hlsl_shader-hlsl">hlsl</a>, <a href="#hlsl_shader-includes">includes</a>, <a href="#hlsl_shader-out_asm">out_asm</a>, <a href="#hlsl_shader-out_hash">out_hash</a>,
-            <a href="#hlsl_shader-out_reflect">out_reflect</a>, <a href="#hlsl_shader-root_sig">root_sig</a>, <a href="#hlsl_shader-spirv">spirv</a>, <a href="#hlsl_shader-target">target</a>)
+hlsl_shader(<a href="#hlsl_shader-name">name</a>, <a href="#hlsl_shader-src">src</a>, <a href="#hlsl_shader-hdrs">hdrs</a>, <a href="#hlsl_shader-asm">asm</a>, <a href="#hlsl_shader-copts">copts</a>, <a href="#hlsl_shader-def_root_sig">def_root_sig</a>, <a href="#hlsl_shader-defines">defines</a>, <a href="#hlsl_shader-entry">entry</a>, <a href="#hlsl_shader-hash">hash</a>, <a href="#hlsl_shader-hlsl">hlsl</a>, <a href="#hlsl_shader-includes">includes</a>,
+            <a href="#hlsl_shader-reflect">reflect</a>, <a href="#hlsl_shader-spirv">spirv</a>, <a href="#hlsl_shader-target">target</a>)
 </pre>
 
 Rule to compile HLSL shaders using DirectXShaderCompiler.
+
+The target will output <name>.cso file with bytecode output.
 
 **ATTRIBUTES**
 
@@ -73,17 +74,16 @@ Rule to compile HLSL shaders using DirectXShaderCompiler.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="hlsl_shader-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="hlsl_shader-src"></a>src |  Input HLSL shader source file   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
-| <a id="hlsl_shader-out"></a>out |  Compiled shader output file. If not specified, defaults to the source file name with '.cso' extension   | String | optional |  `""`  |
 | <a id="hlsl_shader-hdrs"></a>hdrs |  List of header files dependencies to be included in the shader compilation   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
+| <a id="hlsl_shader-asm"></a>asm |  Output assembly code listing file (-Fc <file>). This will produce <name>.asm file   | Boolean | optional |  `False`  |
 | <a id="hlsl_shader-copts"></a>copts |  Additional arguments to pass to the DXC compiler   | List of strings | optional |  `[]`  |
+| <a id="hlsl_shader-def_root_sig"></a>def_root_sig |  Read root signature from a #define (-rootsig-define <value>)   | String | optional |  `""`  |
 | <a id="hlsl_shader-defines"></a>defines |  List of macro defines   | List of strings | optional |  `[]`  |
-| <a id="hlsl_shader-entry"></a>entry |  Entry point name   | String | optional |  `""`  |
+| <a id="hlsl_shader-entry"></a>entry |  Entry point name   | String | optional |  `"main"`  |
+| <a id="hlsl_shader-hash"></a>hash |  Output shader hash to the given file (-Fsh <file>). This will produce <name>.hash file   | Boolean | optional |  `False`  |
 | <a id="hlsl_shader-hlsl"></a>hlsl |  HLSL version to use (2016, 2017, 2018, 2021)   | String | optional |  `""`  |
 | <a id="hlsl_shader-includes"></a>includes |  List of directories to be added to the CLI to search for include files   | List of strings | optional |  `[]`  |
-| <a id="hlsl_shader-out_asm"></a>out_asm |  Output assembly code listing file (-Fc <file>)   | String | optional |  `""`  |
-| <a id="hlsl_shader-out_hash"></a>out_hash |  Output shader hash to the given file (-Fsh <file>)   | String | optional |  `""`  |
-| <a id="hlsl_shader-out_reflect"></a>out_reflect |  Output reflection to the given file (-Fre <file>)   | String | optional |  `""`  |
-| <a id="hlsl_shader-root_sig"></a>root_sig |  Read root signature from a #define (-rootsig-define <value>)   | String | optional |  `""`  |
+| <a id="hlsl_shader-reflect"></a>reflect |  Output reflection to the given file (-Fre <file>). This will produce <name>.reflect file   | Boolean | optional |  `False`  |
 | <a id="hlsl_shader-spirv"></a>spirv |  Generate SPIR-V code   | Boolean | optional |  `False`  |
 | <a id="hlsl_shader-target"></a>target |  Target profile (e.g., cs_6_0, ps_6_0, etc.)   | String | required |  |
 
@@ -147,8 +147,8 @@ There are a few use cases where this can be useful:
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "slang_shader")
 
-slang_shader(<a href="#slang_shader-name">name</a>, <a href="#slang_shader-src">src</a>, <a href="#slang_shader-out">out</a>, <a href="#slang_shader-hdrs">hdrs</a>, <a href="#slang_shader-copts">copts</a>, <a href="#slang_shader-defines">defines</a>, <a href="#slang_shader-entry">entry</a>, <a href="#slang_shader-includes">includes</a>, <a href="#slang_shader-lang">lang</a>, <a href="#slang_shader-out_depfile">out_depfile</a>, <a href="#slang_shader-out_reflect">out_reflect</a>,
-             <a href="#slang_shader-profile">profile</a>, <a href="#slang_shader-stage">stage</a>, <a href="#slang_shader-target">target</a>)
+slang_shader(<a href="#slang_shader-name">name</a>, <a href="#slang_shader-src">src</a>, <a href="#slang_shader-hdrs">hdrs</a>, <a href="#slang_shader-copts">copts</a>, <a href="#slang_shader-defines">defines</a>, <a href="#slang_shader-depfile">depfile</a>, <a href="#slang_shader-entry">entry</a>, <a href="#slang_shader-includes">includes</a>, <a href="#slang_shader-lang">lang</a>, <a href="#slang_shader-profile">profile</a>, <a href="#slang_shader-reflect">reflect</a>,
+             <a href="#slang_shader-stage">stage</a>, <a href="#slang_shader-target">target</a>)
 </pre>
 
 Rule to compile Slang shaders.
@@ -160,16 +160,15 @@ Rule to compile Slang shaders.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="slang_shader-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="slang_shader-src"></a>src |  Input shader source to compile   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
-| <a id="slang_shader-out"></a>out |  Compiled shader output file. If not specified, defaults to the source file name with '.out' extension   | String | optional |  `""`  |
 | <a id="slang_shader-hdrs"></a>hdrs |  List of header files dependencies to be included in the shader compilation   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="slang_shader-copts"></a>copts |  Additional arguments to pass to the compiler   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-defines"></a>defines |  Insert a preprocessor macro   | List of strings | optional |  `[]`  |
+| <a id="slang_shader-depfile"></a>depfile |  Save the source file dependency list in a file (-depfile <name>.dep)   | Boolean | optional |  `False`  |
 | <a id="slang_shader-entry"></a>entry |  Entry point name   | String | optional |  `""`  |
 | <a id="slang_shader-includes"></a>includes |  Add a path to CLI to be used to search #include or #import operations   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-lang"></a>lang |  Set source language for the shader (slang, hlsl, glsl, cpp, etc)   | String | optional |  `""`  |
-| <a id="slang_shader-out_depfile"></a>out_depfile |  Save the source file dependency list in a file (-depfile <path>)   | String | optional |  `""`  |
-| <a id="slang_shader-out_reflect"></a>out_reflect |  Emit reflection data in JSON format to a file   | String | optional |  `""`  |
 | <a id="slang_shader-profile"></a>profile |  Shader profile for code generation (sm_6_6, vs_6_6, glsl_460, etc)   | String | required |  |
+| <a id="slang_shader-reflect"></a>reflect |  Emit reflection data in JSON format to a file <name>.json   | Boolean | optional |  `False`  |
 | <a id="slang_shader-stage"></a>stage |  Stage of an entry point function (vertex, pixel, compute, etc)   | String | optional |  `""`  |
 | <a id="slang_shader-target"></a>target |  Format in which code should be generated (hlsl, dxil, dxil-asm, glsl, spirv, metal, metallib, etc)   | String | required |  |
 

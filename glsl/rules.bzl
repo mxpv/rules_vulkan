@@ -2,27 +2,19 @@
 A rule to compile GLSL shaders.
 """
 
-load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//vulkan:providers.bzl", "ShaderInfo")
 
 def _hlsl_shader_impl(ctx):
     glsl = ctx.toolchains["//glsl:toolchain_type"].info
 
-    src = ctx.file.src
-
-    # Declare output file
-    out = ctx.attr.out
-    if not out:
-        out = paths.replace_extension(src.basename, ".cso")
-    out = ctx.actions.declare_file(out)
-
-    outs = [out]
+    out_obj = ctx.actions.declare_file(ctx.label.name + ".out")
+    outs = [out_obj]
 
     args = ctx.actions.args()
 
     args.add_all([
         "-o",
-        out.path,
+        out_obj.path,
         "-fshader-stage={}".format(ctx.attr.stage),
     ])
 
@@ -44,6 +36,8 @@ def _hlsl_shader_impl(ctx):
     # Append user-defined extra arguments
     args.add_all(ctx.attr.copts)
 
+    # Specify shader inputs.
+    src = ctx.file.src
     args.add(src.path)
 
     ctx.actions.run(
@@ -77,9 +71,6 @@ glsl_shader = rule(
             allow_single_file = True,
             mandatory = True,
             doc = "Input GLSL shader source to compile",
-        ),
-        "out": attr.string(
-            doc = "Compiled shader output file. If not specified, defaults to the source file name with '.spv' extension",
         ),
         "stage": attr.string(
             mandatory = True,

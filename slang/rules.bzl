@@ -2,21 +2,13 @@
 A rule to compile Slang shaders.
 """
 
-load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//vulkan:providers.bzl", "ShaderInfo")
 
 def _slang_shader_impl(ctx):
     slang = ctx.toolchains["//slang:toolchain_type"].info
 
-    src = ctx.file.src
-
-    # Declare output file
-    out = ctx.attr.out
-    if not out:
-        out = paths.replace_extension(src.basename, ".out")
-    out = ctx.actions.declare_file(out)
-
-    outs = [out]
+    out_obj = ctx.actions.declare_file(ctx.label.name + ".out")
+    outs = [out_obj]
 
     args = ctx.actions.args()
     args.add_all([
@@ -25,7 +17,7 @@ def _slang_shader_impl(ctx):
         "-target",
         ctx.attr.target,
         "-o",
-        out.path,
+        out_obj.path,
     ])
 
     if ctx.attr.stage:
@@ -44,17 +36,18 @@ def _slang_shader_impl(ctx):
         args.add("-I", path)
 
     # Emit reflection data to a file
-    if ctx.attr.out_reflect:
-        out_reflect = ctx.actions.declare_file(ctx.attr.out_reflect)
-        args.add("-reflection-json", out_reflect)
-        outs.append(out_reflect)
+    if ctx.attr.reflect:
+        out = ctx.actions.declare_file(ctx.label.name + ".json")
+        args.add("-reflection-json", out.path)
+        outs.append(out)
 
-    if ctx.attr.out_depfile:
-        out_depfile = ctx.actions.declare_file(ctx.attr.out_depfile)
-        args.add("-depfile", out_depfile)
-        outs.append(out_depfile)
+    if ctx.attr.depfile:
+        out = ctx.actions.declare_file(ctx.label.name + ".dep")
+        args.add("-depfile", out.path)
+        outs.append(out)
 
     # Input shader source file
+    src = ctx.file.src
     args.add(src.path)
 
     ctx.actions.run(
@@ -71,7 +64,7 @@ def _slang_shader_impl(ctx):
         DefaultInfo(files = depset(outs)),
         ShaderInfo(
             label = str(ctx.label),
-            entry = ctx.attr.entry or "main",
+            entry = ctx.attr.entry,
             outs = [f.short_path for f in outs],
             stage = ctx.attr.stage,
             defines = ctx.attr.defines,
@@ -90,14 +83,11 @@ slang_shader = rule(
             mandatory = True,
             doc = "Input shader source to compile",
         ),
-        "out": attr.string(
-            doc = "Compiled shader output file. If not specified, defaults to the source file name with '.out' extension",
+        "reflect": attr.bool(
+            doc = "Emit reflection data in JSON format to a file <name>.json",
         ),
-        "out_reflect": attr.string(
-            doc = "Emit reflection data in JSON format to a file",
-        ),
-        "out_depfile": attr.string(
-            doc = "Save the source file dependency list in a file (-depfile <path>)",
+        "depfile": attr.bool(
+            doc = "Save the source file dependency list in a file (-depfile <name>.dep)",
         ),
         "entry": attr.string(
             doc = "Entry point name",
