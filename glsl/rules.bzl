@@ -27,20 +27,19 @@ def _hlsl_shader_impl(ctx):
     ])
 
     for define in ctx.attr.defines:
-        args.append("-D{}".format(define))
+        args.add(define, format = "-D%s")
 
     for path in ctx.attr.includes:
-        args.add("-I")
-        args.add(path)
+        args.add("-I", path)
 
     if ctx.attr.std:
-        args.add("-std={}".format(ctx.attr.std))
+        args.add(ctx.attr.std, format = "-std=%s")
 
     if ctx.attr.target_env:
-        args.add("--target-env={}".format(ctx.attr.target_env))
+        args.add(ctx.attr.target_env, format = "--target-env=%s")
 
     if ctx.attr.target_spv:
-        args.add("--target-spv={}".format(ctx.attr.target_spv))
+        args.add(ctx.attr.target_spv, format = "--target-spv=%s")
 
     # Append user-defined extra arguments
     args.add_all(ctx.attr.copts)

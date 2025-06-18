@@ -47,46 +47,38 @@ def _hlsl_shader_impl(ctx):
 
     # Entry point
     if entry:
-        args.add("-E")
-        args.add(entry)
+        args.add("-E", entry)
 
     # Append macro defines
     for define in ctx.attr.defines:
-        args.add("-D")
-        args.add(define)
+        args.add("-D", define)
 
     for path in ctx.attr.includes:
-        args.add("-I")
-        args.add(path)
+        args.add("-I", path)
 
     # Specify HLSL version
     if ctx.attr.hlsl:
-        args.add("-HV")
-        args.add(ctx.attr.hlsl)
+        args.add("-HV", ctx.attr.hlsl)
 
     # Specify root signature from #define
     if ctx.attr.root_sig:
-        args.add("-rootsig-define")
-        args.add(ctx.attr.root_sig)
+        args.add("-rootsig-define", ctx.attr.root_sig)
 
     # Output assembly code
     if ctx.attr.out_asm:
         out_asm = ctx.actions.declare_file(ctx.attr.out_asm)
-        args.add("-Fc")
-        args.add(out_asm)
+        args.add("-Fc", out_asm)
         outs.append(out_asm)
 
     # Reflect shader
     if ctx.attr.out_reflect:
         out_reflect = ctx.actions.declare_file(ctx.attr.out_reflect)
-        args.add("-Fre")
-        args.add(out_reflect)
+        args.add("-Fre", out_reflect)
         outs.append(out_reflect)
 
     if ctx.attr.out_hash:
         out_hash = ctx.actions.declare_file(ctx.attr.out_hash)
-        args.add("-Fsh")
-        args.add(out_hash)
+        args.add("-Fsh", out_hash)
         outs.append(out_hash)
 
     if ctx.attr.spirv:
