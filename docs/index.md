@@ -147,7 +147,7 @@ There are a few use cases where this can be useful:
 <pre>
 load("@rules_vulkan//docs:docs_hub.bzl", "slang_shader")
 
-slang_shader(<a href="#slang_shader-name">name</a>, <a href="#slang_shader-src">src</a>, <a href="#slang_shader-hdrs">hdrs</a>, <a href="#slang_shader-defines">defines</a>, <a href="#slang_shader-depfile">depfile</a>, <a href="#slang_shader-entry">entry</a>, <a href="#slang_shader-includes">includes</a>, <a href="#slang_shader-lang">lang</a>, <a href="#slang_shader-opts">opts</a>, <a href="#slang_shader-profile">profile</a>, <a href="#slang_shader-reflect">reflect</a>,
+slang_shader(<a href="#slang_shader-name">name</a>, <a href="#slang_shader-srcs">srcs</a>, <a href="#slang_shader-hdrs">hdrs</a>, <a href="#slang_shader-defines">defines</a>, <a href="#slang_shader-depfile">depfile</a>, <a href="#slang_shader-entry">entry</a>, <a href="#slang_shader-includes">includes</a>, <a href="#slang_shader-lang">lang</a>, <a href="#slang_shader-opts">opts</a>, <a href="#slang_shader-profile">profile</a>, <a href="#slang_shader-reflect">reflect</a>,
              <a href="#slang_shader-stage">stage</a>, <a href="#slang_shader-target">target</a>)
 </pre>
 
@@ -159,7 +159,7 @@ Rule to compile Slang shaders.
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="slang_shader-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="slang_shader-src"></a>src |  Input shader source to compile   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="slang_shader-srcs"></a>srcs |  Slang input shader files   | <a href="https://bazel.build/concepts/labels">List of labels</a> | required |  |
 | <a id="slang_shader-hdrs"></a>hdrs |  List of header files dependencies to be included in the shader compilation   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="slang_shader-defines"></a>defines |  Insert a preprocessor macro   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-depfile"></a>depfile |  Save the source file dependency list in a file (-depfile <name>.dep)   | Boolean | optional |  `False`  |
