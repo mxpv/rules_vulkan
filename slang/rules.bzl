@@ -55,16 +55,15 @@ def _slang_shader_impl(ctx):
     args.add_all(extra_opts, uniquify = True)
 
     # Input shader source file
-    src = ctx.file.src
-    args.add(src.path)
+    args.add_all(ctx.files.srcs)
 
     ctx.actions.run(
-        inputs = [src] + ctx.files.hdrs,
+        inputs = ctx.files.srcs + ctx.files.hdrs,
         outputs = outs,
         arguments = [args],
         executable = slang.compiler,
         env = slang.env,
-        progress_message = "Compiling Slang shader %s" % src.path,
+        progress_message = "Compiling Slang shader %s" % ", ".join([f.short_path for f in ctx.files.srcs]),
         mnemonic = "SlangCompile",
     )
 
@@ -86,10 +85,10 @@ slang_shader = rule(
     Rule to compile Slang shaders.
     """,
     attrs = {
-        "src": attr.label(
-            allow_single_file = True,
+        "srcs": attr.label_list(
+            allow_files = True,
             mandatory = True,
-            doc = "Input shader source to compile",
+            doc = "Slang input shader files",
         ),
         "reflect": attr.bool(
             doc = "Emit reflection data in JSON format to a file <name>.json",

@@ -22,7 +22,7 @@ hlsl_shader(
 
 slang_shader(
     name = "hello_slang",
-    src = "shader.hlsl",
+    srcs = ["shader.hlsl"],
     hdrs = ["//common:common_headers"],
     defines = ["USE_VULKAN"],
     depfile = True,
