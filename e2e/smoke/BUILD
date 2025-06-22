@@ -50,7 +50,7 @@ glsl_shader(
 
 shader_group(
     name = "all_shaders",
-    # Shader groups play nicely with `rules_pkg` and allow specifying location inside of an arhive.
+    # Shader groups play nicely with `rules_pkg` and allow specifying location inside of an archive.
     # See https://github.com/bazelbuild/rules_pkg/blob/main/docs/0.10.0/reference.md#pkg_files-prefix
     # Essentially, shader groups can be used inplace of `pkg_files` to bundle shader outputs.
     pkg_prefix = "shaders/",
