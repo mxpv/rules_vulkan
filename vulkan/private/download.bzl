@@ -18,7 +18,7 @@ def _install_linux(ctx, url, sha256, version, attrs):
     })
 
 def _install_macos(ctx, url, sha256, version, attrs):
-    ctx.report_progress("Downloading intaller...")
+    ctx.report_progress("Downloading installer...")
     ctx.download_and_extract(
         url,
         sha256 = sha256,
