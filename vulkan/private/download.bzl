@@ -2,11 +2,16 @@
 Vulkan SDK downloader.
 """
 
-load(":resolve.bzl", "normalize_version", "resolve_rt_url", "resolve_sdk_url")
+load(":resolve.bzl", "find_exact", "normalize_os", "normalize_version")
 
-def _install_linux(ctx, url, sha256, version, attrs):
+def _install_linux(ctx, urls, version, attrs):
     ctx.report_progress("Downloading and unpacking tarball...")
-    ctx.download_and_extract(url, sha256 = sha256, output = "unpack", stripPrefix = version)
+    ctx.download_and_extract(
+        urls["url"],
+        sha256 = urls["sha"],
+        output = "unpack",
+        stripPrefix = version,
+    )
 
     ctx.symlink("unpack/x86_64/", "sdk")
 
@@ -17,11 +22,11 @@ def _install_linux(ctx, url, sha256, version, attrs):
         "{slang_env}": "'LD_LIBRARY_PATH': '{}'".format(ctx.path("sdk/lib")),
     })
 
-def _install_macos(ctx, url, sha256, version, attrs):
+def _install_macos(ctx, urls, version, attrs):
     ctx.report_progress("Downloading installer...")
     ctx.download_and_extract(
-        url,
-        sha256 = sha256,
+        urls["url"],
+        sha256 = urls["sha"],
     )
 
     # Install Vulkan components from terminal
@@ -59,21 +64,23 @@ def _install_macos(ctx, url, sha256, version, attrs):
         "{lib_vulkan}": "sdk/lib/libvulkan*.dylib",
     })
 
-def _install_windows(ctx, version, sdk_url, sdk_sha256, attrs):
+def _install_windows(ctx, urls, version, attrs):
     ctx.report_progress("Downloading installer...")
-    ctx.download(sdk_url, sha256 = sdk_sha256, output = "installer.exe")
+    ctx.download(
+        urls["url"],
+        sha256 = urls["sha"],
+        output = "installer.exe",
+    )
 
     skip_rt = ctx.attr.windows_skip_runtime
 
     if not skip_rt:
-        rt_url, rt_sha256 = resolve_rt_url(ctx, version)
-
         is_arm = ctx.os.arch.startswith("arm")
 
         ctx.report_progress("Downloading runtime...")
         ctx.download_and_extract(
-            rt_url,
-            sha256 = rt_sha256,
+            urls["runtime_url"],
+            sha256 = urls["runtime_sha"],
             strip_prefix = "VulkanRT-{}-{}-Components\\{}".format(
                 "ARM64" if is_arm else "X64",
                 version,
@@ -116,22 +123,22 @@ def _install_windows(ctx, version, sdk_url, sdk_sha256, attrs):
     })
 
 def _download_impl(ctx):
-    sha256 = ctx.attr.sha256
     version = ctx.attr.version
-
     if not version:
         fail("Vulkan SDK version must be specified")
-
     version = normalize_version(version)
 
-    # If no URL provided, try find one from the list of known releases.
-    url = ctx.attr.url
-    if not url:
-        url, sha256 = resolve_sdk_url(ctx, version)
+    # Fetch the list of download URLs for the provided SDK version
+    urls = ctx.attr.urls
+    if not urls:
+        # Fetch URLs for known SDK versions
+        urls = find_exact(version)
 
-    is_linux = ctx.os.name.startswith("linux")
-    is_mac = ctx.os.name.startswith("mac")
-    is_windows = ctx.os.name.startswith("windows")
+    # Fetch URLs for the current platform
+    platform = normalize_os(ctx.os.name, ctx.os.arch)
+    urls = urls.get(platform, None)
+    if not urls:
+        fail("Donwload URLs not found for platform {} and SDK {}", platform, version)
 
     attrs = {
         "{os}": "",
@@ -145,14 +152,14 @@ def _download_impl(ctx):
         "{dxc_env}": "",
     }
 
-    if is_linux:
-        _install_linux(ctx, url, sha256, version, attrs)
-    elif is_mac:
-        _install_macos(ctx, url, sha256, version, attrs)
-    elif is_windows:
-        _install_windows(ctx, version, url, sha256, attrs)
+    if platform == "linux":
+        _install_linux(ctx, urls, version, attrs)
+    elif platform == "mac":
+        _install_macos(ctx, urls, version, attrs)
+    elif platform in ["windows", "warm"]:
+        _install_windows(ctx, urls, version, attrs)
     else:
-        fail("Unsupported OS: {}".format(ctx.os.name))
+        fail("Unsupported OS: {}".format(platform))
 
     ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = attrs)
 
@@ -166,16 +173,13 @@ download_sdk = repository_rule(
 
     """,
     attrs = {
-        "url": attr.string(
+        "urls": attr.string_dict(
             mandatory = True,
             doc = """
-	    URL to download the SDK package from.
+            URLs and SHA256 checksum for each platform.
 
-	    Can be empty, in this case the download URL will be inherited from the provided version.
-	    """,
-        ),
-        "sha256": attr.string(
-            doc = "SDK package checksum",
+            Refer to the module extension doc for specifics.
+            """,
         ),
         "version": attr.string(
             mandatory = True,

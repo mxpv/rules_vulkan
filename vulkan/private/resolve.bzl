@@ -4,7 +4,16 @@ Module to resolve download URL and checksum from the provided SDK version.
 
 load(":versions.bzl", "VERSIONS")
 
-def _normalize_os(os, arch):
+def normalize_os(os, arch):
+    """
+    Convert Bazel OS string to LunarG platform name.
+
+    Args:
+        os: OS name fetched from the repository context.
+        arch: Arch name.
+    Returns:
+        Platform name
+    """
     if os.startswith("linux"):
         return "linux"
     elif os.startswith("mac"):
@@ -31,65 +40,19 @@ def normalize_version(version):
 
     return version
 
-def _find_exact(ctx, version):
+def find_exact(version):
     """
     Find exact record in the VERSIONS table from the provided version and OS/arch retrieved from the `ctx`
 
     Args:
-        ctx: repository context.
         version: exact version string to fetch info.
 
     Returns:
-    `None` if no record found, otherwise a struct with 'url' and 'sha' fields.
+        A dictionary with URLs for each supported platform.
+	Note: LunarG may release patch releases for certain platforms, so some platform entries might be missing.
     """
     platforms = VERSIONS.get(version, None)
     if not platforms:
-        return None
+        fail("Unsupported Vulkan SDK version: {}".format(version))
 
-    os = ctx.os.name
-    arch = ctx.os.arch
-
-    target = _normalize_os(os, arch)
-    info = platforms.get(target, None)
-    if not info:
-        return None
-
-    return info
-
-def resolve_sdk_url(ctx, version):
-    """
-    Finds download Vulkan SDK URL and checksum from version string.
-
-    Args:
-        ctx: The repository context.
-        version: 4 components Vulkan SDK version string (e.g., "1.4.313.1").
-
-    Returns:
-	A tuple containing the download URL and SHA256 checksum.
-    """
-
-    info = _find_exact(ctx, version)
-    if not info:
-        fail("Unknown Vulkan SDK version {} on {} {}", version, ctx.os.name, ctx.os.arch)
-
-    return info["url"], info["sha"]
-
-def resolve_rt_url(ctx, version):
-    """
-    Finds download URL for the runtime package (only applicable for Windows).
-
-    Args:
-        ctx: The repository context.
-        version: 4 components Vulkan SDK version string (e.g., "1.4.313.1").
-
-    Returns:
-	A tuple containing the download URL and SHA256 checksum for the runtime package.
-    """
-
-    # TODO: LunarG often provides runtime package for 0 patch version, e.g. 1.4.313.0, but not for 1.4.313.1.
-    # So if not found, try to find runtime package for the 0 patch version.
-    info = _find_exact(ctx, version)
-    if not info:
-        fail("Unknown Vulkan SDK runtime version {} on {} {}", version, ctx.os.name, ctx.os.arch)
-
-    return info["runtime_url"], info["runtime_sha"]
+    return platforms
