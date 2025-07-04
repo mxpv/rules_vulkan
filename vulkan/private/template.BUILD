@@ -45,7 +45,12 @@ native_binary(
 hlsl_toolchain(
     name = "dxc_{os}",
     compiler = ":dxc",
-    env = {{dxc_env}},
+    env = select({
+        "@platforms//os:windows": {
+            "PATH": "{sdk_root}/Bin",
+        },
+        "//conditions:default": {},
+    }),
 )
 
 toolchain(
