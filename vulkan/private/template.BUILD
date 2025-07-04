@@ -134,3 +134,15 @@ toolchain(
     toolchain = ":slang_{os}",
     toolchain_type = "@rules_vulkan//slang:toolchain_type",
 )
+
+#
+# Spirv-cross
+#
+
+native_binary(
+    name = "spirv_cross",
+    src = select({
+        "@platforms//os:windows": "sdk/Bin/spirv-cross.exe",
+        "//conditions:default": "sdk/bin/spirv-cross",
+    }),
+)
