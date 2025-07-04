@@ -116,8 +116,6 @@ def _install_windows(ctx, urls, version, attrs):
         "{sdk_root}": str(ctx.path("sdk")),
         "{include_path}": "sdk/Include",
         "{lib_vulkan}": "sdk/Lib/vulkan*.lib",
-        "{bin_dxc}": "sdk/Bin/dxc.exe",
-        "{bin_glslc}": "sdk/Bin/glslc.exe",
     })
 
 def _download_impl(ctx):
@@ -142,8 +140,6 @@ def _download_impl(ctx):
         "{os}": "",
         "{include_path}": "sdk/include",
         "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
-        "{bin_dxc}": "sdk/bin/dxc",
-        "{bin_glslc}": "sdk/bin/glslc",
         "{vulkan_deps}": "",  # Windows only
     }
 

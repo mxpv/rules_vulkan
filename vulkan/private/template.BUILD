@@ -39,7 +39,10 @@ cc_library(
 
 native_binary(
     name = "dxc",
-    src = "{bin_dxc}",
+    src = select({
+        "@platforms//os:windows": "sdk/Bin/dxc.exe",
+        "//conditions:default": "sdk/bin/dxc",
+    }),
 )
 
 hlsl_toolchain(
@@ -68,7 +71,10 @@ toolchain(
 
 native_binary(
     name = "glslc",
-    src = "{bin_glslc}",
+    src = select({
+        "@platforms//os:windows": "sdk/Bin/glslc.exe",
+        "//conditions:default": "sdk/bin/glslc",
+    }),
 )
 
 glsl_toolchain(
