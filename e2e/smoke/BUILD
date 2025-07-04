@@ -84,5 +84,5 @@ cc_binary(
     data = [
         ":database",
     ],
-    deps = ["@vulkan_sdk_1.4.313//:vulkan"],
+    deps = ["@vk_sdk//:vulkan"],
 )
