@@ -7,8 +7,9 @@ load("//vulkan:defs.bzl", "download_sdk")
 def _vulkan_sdk_impl(ctx):
     for mod in ctx.modules:
         for tag in mod.tags.download:
+            name = tag.name
             download_sdk(
-                name = "vulkan_sdk_{}".format(tag.version),
+                name = name if name else "vulkan_sdk_{}".format(tag.version),
                 version = tag.version,
                 urls = tag.urls,
             )
@@ -22,6 +23,13 @@ _download_tag = tag_class(
         "version": attr.string(
             mandatory = True,
             doc = "SDK version to install",
+        ),
+        "name": attr.string(
+            doc = """
+            Optional repository name alias.
+
+            If not specified, will use "vulkan_sdk_{version}".
+            """
         ),
         "urls": attr.string_dict(
             doc = """
