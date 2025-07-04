@@ -1,3 +1,4 @@
+load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_pkg//:pkg.bzl", "pkg_zip")
 load("@rules_vulkan//glsl:rules.bzl", "glsl_shader")
@@ -59,6 +60,15 @@ shader_group(
         ":hello_hlsl",
         ":hello_slang",
     ],
+)
+
+# Since the SDK repo exports all binaries, you can manually wrap any SDK binary not directly exposed
+native_binary(
+    name = "spirv_cross",
+    src = select({
+        "@platforms//os:windows": "@vk_sdk//:sdk/Bin/spirv-cross.exe",
+        "//conditions:default": "@vk_sdk//:sdk/bin/spirv-cross",
+    }),
 )
 
 gather_metadata(
