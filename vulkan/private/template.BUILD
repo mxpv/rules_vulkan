@@ -97,7 +97,15 @@ native_binary(
 slang_toolchain(
     name = "slang_{os}",
     compiler = ":slangc",
-    env = {{slang_env}},
+    env = select({
+        "@platforms//os:windows": {
+            "PATH": "{sdk_root}/Bin",
+        },
+        "@platforms//os:linux": {
+            "LD_LIBRARY_PATH": "{sdk_root}/lib",
+        },
+        "//conditions:default": {},
+    }),
 )
 
 toolchain(
