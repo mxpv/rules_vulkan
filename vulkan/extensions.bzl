@@ -29,7 +29,7 @@ _download_tag = tag_class(
             Optional repository name alias.
 
             If not specified, will use "vulkan_sdk_{version}".
-            """
+            """,
         ),
         "urls": attr.string_dict(
             doc = """
