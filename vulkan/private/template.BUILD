@@ -91,7 +91,10 @@ toolchain(
 
 native_binary(
     name = "slangc",
-    src = "{bin_slangc}",
+    src = select({
+        "@platforms//os:windows": "sdk/Bin/slangc.exe",
+        "//conditions:default": "sdk/bin/slangc",
+    }),
 )
 
 slang_toolchain(
