@@ -17,6 +17,7 @@ def _install_linux(ctx, urls, version, attrs):
 
     attrs.update({
         "{os}": "linux",
+        "{sdk_root}": str(ctx.path("sdk")),
         "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
         "{lib_path}": str(ctx.path("sdk/lib")),
         "{slang_env}": "'LD_LIBRARY_PATH': '{}'".format(ctx.path("sdk/lib")),
@@ -61,6 +62,7 @@ def _install_macos(ctx, urls, version, attrs):
 
     attrs.update({
         "{os}": "macos",
+        "{sdk_root}": str(ctx.path("sdk")),
         "{lib_vulkan}": "sdk/lib/libvulkan*.dylib",
     })
 
@@ -113,13 +115,13 @@ def _install_windows(ctx, urls, version, attrs):
 
     attrs.update({
         "{os}": "windows",
+        "{sdk_root}": str(ctx.path("sdk")),
         "{include_path}": "sdk/Include",
         "{lib_vulkan}": "sdk/Lib/vulkan*.lib",
         "{bin_dxc}": "sdk/Bin/dxc.exe",
         "{bin_glslc}": "sdk/Bin/glslc.exe",
         "{bin_slangc}": "sdk/Bin/slangc.exe",
         "{slang_env}": "'PATH': '{}'".format(ctx.path("sdk/Bin")),
-        "{dxc_env}": "'PATH': '{}'".format(ctx.path("sdk/Bin")),
     })
 
 def _download_impl(ctx):
@@ -149,7 +151,6 @@ def _download_impl(ctx):
         "{bin_slangc}": "sdk/bin/slangc",
         "{vulkan_deps}": "",  # Windows only
         "{slang_env}": "",
-        "{dxc_env}": "",
     }
 
     if platform == "linux":
