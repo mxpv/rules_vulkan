@@ -7,6 +7,15 @@ load("@rules_vulkan//slang:toolchain.bzl", "slang_toolchain")
 
 package(default_visibility = ["//visibility:public"])
 
+# Export SDK files to allow external wrappers.
+exports_files(glob(
+    [
+        "sdk/bin/**",
+        "sdk/Bin/**",
+    ],
+    allow_empty = True,
+))
+
 filegroup(
     name = "headers",
     srcs = glob([
