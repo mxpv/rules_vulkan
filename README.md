@@ -72,6 +72,15 @@ cc_binary(
     deps = ["@vulkan_sdk_1.4.313//:vulkan"],
 )
 
+# Since the SDK repo exports all binaries, you can manually wrap any SDK binary not directly exposed
+native_binary(
+    name = "spirv_cross",
+    src = select({
+        "@platforms//os:windows": "@vulkan_sdk_1.4.313//:sdk/Bin/spirv-cross.exe",
+        "//conditions:default": "@vulkan_sdk_1.4.313//:sdk/bin/spirv-cross",
+    }),
+)
+
 ```
 
 Refer to `e2e` project [here](./e2e/smoke/BUILD) for a more complete setup.
