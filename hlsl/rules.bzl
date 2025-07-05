@@ -28,7 +28,8 @@ def _map_stage(target):
 def _hlsl_shader_impl(ctx):
     dxc = ctx.toolchains["//hlsl:toolchain_type"].info
 
-    out_obj = ctx.actions.declare_file(ctx.label.name + ".cso")
+    ext = ".spv" if ctx.attr.spirv else ".cso"
+    out_obj = ctx.actions.declare_file(ctx.label.name + ext)
     outs = [out_obj]
 
     args = ctx.actions.args()
@@ -114,7 +115,7 @@ hlsl_shader = rule(
     doc = """
     Rule to compile HLSL shaders using DirectXShaderCompiler.
 
-    The target will output <name>.cso file with bytecode output.
+    The target will output <name>.cso or <name>.spv (when targeting spirv) file with bytecode output.
     """,
     attrs = {
         "src": attr.label(
