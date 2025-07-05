@@ -65,7 +65,7 @@ hlsl_shader(<a href="#hlsl_shader-name">name</a>, <a href="#hlsl_shader-src">src
 
 Rule to compile HLSL shaders using DirectXShaderCompiler.
 
-The target will output <name>.cso file with bytecode output.
+The target will output <name>.cso or <name>.spv (when targeting spirv) file with bytecode output.
 
 **ATTRIBUTES**
 
