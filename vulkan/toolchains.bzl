@@ -4,7 +4,7 @@ Vulkan SDK toolchains
 
 VulkanInfo = provider(
     doc = """Information about Vulkan SDK""",
-    fields = ["dxc", "slangc", "glslc", "env"],
+    fields = ["dxc", "slangc", "glslc", "spirv_cross", "env"],
 )
 
 def _vulkan_toolchain_impl(ctx):
@@ -13,6 +13,7 @@ def _vulkan_toolchain_impl(ctx):
             dxc = ctx.executable.dxc,
             slangc = ctx.executable.slangc,
             glslc = ctx.executable.glslc,
+            spirv_cross = ctx.executable.spirv_cross,
             env = ctx.attr.env,
         ),
     )
@@ -36,6 +37,12 @@ vulkan_toolchain = rule(
         ),
         "glslc": attr.label(
             doc = "Path to glslc",
+            executable = True,
+            mandatory = True,
+            cfg = "exec",
+        ),
+        "spirv_cross": attr.label(
+            doc = "Path to spirv_cross",
             executable = True,
             mandatory = True,
             cfg = "exec",

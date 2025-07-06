@@ -1,7 +1,7 @@
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_pkg//:pkg.bzl", "pkg_zip")
-load("@rules_vulkan//vulkan:defs.bzl", "glsl_shader", "hlsl_shader", "shader_group", "slang_shader")
+load("@rules_vulkan//vulkan:defs.bzl", "glsl_shader", "hlsl_shader", "shader_group", "slang_shader", "spirv_cross")
 load(":metadata.bzl", "gather_metadata")
 
 hlsl_shader(
@@ -11,11 +11,18 @@ hlsl_shader(
     asm = True,  # Output assembly code
     defines = ["USE_VULKAN"],
     entry = "CSMain",
-    hash = True,  # Output shader hash
     hlsl = "2021",
     opts = ["-Ges"],  # Additional compiler options.
-    reflect = True,  # Output reflection file
+    spirv = True,
     target = "cs_6_0",
+)
+
+spirv_cross(
+    name = "hello_msl",
+    src = ":hello_hlsl",
+    backend = "msl",
+    # entry point and stage will be injected automatically.
+    opts = ["--msl-version", "20100"],
 )
 
 slang_shader(
@@ -55,6 +62,7 @@ shader_group(
     deps = [
         ":hello_glsl",
         ":hello_hlsl",
+        ":hello_msl",
         ":hello_slang",
     ],
 )

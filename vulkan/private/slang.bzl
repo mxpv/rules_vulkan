@@ -77,7 +77,6 @@ def _slang_shader_impl(ctx):
             all_files = depset(all_files),
         ),
         ShaderInfo(
-            label = str(ctx.label),
             entry = ctx.attr.entry,
             outs = [f.short_path for f in all_files],
             stage = ctx.attr.stage,
