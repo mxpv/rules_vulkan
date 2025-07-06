@@ -1,13 +1,13 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-All project entries to generate documentation for.
+Definitions for the Vulkan SDK Bazel rules.
 
 <a id="glsl_shader"></a>
 
 ## glsl_shader
 
 <pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "glsl_shader")
+load("@rules_vulkan//vulkan:defs.bzl", "glsl_shader")
 
 glsl_shader(<a href="#glsl_shader-name">name</a>, <a href="#glsl_shader-src">src</a>, <a href="#glsl_shader-hdrs">hdrs</a>, <a href="#glsl_shader-defines">defines</a>, <a href="#glsl_shader-includes">includes</a>, <a href="#glsl_shader-opts">opts</a>, <a href="#glsl_shader-stage">stage</a>, <a href="#glsl_shader-std">std</a>, <a href="#glsl_shader-target_env">target_env</a>, <a href="#glsl_shader-target_spv">target_spv</a>)
 </pre>
@@ -36,7 +36,7 @@ Rule to compile GLSL shader.
 ## hlsl_shader
 
 <pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "hlsl_shader")
+load("@rules_vulkan//vulkan:defs.bzl", "hlsl_shader")
 
 hlsl_shader(<a href="#hlsl_shader-name">name</a>, <a href="#hlsl_shader-src">src</a>, <a href="#hlsl_shader-hdrs">hdrs</a>, <a href="#hlsl_shader-asm">asm</a>, <a href="#hlsl_shader-def_root_sig">def_root_sig</a>, <a href="#hlsl_shader-defines">defines</a>, <a href="#hlsl_shader-entry">entry</a>, <a href="#hlsl_shader-hash">hash</a>, <a href="#hlsl_shader-hlsl">hlsl</a>, <a href="#hlsl_shader-includes">includes</a>, <a href="#hlsl_shader-opts">opts</a>, <a href="#hlsl_shader-reflect">reflect</a>,
             <a href="#hlsl_shader-spirv">spirv</a>, <a href="#hlsl_shader-target">target</a>)
@@ -72,7 +72,7 @@ The target will output <name>.cso or <name>.spv (when targeting spirv) file with
 ## shader_group
 
 <pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "shader_group")
+load("@rules_vulkan//vulkan:defs.bzl", "shader_group")
 
 shader_group(<a href="#shader_group-name">name</a>, <a href="#shader_group-deps">deps</a>, <a href="#shader_group-pkg_prefix">pkg_prefix</a>)
 </pre>
@@ -102,7 +102,7 @@ There are a few use cases where this can be useful:
 ## slang_shader
 
 <pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "slang_shader")
+load("@rules_vulkan//vulkan:defs.bzl", "slang_shader")
 
 slang_shader(<a href="#slang_shader-name">name</a>, <a href="#slang_shader-srcs">srcs</a>, <a href="#slang_shader-hdrs">hdrs</a>, <a href="#slang_shader-defines">defines</a>, <a href="#slang_shader-depfile">depfile</a>, <a href="#slang_shader-entry">entry</a>, <a href="#slang_shader-includes">includes</a>, <a href="#slang_shader-lang">lang</a>, <a href="#slang_shader-opts">opts</a>, <a href="#slang_shader-profile">profile</a>, <a href="#slang_shader-reflect">reflect</a>,
              <a href="#slang_shader-stage">stage</a>, <a href="#slang_shader-target">target</a>)
@@ -130,12 +130,87 @@ Rule to compile Slang shaders.
 | <a id="slang_shader-target"></a>target |  Format in which code should be generated (hlsl, dxil, dxil-asm, glsl, spirv, metal, metallib, etc)   | String | required |  |
 
 
+<a id="spirv_cross"></a>
+
+## spirv_cross
+
+<pre>
+load("@rules_vulkan//vulkan:defs.bzl", "spirv_cross")
+
+spirv_cross(<a href="#spirv_cross-name">name</a>, <a href="#spirv_cross-src">src</a>, <a href="#spirv_cross-out">out</a>, <a href="#spirv_cross-backend">backend</a>, <a href="#spirv_cross-entry">entry</a>, <a href="#spirv_cross-opts">opts</a>, <a href="#spirv_cross-stage">stage</a>)
+</pre>
+
+spirv-cross build target.
+
+This rule allows invoking spirv-cross binary bundled with Vulkan SDK.
+
+Additionally, it integrates with compiler rules (hlsl_shader, glsl_shader, etc) and can inherit entry point
+and stages from `CompilerInfo`.
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="spirv_cross-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="spirv_cross-src"></a>src |  Input file   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="spirv_cross-out"></a>out |  Output artifact name. If not specified, will default to <name>.out   | String | optional |  `""`  |
+| <a id="spirv_cross-backend"></a>backend |  Select backend for spirv-cross   | String | optional |  `""`  |
+| <a id="spirv_cross-entry"></a>entry |  Use a specific entry point   | String | optional |  `""`  |
+| <a id="spirv_cross-opts"></a>opts |  Additional arguments to pass to the spirv-cross binary   | List of strings | optional |  `[]`  |
+| <a id="spirv_cross-stage"></a>stage |  Forces use of a certain shader stage   | String | optional |  `""`  |
+
+
+<a id="vulkan_toolchain"></a>
+
+## vulkan_toolchain
+
+<pre>
+load("@rules_vulkan//vulkan:defs.bzl", "vulkan_toolchain")
+
+vulkan_toolchain(<a href="#vulkan_toolchain-name">name</a>, <a href="#vulkan_toolchain-dxc">dxc</a>, <a href="#vulkan_toolchain-env">env</a>, <a href="#vulkan_toolchain-glslc">glslc</a>, <a href="#vulkan_toolchain-slangc">slangc</a>, <a href="#vulkan_toolchain-spirv_cross">spirv_cross</a>)
+</pre>
+
+
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="vulkan_toolchain-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="vulkan_toolchain-dxc"></a>dxc |  Path to dxc   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="vulkan_toolchain-env"></a>env |  Environment to be passed to executables.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
+| <a id="vulkan_toolchain-glslc"></a>glslc |  Path to glslc   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="vulkan_toolchain-slangc"></a>slangc |  Path to slangc   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="vulkan_toolchain-spirv_cross"></a>spirv_cross |  Path to spirv_cross   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+
+
+<a id="ShaderGroupInfo"></a>
+
+## ShaderGroupInfo
+
+<pre>
+load("@rules_vulkan//vulkan:defs.bzl", "ShaderGroupInfo")
+
+ShaderGroupInfo(<a href="#ShaderGroupInfo-list">list</a>)
+</pre>
+
+A collection of shader infos.
+
+**FIELDS**
+
+| Name  | Description |
+| :------------- | :------------- |
+| <a id="ShaderGroupInfo-list"></a>list |  List of ShaderInfo structures    |
+
+
 <a id="ShaderInfo"></a>
 
 ## ShaderInfo
 
 <pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "ShaderInfo")
+load("@rules_vulkan//vulkan:defs.bzl", "ShaderInfo")
 
 ShaderInfo(<a href="#ShaderInfo-outs">outs</a>, <a href="#ShaderInfo-entry">entry</a>, <a href="#ShaderInfo-stage">stage</a>, <a href="#ShaderInfo-defines">defines</a>, <a href="#ShaderInfo-target">target</a>)
 </pre>
@@ -160,7 +235,7 @@ This is useful for building all kind of shader databases.
 ## download_sdk
 
 <pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "download_sdk")
+load("@rules_vulkan//vulkan:defs.bzl", "download_sdk")
 
 download_sdk(<a href="#download_sdk-name">name</a>, <a href="#download_sdk-build_file">build_file</a>, <a href="#download_sdk-repo_mapping">repo_mapping</a>, <a href="#download_sdk-urls">urls</a>, <a href="#download_sdk-version">version</a>, <a href="#download_sdk-windows_skip_runtime">windows_skip_runtime</a>)
 </pre>

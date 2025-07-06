@@ -4,12 +4,13 @@ load("@stardoc//stardoc:stardoc.bzl", "stardoc")
 stardoc(
     name = "docs",
     out = "index_generated.md",
-    input = "docs_hub.bzl",
+    input = "//vulkan:defs.bzl",
     symbol_names = [
         # Rules
         "glsl_shader",
         "hlsl_shader",
         "slang_shader",
+        "spirv_cross",
         "download_sdk",
         "shader_group",
 
@@ -18,6 +19,7 @@ stardoc(
 
         # Providers
         "ShaderInfo",
+        "ShaderGroupInfo",
     ],
     deps = [
         "//vulkan:bzl_lib",
