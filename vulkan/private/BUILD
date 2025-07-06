@@ -9,6 +9,7 @@ bzl_library(
         "resolve.bzl",
         "shader_group.bzl",
         "slang.bzl",
+        "spirv_cross.bzl",
         "versions.bzl",
     ],
     visibility = ["//visibility:public"],
