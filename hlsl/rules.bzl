@@ -171,7 +171,7 @@ hlsl_shader = rule(
             doc = "Output shader hash to the given file (-Fsh <file>). This will produce <name>.hash file",
         ),
         "_extra_opts": attr.label(
-            default = ":extra_opts",
+            default = "//vulkan/settings:dxc_opts",
             doc = "Add extra options provided via Bazel's build settings.",
         ),
     },
