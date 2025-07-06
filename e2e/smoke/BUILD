@@ -1,10 +1,7 @@
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_pkg//:pkg.bzl", "pkg_zip")
-load("@rules_vulkan//glsl:rules.bzl", "glsl_shader")
-load("@rules_vulkan//hlsl:rules.bzl", "hlsl_shader")
-load("@rules_vulkan//slang:rules.bzl", "slang_shader")
-load("@rules_vulkan//vulkan:rules.bzl", "shader_group")
+load("@rules_vulkan//vulkan:defs.bzl", "glsl_shader", "hlsl_shader", "shader_group", "slang_shader")
 load(":metadata.bzl", "gather_metadata")
 
 hlsl_shader(
