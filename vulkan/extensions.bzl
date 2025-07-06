@@ -6,7 +6,7 @@ load("//vulkan:defs.bzl", "download_sdk")
 
 def _vulkan_sdk_impl(ctx):
     for mod in ctx.modules:
-        for tag in mod.tags.download:
+        for tag in mod.tags.toolchain:
             name = tag.name
             download_sdk(
                 name = name if name else "vulkan_sdk_{}".format(tag.version),
@@ -18,7 +18,7 @@ def _vulkan_sdk_impl(ctx):
         reproducible = True,
     )
 
-_download_tag = tag_class(
+_toolchain_tag = tag_class(
     attrs = {
         "version": attr.string(
             mandatory = True,
@@ -86,7 +86,7 @@ vulkan_sdk = module_extension(
     Module extension to manage Vulkan SDKs.
     """,
     tag_classes = {
-        "download": _download_tag,
+        "toolchain": _toolchain_tag,
     },
     os_dependent = True,
     arch_dependent = True,

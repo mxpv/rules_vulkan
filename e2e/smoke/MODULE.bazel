@@ -11,7 +11,7 @@ local_path_override(
 )
 
 vulkan_sdk = use_extension("@rules_vulkan//vulkan:extensions.bzl", "vulkan_sdk")
-vulkan_sdk.download(
+vulkan_sdk.toolchain(
     name = "vk_sdk",
     version = "1.4.313",
 )
