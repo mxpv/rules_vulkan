@@ -8,8 +8,8 @@ load("//vulkan:providers.bzl", "ShaderInfo")
 def _slang_shader_impl(ctx):
     slang = ctx.toolchains["//slang:toolchain_type"].info
 
-    out_obj = ctx.actions.declare_file(ctx.label.name + ".out")
-    outs = [out_obj]
+    compiled_file = ctx.actions.declare_file(ctx.label.name + ".out")
+    all_files = [compiled_file]
 
     args = ctx.actions.args()
     args.add_all([
@@ -18,7 +18,7 @@ def _slang_shader_impl(ctx):
         "-target",
         ctx.attr.target,
         "-o",
-        out_obj.path,
+        compiled_file,
     ])
 
     if ctx.attr.stage:
@@ -39,13 +39,15 @@ def _slang_shader_impl(ctx):
     # Emit reflection data to a file
     if ctx.attr.reflect:
         out = ctx.actions.declare_file(ctx.label.name + ".json")
+
         args.add("-reflection-json", out.path)
-        outs.append(out)
+        all_files.append(out)
 
     if ctx.attr.depfile:
         out = ctx.actions.declare_file(ctx.label.name + ".dep")
+
         args.add("-depfile", out.path)
-        outs.append(out)
+        all_files.append(out)
 
     # Append user-defined extra arguments
     args.add_all(ctx.attr.opts)
@@ -59,7 +61,7 @@ def _slang_shader_impl(ctx):
 
     ctx.actions.run(
         inputs = ctx.files.srcs + ctx.files.hdrs,
-        outputs = outs,
+        outputs = all_files,
         arguments = [args],
         executable = slang.compiler,
         env = slang.env,
@@ -68,11 +70,16 @@ def _slang_shader_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset(outs)),
+        DefaultInfo(
+            files = depset([compiled_file]),
+        ),
+        OutputGroupInfo(
+            all_files = depset(all_files),
+        ),
         ShaderInfo(
             label = str(ctx.label),
             entry = ctx.attr.entry,
-            outs = [f.short_path for f in outs],
+            outs = [f.short_path for f in all_files],
             stage = ctx.attr.stage,
             defines = ctx.attr.defines,
             target = ctx.attr.target,

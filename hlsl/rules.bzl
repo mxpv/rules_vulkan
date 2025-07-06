@@ -29,13 +29,13 @@ def _hlsl_shader_impl(ctx):
     dxc = ctx.toolchains["//hlsl:toolchain_type"].info
 
     ext = ".spv" if ctx.attr.spirv else ".cso"
-    out_obj = ctx.actions.declare_file(ctx.label.name + ext)
-    outs = [out_obj]
+    compiled_file = ctx.actions.declare_file(ctx.label.name + ext)
+    all_files = [compiled_file]
 
     args = ctx.actions.args()
 
     # Target + shader output path (required).
-    args.add_all(["-T", ctx.attr.target, "-Fo", out_obj.path])
+    args.add_all(["-T", ctx.attr.target, "-Fo", compiled_file])
 
     # Entry point
     if ctx.attr.entry:
@@ -59,20 +59,23 @@ def _hlsl_shader_impl(ctx):
     # Output assembly code
     if ctx.attr.asm:
         out = ctx.actions.declare_file(ctx.label.name + ".asm")
+
         args.add("-Fc", out)
-        outs.append(out)
+        all_files.append(out)
 
     # Output reflection
     if ctx.attr.reflect:
         out = ctx.actions.declare_file(ctx.label.name + ".reflect")
+
         args.add("-Fre", out)
-        outs.append(out)
+        all_files.append(out)
 
     # Output hash.
     if ctx.attr.hash:
         out = ctx.actions.declare_file(ctx.label.name + ".hash")
+
         args.add("-Fsh", out)
-        outs.append(out)
+        all_files.append(out)
 
     if ctx.attr.spirv:
         args.add("-spirv")
@@ -90,7 +93,7 @@ def _hlsl_shader_impl(ctx):
 
     ctx.actions.run(
         inputs = [src] + ctx.files.hdrs,
-        outputs = outs,
+        outputs = all_files,
         arguments = [args],
         executable = dxc.compiler,
         env = dxc.env,
@@ -99,11 +102,16 @@ def _hlsl_shader_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset(outs)),
+        DefaultInfo(
+            files = depset([compiled_file]),
+        ),
+        OutputGroupInfo(
+            all_files = depset(all_files),
+        ),
         ShaderInfo(
             label = str(ctx.label),
             entry = ctx.attr.entry,
-            outs = [f.short_path for f in outs],
+            outs = [f.short_path for f in all_files],
             stage = _map_stage(ctx.attr.target),
             defines = ctx.attr.defines,
             target = ctx.attr.target,

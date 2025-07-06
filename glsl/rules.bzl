@@ -8,14 +8,14 @@ load("//vulkan:providers.bzl", "ShaderInfo")
 def _hlsl_shader_impl(ctx):
     glsl = ctx.toolchains["//glsl:toolchain_type"].info
 
-    out_obj = ctx.actions.declare_file(ctx.label.name + ".out")
-    outs = [out_obj]
+    compiled_file = ctx.actions.declare_file(ctx.label.name + ".out")
+    all_files = [compiled_file]
 
     args = ctx.actions.args()
 
     args.add_all([
         "-o",
-        out_obj.path,
+        compiled_file,
         "-fshader-stage={}".format(ctx.attr.stage),
     ])
 
@@ -47,7 +47,7 @@ def _hlsl_shader_impl(ctx):
 
     ctx.actions.run(
         inputs = [src] + ctx.files.hdrs,
-        outputs = outs,
+        outputs = all_files,
         arguments = [args],
         executable = glsl.compiler,
         progress_message = "Compiling GLSL shader %s" % src.path,
@@ -55,11 +55,16 @@ def _hlsl_shader_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset(outs)),
+        DefaultInfo(
+            files = depset([compiled_file]),
+        ),
+        OutputGroupInfo(
+            all_files = depset(all_files),
+        ),
         ShaderInfo(
             label = str(ctx.label),
             entry = "main",
-            outs = [f.short_path for f in outs],
+            outs = [f.short_path for f in all_files],
             stage = ctx.attr.stage,
             defines = ctx.attr.defines,
             target = ctx.attr.target_spv,
