@@ -134,7 +134,7 @@ slang_shader = rule(
             doc = "Additional arguments to pass to the compiler",
         ),
         "_extra_opts": attr.label(
-            default = ":extra_opts",
+            default = "//vulkan/settings:slangc_opts",
             doc = "Add extra options provided via Bazel's build settings.",
         ),
     },
