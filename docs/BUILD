@@ -14,14 +14,7 @@ stardoc(
         "shader_group",
 
         # Toolchains
-        "glsl_toolchain",
-        "hlsl_toolchain",
-        "slang_toolchain",
-
-        # Compiler info providers
-        "GlslCompilerInfo",
-        "HlslCompilerInfo",
-        "SlangCompilerInfo",
+        "vulkan_toolchain",
 
         # Providers
         "ShaderInfo",
