@@ -15,6 +15,7 @@ into your builds. It streamlines downloading, installing, and using Vulkan SDKs 
   + [glsl_shader](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#glsl_shader)
   + [hlsl_shader](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#hlsl_shader)
   + [slang_shader](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#slang_shader)
+  + [spirv_cross](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#spirv_cross)
   + [shader_group](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#shader_group)
   + [download_sdk](https://github.com/mxpv/rules_vulkan/blob/main/docs/index.md#download_sdk)
 - [Download SDKs](https://vulkan.lunarg.com)
