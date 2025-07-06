@@ -4,7 +4,6 @@ A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
-load("//vulkan:toolchains.bzl", "VulkanInfo")
 
 def _map_stage(target):
     if target.startswith("vs"):

@@ -4,7 +4,6 @@ A rule to compile GLSL shaders.
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
-load("//vulkan:toolchains.bzl", "VulkanInfo")
 
 def _hlsl_shader_impl(ctx):
     sdk = ctx.toolchains["//vulkan:toolchain_type"].info
