@@ -4,9 +4,10 @@ A rule to compile Slang shaders.
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
+load("//vulkan:toolchains.bzl", "VulkanInfo")
 
 def _slang_shader_impl(ctx):
-    slang = ctx.toolchains["//slang:toolchain_type"].info
+    sdk = ctx.toolchains["//vulkan:toolchain_type"].info
 
     compiled_file = ctx.actions.declare_file(ctx.label.name + ".out")
     all_files = [compiled_file]
@@ -63,8 +64,8 @@ def _slang_shader_impl(ctx):
         inputs = ctx.files.srcs + ctx.files.hdrs,
         outputs = all_files,
         arguments = [args],
-        executable = slang.compiler,
-        env = slang.env,
+        executable = sdk.slangc,
+        env = sdk.env,
         progress_message = "Compiling Slang shader %s" % ", ".join([f.short_path for f in ctx.files.srcs]),
         mnemonic = "SlangCompile",
     )
@@ -138,6 +139,6 @@ slang_shader = rule(
             doc = "Add extra options provided via Bazel's build settings.",
         ),
     },
-    toolchains = [":toolchain_type"],
+    toolchains = ["//vulkan:toolchain_type"],
     provides = [ShaderInfo],
 )

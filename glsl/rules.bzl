@@ -4,9 +4,10 @@ A rule to compile GLSL shaders.
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
+load("//vulkan:toolchains.bzl", "VulkanInfo")
 
 def _hlsl_shader_impl(ctx):
-    glsl = ctx.toolchains["//glsl:toolchain_type"].info
+    sdk = ctx.toolchains["//vulkan:toolchain_type"].info
 
     compiled_file = ctx.actions.declare_file(ctx.label.name + ".out")
     all_files = [compiled_file]
@@ -49,7 +50,7 @@ def _hlsl_shader_impl(ctx):
         inputs = [src] + ctx.files.hdrs,
         outputs = all_files,
         arguments = [args],
-        executable = glsl.compiler,
+        executable = sdk.glslc,
         progress_message = "Compiling GLSL shader %s" % src.path,
         mnemonic = "GlslCompile",
     )
@@ -126,6 +127,6 @@ glsl_shader = rule(
             doc = "Add extra options provided via Bazel's build settings.",
         ),
     },
-    toolchains = [":toolchain_type"],
+    toolchains = ["//vulkan:toolchain_type"],
     provides = [ShaderInfo],
 )
