@@ -1,9 +1,7 @@
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@rules_cc//cc:cc_import.bzl", "cc_import")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
-load("@rules_vulkan//glsl:toolchain.bzl", "glsl_toolchain")
-load("@rules_vulkan//hlsl:toolchain.bzl", "hlsl_toolchain")
-load("@rules_vulkan//slang:toolchain.bzl", "slang_toolchain")
+load("@rules_vulkan//vulkan:toolchains.bzl", "VulkanInfo", "vulkan_toolchain")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -43,7 +41,7 @@ cc_library(
 )
 
 #
-# HLSL (dxc) toolchain
+# SDK compilers and tools
 #
 
 native_binary(
@@ -54,30 +52,6 @@ native_binary(
     }),
 )
 
-hlsl_toolchain(
-    name = "dxc_{os}",
-    compiler = ":dxc",
-    env = select({
-        "@platforms//os:windows": {
-            "PATH": "{sdk_root}/Bin",
-        },
-        "//conditions:default": {},
-    }),
-)
-
-toolchain(
-    name = "dxc_{os}_toolchain",
-    exec_compatible_with = [
-        "@platforms//os:{os}",
-    ],
-    toolchain = ":dxc_{os}",
-    toolchain_type = "@rules_vulkan//hlsl:toolchain_type",
-)
-
-#
-# GLSL toolchain
-#
-
 native_binary(
     name = "glslc",
     src = select({
@@ -85,24 +59,6 @@ native_binary(
         "//conditions:default": "sdk/bin/glslc",
     }),
 )
-
-glsl_toolchain(
-    name = "glsl_{os}",
-    compiler = ":glslc",
-)
-
-toolchain(
-    name = "glsl_{os}_toolchain",
-    exec_compatible_with = [
-        "@platforms//os:{os}",
-    ],
-    toolchain = ":glsl_{os}",
-    toolchain_type = "@rules_vulkan//glsl:toolchain_type",
-)
-
-#
-# Slang toolchain
-#
 
 native_binary(
     name = "slangc",
@@ -112,37 +68,41 @@ native_binary(
     }),
 )
 
-slang_toolchain(
-    name = "slang_{os}",
-    compiler = ":slangc",
-    env = select({
-        "@platforms//os:windows": {
-            "PATH": "{sdk_root}/Bin",
-        },
-        "@platforms//os:linux": {
-            "LD_LIBRARY_PATH": "{sdk_root}/lib",
-        },
-        "//conditions:default": {},
-    }),
-)
-
-toolchain(
-    name = "slang_{os}_toolchain",
-    exec_compatible_with = [
-        "@platforms//os:{os}",
-    ],
-    toolchain = ":slang_{os}",
-    toolchain_type = "@rules_vulkan//slang:toolchain_type",
-)
-
-#
-# Spirv-cross
-#
-
 native_binary(
     name = "spirv_cross",
     src = select({
         "@platforms//os:windows": "sdk/Bin/spirv-cross.exe",
         "//conditions:default": "sdk/bin/spirv-cross",
     }),
+)
+
+#
+# Vulkan toolchain
+#
+
+vulkan_toolchain(
+    name = "vulkan_sdk_{os}",
+    dxc = ":dxc",
+    env = select({
+        # Required by dxc and slangc on Windows
+        "@platforms//os:windows": {
+            "PATH": "{sdk_root}/Bin",
+        },
+        # Required by slangc on Linux
+        "@platforms//os:linux": {
+            "LD_LIBRARY_PATH": "{sdk_root}/lib",
+        },
+        "//conditions:default": {},
+    }),
+    glslc = ":glslc",
+    slangc = ":slangc",
+)
+
+toolchain(
+    name = "vulkan_sdk_{os}_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:{os}",
+    ],
+    toolchain = ":vulkan_sdk_{os}",
+    toolchain_type = "@rules_vulkan//vulkan:toolchain_type",
 )

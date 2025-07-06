@@ -4,6 +4,7 @@ A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
+load("//vulkan:toolchains.bzl", "VulkanInfo")
 
 def _map_stage(target):
     if target.startswith("vs"):
@@ -26,7 +27,7 @@ def _map_stage(target):
         return "unknown"
 
 def _hlsl_shader_impl(ctx):
-    dxc = ctx.toolchains["//hlsl:toolchain_type"].info
+    sdk = ctx.toolchains["//vulkan:toolchain_type"].info
 
     ext = ".spv" if ctx.attr.spirv else ".cso"
     compiled_file = ctx.actions.declare_file(ctx.label.name + ext)
@@ -95,8 +96,8 @@ def _hlsl_shader_impl(ctx):
         inputs = [src] + ctx.files.hdrs,
         outputs = all_files,
         arguments = [args],
-        executable = dxc.compiler,
-        env = dxc.env,
+        executable = sdk.dxc,
+        env = sdk.env,
         progress_message = "Compiling HLSL shader %s" % src.path,
         mnemonic = "HlslCompile",
     )
@@ -175,6 +176,6 @@ hlsl_shader = rule(
             doc = "Add extra options provided via Bazel's build settings.",
         ),
     },
-    toolchains = [":toolchain_type"],
+    toolchains = ["//vulkan:toolchain_type"],
     provides = [ShaderInfo],
 )
