@@ -1,7 +1,7 @@
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@rules_cc//cc:cc_import.bzl", "cc_import")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
-load("@rules_vulkan//vulkan:toolchains.bzl", "VulkanInfo", "vulkan_toolchain")
+load("@rules_vulkan//vulkan:toolchains.bzl", "vulkan_toolchain")
 
 package(default_visibility = ["//visibility:public"])
 

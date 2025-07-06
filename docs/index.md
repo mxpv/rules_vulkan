@@ -31,27 +31,6 @@ Rule to compile GLSL shader.
 | <a id="glsl_shader-target_spv"></a>target_spv |  Set the SPIR-V version to be used for the generated SPIR-V module.<br><br>The default is the highest version of SPIR-V required to be supported for the target environment. For example, default for `vulkan1.0` is `spv1.0`.   | String | optional |  `""`  |
 
 
-<a id="glsl_toolchain"></a>
-
-## glsl_toolchain
-
-<pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "glsl_toolchain")
-
-glsl_toolchain(<a href="#glsl_toolchain-name">name</a>, <a href="#glsl_toolchain-compiler">compiler</a>)
-</pre>
-
-GLSL Toolchain
-
-**ATTRIBUTES**
-
-
-| Name  | Description | Type | Mandatory | Default |
-| :------------- | :------------- | :------------- | :------------- | :------------- |
-| <a id="glsl_toolchain-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="glsl_toolchain-compiler"></a>compiler |  Path to compiler executable   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
-
-
 <a id="hlsl_shader"></a>
 
 ## hlsl_shader
@@ -86,28 +65,6 @@ The target will output <name>.cso or <name>.spv (when targeting spirv) file with
 | <a id="hlsl_shader-reflect"></a>reflect |  Output reflection to the given file (-Fre <file>). This will produce <name>.reflect file   | Boolean | optional |  `False`  |
 | <a id="hlsl_shader-spirv"></a>spirv |  Generate SPIR-V code   | Boolean | optional |  `False`  |
 | <a id="hlsl_shader-target"></a>target |  Target profile (e.g., cs_6_0, ps_6_0, etc.)   | String | required |  |
-
-
-<a id="hlsl_toolchain"></a>
-
-## hlsl_toolchain
-
-<pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "hlsl_toolchain")
-
-hlsl_toolchain(<a href="#hlsl_toolchain-name">name</a>, <a href="#hlsl_toolchain-compiler">compiler</a>, <a href="#hlsl_toolchain-env">env</a>)
-</pre>
-
-
-
-**ATTRIBUTES**
-
-
-| Name  | Description | Type | Mandatory | Default |
-| :------------- | :------------- | :------------- | :------------- | :------------- |
-| <a id="hlsl_toolchain-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="hlsl_toolchain-compiler"></a>compiler |  Path to the HLSL compiler executable (e.g., dxc)   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
-| <a id="hlsl_toolchain-env"></a>env |  Environment variables to set for the HLSL compiler.<br><br>This can be used to set additional paths or configurations needed by the HLSL compiler.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
 
 
 <a id="shader_group"></a>
@@ -173,67 +130,6 @@ Rule to compile Slang shaders.
 | <a id="slang_shader-target"></a>target |  Format in which code should be generated (hlsl, dxil, dxil-asm, glsl, spirv, metal, metallib, etc)   | String | required |  |
 
 
-<a id="slang_toolchain"></a>
-
-## slang_toolchain
-
-<pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "slang_toolchain")
-
-slang_toolchain(<a href="#slang_toolchain-name">name</a>, <a href="#slang_toolchain-compiler">compiler</a>, <a href="#slang_toolchain-env">env</a>)
-</pre>
-
-
-
-**ATTRIBUTES**
-
-
-| Name  | Description | Type | Mandatory | Default |
-| :------------- | :------------- | :------------- | :------------- | :------------- |
-| <a id="slang_toolchain-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="slang_toolchain-compiler"></a>compiler |  -   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
-| <a id="slang_toolchain-env"></a>env |  Environment variables to set for the Slang compiler.<br><br>This can be used to set additional paths or configurations needed by the Slang compiler.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
-
-
-<a id="GlslCompilerInfo"></a>
-
-## GlslCompilerInfo
-
-<pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "GlslCompilerInfo")
-
-GlslCompilerInfo(<a href="#GlslCompilerInfo-compiler">compiler</a>)
-</pre>
-
-Information about GLSL compiler
-
-**FIELDS**
-
-| Name  | Description |
-| :------------- | :------------- |
-| <a id="GlslCompilerInfo-compiler"></a>compiler |  -    |
-
-
-<a id="HlslCompilerInfo"></a>
-
-## HlslCompilerInfo
-
-<pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "HlslCompilerInfo")
-
-HlslCompilerInfo(<a href="#HlslCompilerInfo-compiler">compiler</a>, <a href="#HlslCompilerInfo-env">env</a>)
-</pre>
-
-Information about HLSL compiler
-
-**FIELDS**
-
-| Name  | Description |
-| :------------- | :------------- |
-| <a id="HlslCompilerInfo-compiler"></a>compiler |  -    |
-| <a id="HlslCompilerInfo-env"></a>env |  -    |
-
-
 <a id="ShaderInfo"></a>
 
 ## ShaderInfo
@@ -258,26 +154,6 @@ This is useful for building all kind of shader databases.
 | <a id="ShaderInfo-stage"></a>stage |  Shader stage    |
 | <a id="ShaderInfo-defines"></a>defines |  List of shader defines used during compilation    |
 | <a id="ShaderInfo-target"></a>target |  Compilation target (note: this depends on compiler used)    |
-
-
-<a id="SlangCompilerInfo"></a>
-
-## SlangCompilerInfo
-
-<pre>
-load("@rules_vulkan//docs:docs_hub.bzl", "SlangCompilerInfo")
-
-SlangCompilerInfo(<a href="#SlangCompilerInfo-compiler">compiler</a>, <a href="#SlangCompilerInfo-env">env</a>)
-</pre>
-
-Information about Slang compiler
-
-**FIELDS**
-
-| Name  | Description |
-| :------------- | :------------- |
-| <a id="SlangCompilerInfo-compiler"></a>compiler |  -    |
-| <a id="SlangCompilerInfo-env"></a>env |  -    |
 
 
 <a id="download_sdk"></a>
