@@ -47,8 +47,7 @@ register_toolchains("@vulkan_sdk_1.4.313//:all")
 Then use it in your `BUILD` files:
 
 ```bazel
-load("@rules_vulkan//hlsl:rules.bzl", "hlsl_shader")
-load("@rules_vulkan//glsl:rules.bzl", "glsl_shader")
+load("@rules_vulkan//vulkan:defs.bzl", "hlsl_shader", "glsl_shader")
 
 hlsl_shader(
     name = "hello_hlsl",
