@@ -20,9 +20,6 @@ stardoc(
         "ShaderInfo",
     ],
     deps = [
-        "//glsl:bzl_lib",
-        "//hlsl:bzl_lib",
-        "//slang:bzl_lib",
         "//vulkan:bzl_lib",
         "@bazel_skylib//lib:paths",
         "@bazel_skylib//rules:common_settings",
