@@ -5,23 +5,25 @@ A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
 
+# Normalize stage names
+# See https://github.com/KhronosGroup/SPIRV-Cross/blob/d8e3e2b141b8c8a167b2e3984736a6baacff316c/main.cpp#L1151
 def _map_stage(target):
     if target.startswith("vs"):
-        return "vertex"
+        return "vert"
     elif target.startswith("ps"):
-        return "pixel"
+        return "frag"
     elif target.startswith("cs"):
-        return "compute"
+        return "comp"
     elif target.startswith("gs"):
-        return "geometry"
+        return "geom"
     elif target.startswith("hs"):
-        return "hull"
-    elif target.startswith("ds"):
+        return "tesc"
+    elif target.startswith("tese"):
         return "domain"
     elif target.startswith("ms"):
         return "mesh"
     elif target.startswith("as"):
-        return "amplification"
+        return "task"
     else:
         return "unknown"
 
@@ -109,7 +111,6 @@ def _hlsl_shader_impl(ctx):
             all_files = depset(all_files),
         ),
         ShaderInfo(
-            label = str(ctx.label),
             entry = ctx.attr.entry,
             outs = [f.short_path for f in all_files],
             stage = _map_stage(ctx.attr.target),

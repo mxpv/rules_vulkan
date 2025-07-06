@@ -96,6 +96,7 @@ vulkan_toolchain(
     }),
     glslc = ":glslc",
     slangc = ":slangc",
+    spirv_cross = ":spirv_cross",
 )
 
 toolchain(
