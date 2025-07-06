@@ -24,7 +24,7 @@ def _shader_group_impl(ctx):
             for k, v in dep[PackageFilesInfo].dest_src_map.items():
                 src_map[paths.join(prefix, k)] = v
         else:
-            for f in dep[DefaultInfo].files.to_list():
+            for f in dep[OutputGroupInfo].all_files.to_list():
                 src_map[paths.join(prefix, f.basename)] = f
 
     all_files.extend(src_map.values())
