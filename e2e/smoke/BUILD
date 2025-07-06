@@ -22,7 +22,10 @@ spirv_cross(
     src = ":hello_hlsl",
     backend = "msl",
     # entry point and stage will be injected automatically.
-    opts = ["--msl-version", "20100"],
+    opts = [
+        "--msl-version",
+        "20100",
+    ],
 )
 
 slang_shader(
