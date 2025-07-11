@@ -33,7 +33,7 @@ slang_shader(
     srcs = ["shader.hlsl"],
     hdrs = ["//common:common_headers"],
     defines = ["USE_VULKAN"],
-    depfile = True,
+    depfile = "hello_slang.dep",
     entry = "CSMain",
     lang = "hlsl",
     opts = [
@@ -41,7 +41,7 @@ slang_shader(
         "all",
     ],
     profile = "glsl_450",
-    reflect = True,
+    reflect = "hello_slang.json",
     stage = "compute",
     target = "spirv",
 )

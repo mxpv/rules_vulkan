@@ -8,7 +8,8 @@ load("//vulkan:providers.bzl", "ShaderInfo")
 def _slang_shader_impl(ctx):
     sdk = ctx.toolchains["//vulkan:toolchain_type"].info
 
-    compiled_file = ctx.actions.declare_file(ctx.label.name + ".out")
+    name = ctx.attr.name if ctx.attr.name else ctx.label.name + ".out"
+    compiled_file = ctx.actions.declare_file(name)
     all_files = [compiled_file]
 
     args = ctx.actions.args()
@@ -38,13 +39,13 @@ def _slang_shader_impl(ctx):
 
     # Emit reflection data to a file
     if ctx.attr.reflect:
-        out = ctx.actions.declare_file(ctx.label.name + ".json")
+        out = ctx.actions.declare_file(ctx.attr.reflect)
 
         args.add("-reflection-json", out.path)
         all_files.append(out)
 
     if ctx.attr.depfile:
-        out = ctx.actions.declare_file(ctx.label.name + ".dep")
+        out = ctx.actions.declare_file(ctx.attr.depfile)
 
         args.add("-depfile", out.path)
         all_files.append(out)
@@ -96,10 +97,13 @@ slang_shader = rule(
             mandatory = True,
             doc = "Slang input shader files",
         ),
-        "reflect": attr.bool(
-            doc = "Emit reflection data in JSON format to a file <name>.json",
+        "out": attr.string(
+            doc = "Specify a path where generated output should be written (-o <path>)",
         ),
-        "depfile": attr.bool(
+        "reflect": attr.string(
+            doc = "Emit reflection data in JSON format to a file",
+        ),
+        "depfile": attr.string(
             doc = "Save the source file dependency list in a file (-depfile <name>.dep)",
         ),
         "entry": attr.string(
