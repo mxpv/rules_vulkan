@@ -104,7 +104,7 @@ There are a few use cases where this can be useful:
 <pre>
 load("@rules_vulkan//vulkan:defs.bzl", "slang_shader")
 
-slang_shader(<a href="#slang_shader-name">name</a>, <a href="#slang_shader-srcs">srcs</a>, <a href="#slang_shader-hdrs">hdrs</a>, <a href="#slang_shader-defines">defines</a>, <a href="#slang_shader-depfile">depfile</a>, <a href="#slang_shader-entry">entry</a>, <a href="#slang_shader-includes">includes</a>, <a href="#slang_shader-lang">lang</a>, <a href="#slang_shader-opts">opts</a>, <a href="#slang_shader-profile">profile</a>, <a href="#slang_shader-reflect">reflect</a>,
+slang_shader(<a href="#slang_shader-name">name</a>, <a href="#slang_shader-srcs">srcs</a>, <a href="#slang_shader-out">out</a>, <a href="#slang_shader-hdrs">hdrs</a>, <a href="#slang_shader-defines">defines</a>, <a href="#slang_shader-depfile">depfile</a>, <a href="#slang_shader-entry">entry</a>, <a href="#slang_shader-includes">includes</a>, <a href="#slang_shader-lang">lang</a>, <a href="#slang_shader-opts">opts</a>, <a href="#slang_shader-profile">profile</a>, <a href="#slang_shader-reflect">reflect</a>,
              <a href="#slang_shader-stage">stage</a>, <a href="#slang_shader-target">target</a>)
 </pre>
 
@@ -117,15 +117,16 @@ Rule to compile Slang shaders.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="slang_shader-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="slang_shader-srcs"></a>srcs |  Slang input shader files   | <a href="https://bazel.build/concepts/labels">List of labels</a> | required |  |
+| <a id="slang_shader-out"></a>out |  Specify a path where generated output should be written (-o <path>)   | String | optional |  `""`  |
 | <a id="slang_shader-hdrs"></a>hdrs |  List of header files dependencies to be included in the shader compilation   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="slang_shader-defines"></a>defines |  Insert a preprocessor macro   | List of strings | optional |  `[]`  |
-| <a id="slang_shader-depfile"></a>depfile |  Save the source file dependency list in a file (-depfile <name>.dep)   | Boolean | optional |  `False`  |
+| <a id="slang_shader-depfile"></a>depfile |  Save the source file dependency list in a file (-depfile <name>.dep)   | String | optional |  `""`  |
 | <a id="slang_shader-entry"></a>entry |  Entry point name   | String | optional |  `""`  |
 | <a id="slang_shader-includes"></a>includes |  Add a path to CLI to be used to search #include or #import operations   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-lang"></a>lang |  Set source language for the shader (slang, hlsl, glsl, cpp, etc)   | String | optional |  `""`  |
 | <a id="slang_shader-opts"></a>opts |  Additional arguments to pass to the compiler   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-profile"></a>profile |  Shader profile for code generation (sm_6_6, vs_6_6, glsl_460, etc)   | String | required |  |
-| <a id="slang_shader-reflect"></a>reflect |  Emit reflection data in JSON format to a file <name>.json   | Boolean | optional |  `False`  |
+| <a id="slang_shader-reflect"></a>reflect |  Emit reflection data in JSON format to a file   | String | optional |  `""`  |
 | <a id="slang_shader-stage"></a>stage |  Stage of an entry point function (vertex, pixel, compute, etc)   | String | optional |  `""`  |
 | <a id="slang_shader-target"></a>target |  Format in which code should be generated (hlsl, dxil, dxil-asm, glsl, spirv, metal, metallib, etc)   | String | required |  |
 
