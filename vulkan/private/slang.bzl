@@ -8,7 +8,7 @@ load("//vulkan:providers.bzl", "ShaderInfo")
 def _slang_shader_impl(ctx):
     sdk = ctx.toolchains["//vulkan:toolchain_type"].info
 
-    name = ctx.attr.name if ctx.attr.name else ctx.label.name + ".out"
+    name = ctx.attr.out if ctx.attr.out else ctx.label.name + ".out"
     compiled_file = ctx.actions.declare_file(name)
     all_files = [compiled_file]
 
