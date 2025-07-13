@@ -46,7 +46,7 @@ shader_group = rule(
     doc = """
     `shadergroup` is a rule to group multiple shaders together.
 
-    This is a kin of `filegroup`, which forwards providers.
+    `shadergroup` is similar to `filegroup`, but forwards providers.
 
     Roughly the motivation for this is described in this [issue](https://github.com/bazelbuild/bazel/issues/8904).
 
