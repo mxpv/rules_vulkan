@@ -66,10 +66,10 @@ building shader databases.
 - Proofread documentation for clarity and accuracy
 - Check for spelling errors and typos in code reviews
 
-### Commit Messages
+### Commit Messages and PRs
 - Use descriptive commit messages that explain the change and its purpose
-- Do not include AI tool references, co-authorship attributions, or generation credits in commit messages
-- Do not add "Generated with Claude Code" or "Co-Authored-By: Claude" to commit messages
+- Do not include AI tool references, co-authorship attributions, or generation credits in commit messages or PRs
+- Do not add "Generated with Claude Code" or "Co-Authored-By: Claude" to commit messages or PRs
 
 ### Pre-Push Checklist
 Before pushing code to the repository, ensure the following steps are completed:
