@@ -134,7 +134,7 @@ def _download_impl(ctx):
     platform = normalize_os(ctx.os.name, ctx.os.arch)
     urls = urls.get(platform, None)
     if not urls:
-        fail("Donwload URLs not found for platform {} and SDK {}", platform, version)
+        fail("Download URLs not found for platform {} and SDK {}", platform, version)
 
     attrs = {
         "{os}": "",
@@ -186,7 +186,7 @@ download_sdk = repository_rule(
             doc = """
             Do not download and install Vulkan runtime package (e.g. `vulkan-1.dll` dependency) on Windows.
 
-            When `True`, the downloader with put `vulkan-1.dll` into the repository root directory.
+            When `True`, the downloader will put `vulkan-1.dll` into the repository root directory.
 
             This is useful if there is a system-wide Vulkan runtime already installed, otherwise this
             might lead to link/runtime issues when building CC targets.
