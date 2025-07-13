@@ -68,6 +68,7 @@ building shader databases.
 ### Commit Messages
 - Use descriptive commit messages that explain the change and its purpose
 - Do not include AI tool references, co-authorship attributions, or generation credits in commit messages
+- Do not add "Generated with Claude Code" or "Co-Authored-By: Claude" to commit messages
 
 ### Pre-Push Checklist
 Before pushing code to the repository, ensure the following steps are completed:
