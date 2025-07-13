@@ -64,6 +64,7 @@ building shader databases.
 - Write clean and idiomatic Starlark code following Bazel best practices
 - All public APIs must include comprehensive documentation
 - Proofread documentation for clarity and accuracy
+- Check for spelling errors and typos in code reviews
 
 ### Commit Messages
 - Use descriptive commit messages that explain the change and its purpose
