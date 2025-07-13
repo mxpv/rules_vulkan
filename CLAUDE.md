@@ -22,13 +22,21 @@ HLSL, and Slang shaders, plus spirv-cross transpilation.
 ### Documentation
 - `bazelisk run //docs:update_test` - Verify documentation is up to date
 
+### SDK Version Updates
+- `python tools/update_versions.py` - Fetch latest Vulkan SDK versions and update versions.bzl
+- After running the script, format with `bazelisk run :fmt`
+- If there are changes in versions.bzl after formatting, create a PR with the updates
+- If no changes, report "no new versions available" and specify the latest currently available version
+
 ## Architecture
 
 ### Core Components
 
 **Vulkan SDK Management**: The `download_sdk` rule and `vulkan_sdk` module extension handle automatic SDK download
 and installation. Available SDK versions are maintained in `vulkan/private/versions.bzl` (updated via
-`tools/update_versions.py`).
+`tools/update_versions.py`). The `versions.bzl` file contains a list of known Vulkan SDK versions available on the
+LunarG website. Use `tools/update_versions.py` to fetch available versions and rebuild `versions.bzl`. Note that
+`versions.bzl` must be reformatted after fetching.
 
 **Shader Compilation Rules**: 
 - `glsl_shader` - Compiles GLSL shaders using glslc
