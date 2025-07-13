@@ -4,14 +4,16 @@
 # based on https://vulkan.lunarg.com/content/view/latest-sdk-version-api
 
 import json
-import requests
+import urllib.request
+import urllib.error
 import pprint
 
 VERSIONS_URL = "https://vulkan.lunarg.com/sdk/versions.json"
 PLATFORMS = ["linux", "mac", "windows", "warm"]
 
 # Fetch list of available Vulkan SDK versions
-versions = requests.get(VERSIONS_URL).json()
+with urllib.request.urlopen(VERSIONS_URL) as response:
+    versions = json.loads(response.read().decode())
 
 print("Available versions:")
 for version in versions:
@@ -77,10 +79,13 @@ def query(ver, plat, file):
     print(f"  URL: {url}")
 
     # Query checksum URL.
-    resp = requests.get(url)
-    resp.raise_for_status
-
-    data = resp.json()
+    try:
+        with urllib.request.urlopen(url) as resp:
+            data = json.loads(resp.read().decode())
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
     print(f"  Result: {data}")
 
     if isinstance(data, dict) and data.get("ok") is False and data.get("title") == "Not Found":
