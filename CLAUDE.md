@@ -70,6 +70,7 @@ building shader databases.
 - Use descriptive commit messages that explain the change and its purpose
 - Do not include AI tool references, co-authorship attributions, or generation credits in commit messages or PRs
 - Do not add "Generated with Claude Code" or "Co-Authored-By: Claude" to commit messages or PRs
+- Before opening PRs, update documentation and run lints: `bazelisk run //docs:update` and `bazelisk run :fmt`
 
 ### Pre-Push Checklist
 Before pushing code to the repository, ensure the following steps are completed:
