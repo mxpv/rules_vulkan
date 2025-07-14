@@ -63,7 +63,10 @@ def _hlsl_shader_impl(ctx):
         ),
         ShaderInfo(
             entry = "main",
-            outs = [f.short_path for f in all_files],
+            assembly = None,
+            reflection = None,
+            hash = None,
+            depfile = None,
             stage = ctx.attr.stage,
             defines = ctx.attr.defines,
             target = ctx.attr.target_spv,
