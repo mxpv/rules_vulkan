@@ -28,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 25
 
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.15.0
@@ -46,9 +46,12 @@ jobs:
             actions: read
           model: "claude-opus-4-20250514"
           use_sticky_comment: true
-          allowed_tools: "Bash(*)"
-          system_prompt: |
+          allowed_tools: "Bash(bazelisk:*),Bash(python tools/update_versions.py),View,GlobTool,GrepTool,BatchTool,mcp__github"
+          custom_instructions: |
             Be extremely concise in code reviews. Provide only:
             1. Brief summary of changes
             2. Approved/Not approved
+            Important rules:
+            - Never fetch SDK versions from LunarG via curl or any other tools
+            - Always use the update script provided in the repository (tools/update_versions.py)
 
