@@ -24,9 +24,8 @@ HLSL, and Slang shaders, plus spirv-cross transpilation.
 - Note: There's currently an issue with Bazel 8 when generating docs on macOS due to absolute path inclusion errors with protobuf/utf8_range (see [bazelbuild/bazel#21718](https://github.com/bazelbuild/bazel/issues/21718) and [bazelbuild/bazel#24556](https://github.com/bazelbuild/bazel/issues/24556)). Workaround: `USE_BAZEL_VERSION=7.4.1 bazelisk run //docs:update`
 
 ### SDK Version Updates
-- `python tools/update_versions.py` - Fetch latest Vulkan SDK versions and update versions.bzl
-- `bazelisk run :fmt` - Format the files after running the script
-- Check for changes in versions.bzl after formatting - if there are changes, create a PR with the updates
+- `python tools/update_versions.py` - Fetch latest Vulkan SDK versions and update versions.bzl (outputs properly formatted code)
+- Check for changes in versions.bzl - if there are changes, create a PR with the updates
 - If no changes, report "no new versions available" and specify the latest currently available version
 
 ## Architecture
@@ -36,8 +35,7 @@ HLSL, and Slang shaders, plus spirv-cross transpilation.
 **Vulkan SDK Management**: The `download_sdk` rule and `vulkan_sdk` module extension handle automatic SDK download
 and installation. Available SDK versions are maintained in `vulkan/private/versions.bzl` (updated via
 `tools/update_versions.py`). The `versions.bzl` file contains a list of known Vulkan SDK versions available on the
-LunarG website. Use `tools/update_versions.py` to fetch available versions and rebuild `versions.bzl`. Note that
-`versions.bzl` must be reformatted after fetching.
+LunarG website. Use `tools/update_versions.py` to fetch available versions and rebuild `versions.bzl`.
 
 **Shader Compilation Rules**: 
 - `glsl_shader` - Compiles GLSL shaders using glslc
