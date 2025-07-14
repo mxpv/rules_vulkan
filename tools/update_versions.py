@@ -127,18 +127,32 @@ for ver in versions:
 # Sort top-level version keys descending, keep nested dicts as-is
 ordered_output = {k: output[k] for k in sorted(output, reverse=True)}
 
-with open("vulkan/private/versions.bzl", "w") as f:
-    f.write("\"\"\"")
-    f.write("List of SDK packages currently available for download on LunarG.\n")
-    f.write("\"\"\"")
+def format_dict(data, indent_level=0):
+    """Format a dictionary in Starlark format."""
+    if not data:
+        return "{}"
 
+    indent = "    " * indent_level
+    next_indent = "    " * (indent_level + 1)
+
+    lines = ["{"]
+
+    for key, value in data.items():
+        if isinstance(value, dict):
+            formatted_value = format_dict(value, indent_level + 1)
+            lines.append(f'{next_indent}"{key}": {formatted_value},')
+        else:
+            lines.append(f'{next_indent}"{key}": "{value}",')
+    
+    lines.append(f"{indent}}}")
+    return "\n".join(lines)
+
+with open("vulkan/private/versions.bzl", "w") as f:
+    f.write('"""List of SDK packages currently available for download on LunarG.\n"""\n\n')
     f.write("# GENERATED FILE. Do not edit.\n")
     f.write("# Use ./tools/update_versions.py to update the list of available SDK versions\n\n")
-
-    f.write(f"LATEST_VERSION = \"{latest_version}\"\n\n")
-
+    f.write(f'LATEST_VERSION = "{latest_version}"\n\n')
     f.write("VERSIONS = ")
-    json.dump(ordered_output, f, indent=4)
-
-    f.write("\n\n")
+    f.write(format_dict(ordered_output))
+    f.write("\n")
 
