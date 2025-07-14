@@ -46,7 +46,7 @@ jobs:
             actions: read
           model: "claude-opus-4-20250514"
           use_sticky_comment: true
-          allowed_tools: "Bash(bazelisk *),Bash(git *),Bash(python tools/update_versions.py),Bash(find *),Bash(grep *),Bash(cat *)"
+          allowed_tools: "Bash(*)"
           system_prompt: |
             Be extremely concise in code reviews. Provide only:
             1. Brief summary of changes
