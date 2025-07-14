@@ -8,7 +8,7 @@ hlsl_shader(
     name = "hello_hlsl",
     src = "shader.hlsl",
     hdrs = ["//common:common_headers"],
-    asm = True,  # Output assembly code
+    asm = "hello_hlsl.asm",  # Output assembly code
     defines = ["USE_VULKAN"],
     entry = "CSMain",
     hlsl = "2021",

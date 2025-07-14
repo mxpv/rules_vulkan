@@ -54,15 +54,15 @@ The target will output <name>.cso or <name>.spv (when targeting spirv) file with
 | <a id="hlsl_shader-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="hlsl_shader-src"></a>src |  Input HLSL shader source file   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 | <a id="hlsl_shader-hdrs"></a>hdrs |  List of header files dependencies to be included in the shader compilation   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
-| <a id="hlsl_shader-asm"></a>asm |  Output assembly code listing file (-Fc <file>). This will produce <name>.asm file   | Boolean | optional |  `False`  |
+| <a id="hlsl_shader-asm"></a>asm |  Output assembly code listing file to the specified path (-Fc <file>)   | String | optional |  `""`  |
 | <a id="hlsl_shader-def_root_sig"></a>def_root_sig |  Read root signature from a #define (-rootsig-define <value>)   | String | optional |  `""`  |
 | <a id="hlsl_shader-defines"></a>defines |  List of macro defines   | List of strings | optional |  `[]`  |
 | <a id="hlsl_shader-entry"></a>entry |  Entry point name   | String | optional |  `"main"`  |
-| <a id="hlsl_shader-hash"></a>hash |  Output shader hash to the given file (-Fsh <file>). This will produce <name>.hash file   | Boolean | optional |  `False`  |
+| <a id="hlsl_shader-hash"></a>hash |  Output shader hash to the specified file (-Fsh <file>)   | String | optional |  `""`  |
 | <a id="hlsl_shader-hlsl"></a>hlsl |  HLSL version to use (2016, 2017, 2018, 2021)   | String | optional |  `""`  |
 | <a id="hlsl_shader-includes"></a>includes |  List of directories to be added to the CLI to search for include files   | List of strings | optional |  `[]`  |
 | <a id="hlsl_shader-opts"></a>opts |  Additional arguments to pass to the DXC compiler   | List of strings | optional |  `[]`  |
-| <a id="hlsl_shader-reflect"></a>reflect |  Output reflection to the given file (-Fre <file>). This will produce <name>.reflect file   | Boolean | optional |  `False`  |
+| <a id="hlsl_shader-reflect"></a>reflect |  Output reflection to the specified file (-Fre <file>)   | String | optional |  `""`  |
 | <a id="hlsl_shader-spirv"></a>spirv |  Generate SPIR-V code   | Boolean | optional |  `False`  |
 | <a id="hlsl_shader-target"></a>target |  Target profile (e.g., cs_6_0, ps_6_0, etc.)   | String | required |  |
 

@@ -60,21 +60,21 @@ def _hlsl_shader_impl(ctx):
 
     # Output assembly code
     if ctx.attr.asm:
-        out = ctx.actions.declare_file(ctx.label.name + ".asm")
+        out = ctx.actions.declare_file(ctx.attr.asm)
 
         args.add("-Fc", out)
         all_files.append(out)
 
     # Output reflection
     if ctx.attr.reflect:
-        out = ctx.actions.declare_file(ctx.label.name + ".reflect")
+        out = ctx.actions.declare_file(ctx.attr.reflect)
 
         args.add("-Fre", out)
         all_files.append(out)
 
     # Output hash.
     if ctx.attr.hash:
-        out = ctx.actions.declare_file(ctx.label.name + ".hash")
+        out = ctx.actions.declare_file(ctx.attr.hash)
 
         args.add("-Fsh", out)
         all_files.append(out)
@@ -162,14 +162,14 @@ hlsl_shader = rule(
         "opts": attr.string_list(
             doc = "Additional arguments to pass to the DXC compiler",
         ),
-        "asm": attr.bool(
-            doc = "Output assembly code listing file (-Fc <file>). This will produce <name>.asm file",
+        "asm": attr.string(
+            doc = "Output assembly code listing file to the specified path (-Fc <file>)",
         ),
-        "reflect": attr.bool(
-            doc = "Output reflection to the given file (-Fre <file>). This will produce <name>.reflect file",
+        "reflect": attr.string(
+            doc = "Output reflection to the specified file (-Fre <file>)",
         ),
-        "hash": attr.bool(
-            doc = "Output shader hash to the given file (-Fsh <file>). This will produce <name>.hash file",
+        "hash": attr.string(
+            doc = "Output shader hash to the specified file (-Fsh <file>)",
         ),
         "_extra_opts": attr.label(
             default = "//vulkan/settings:dxc_opts",
