@@ -59,25 +59,25 @@ def _hlsl_shader_impl(ctx):
         args.add("-rootsig-define", ctx.attr.def_root_sig)
 
     # Output assembly code
+    asm_file = None
     if ctx.attr.asm:
-        out = ctx.actions.declare_file(ctx.attr.asm)
-
-        args.add("-Fc", out)
-        all_files.append(out)
+        asm_file = ctx.actions.declare_file(ctx.attr.asm)
+        args.add("-Fc", asm_file)
+        all_files.append(asm_file)
 
     # Output reflection
+    reflection_file = None
     if ctx.attr.reflect:
-        out = ctx.actions.declare_file(ctx.attr.reflect)
-
-        args.add("-Fre", out)
-        all_files.append(out)
+        reflection_file = ctx.actions.declare_file(ctx.attr.reflect)
+        args.add("-Fre", reflection_file)
+        all_files.append(reflection_file)
 
     # Output hash.
+    hash_file = None
     if ctx.attr.hash:
-        out = ctx.actions.declare_file(ctx.attr.hash)
-
-        args.add("-Fsh", out)
-        all_files.append(out)
+        hash_file = ctx.actions.declare_file(ctx.attr.hash)
+        args.add("-Fsh", hash_file)
+        all_files.append(hash_file)
 
     if ctx.attr.spirv:
         args.add("-spirv")
@@ -112,7 +112,10 @@ def _hlsl_shader_impl(ctx):
         ),
         ShaderInfo(
             entry = ctx.attr.entry,
-            outs = [f.short_path for f in all_files],
+            assembly = asm_file.path if asm_file else None,
+            reflection = reflection_file.path if reflection_file else None,
+            hash = hash_file.path if hash_file else None,
+            depfile = None,
             stage = _map_stage(ctx.attr.target),
             defines = ctx.attr.defines,
             target = ctx.attr.target,

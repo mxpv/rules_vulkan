@@ -38,17 +38,17 @@ def _slang_shader_impl(ctx):
         args.add("-I", path)
 
     # Emit reflection data to a file
+    reflection_file = None
     if ctx.attr.reflect:
-        out = ctx.actions.declare_file(ctx.attr.reflect)
+        reflection_file = ctx.actions.declare_file(ctx.attr.reflect)
+        args.add("-reflection-json", reflection_file.path)
+        all_files.append(reflection_file)
 
-        args.add("-reflection-json", out.path)
-        all_files.append(out)
-
+    depfile_file = None
     if ctx.attr.depfile:
-        out = ctx.actions.declare_file(ctx.attr.depfile)
-
-        args.add("-depfile", out.path)
-        all_files.append(out)
+        depfile_file = ctx.actions.declare_file(ctx.attr.depfile)
+        args.add("-depfile", depfile_file.path)
+        all_files.append(depfile_file)
 
     # Append user-defined extra arguments
     args.add_all(ctx.attr.opts)
@@ -79,7 +79,10 @@ def _slang_shader_impl(ctx):
         ),
         ShaderInfo(
             entry = ctx.attr.entry,
-            outs = [f.short_path for f in all_files],
+            assembly = None,
+            reflection = reflection_file.path if reflection_file else None,
+            hash = None,
+            depfile = depfile_file.path if depfile_file else None,
             stage = ctx.attr.stage,
             defines = ctx.attr.defines,
             target = ctx.attr.target,
