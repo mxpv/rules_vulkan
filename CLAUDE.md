@@ -24,8 +24,8 @@ HLSL, and Slang shaders, plus spirv-cross transpilation.
 
 ### SDK Version Updates
 - `python tools/update_versions.py` - Fetch latest Vulkan SDK versions and update versions.bzl
-- After running the script, format with `bazelisk run :fmt`
-- If there are changes in versions.bzl after formatting, create a PR with the updates
+- `bazelisk run :fmt` - Format the files after running the script
+- Check for changes in versions.bzl after formatting - if there are changes, create a PR with the updates
 - If no changes, report "no new versions available" and specify the latest currently available version
 
 ## Architecture
