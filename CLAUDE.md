@@ -21,6 +21,7 @@ HLSL, and Slang shaders, plus spirv-cross transpilation.
 
 ### Documentation
 - `bazelisk run //docs:update_test` - Verify documentation is up to date
+- Note: There's currently an issue with Bazel 8 when generating docs on macOS due to absolute path inclusion errors with protobuf/utf8_range (see [bazelbuild/bazel#21718](https://github.com/bazelbuild/bazel/issues/21718) and [bazelbuild/bazel#24556](https://github.com/bazelbuild/bazel/issues/24556)). Workaround: `USE_BAZEL_VERSION=7.4.1 bazelisk run //docs:update`
 
 ### SDK Version Updates
 - `python tools/update_versions.py` - Fetch latest Vulkan SDK versions and update versions.bzl
@@ -68,13 +69,14 @@ building shader databases.
 
 ### Commit Messages and PRs
 - Use descriptive commit messages that explain the change and its purpose
-- Do not include AI tool references, co-authorship attributions, or generation credits in commit messages or PRs
-- Do not add "Generated with Claude Code" or "Co-Authored-By: Claude" to commit messages or PRs
-- Before opening PRs, update documentation and run lints: `bazelisk run //docs:update` and `bazelisk run :fmt`
+- PR titles are used to generate changelog, so they must be formatted accordingly and clearly describe the feature or fix
+- Before making a commit or opening a PR, update documentation and run lints: `bazelisk run //docs:update` and `bazelisk run :fmt`
+- Don't add "Generated with [Claude Code](https://claude.ai/code)" to commit messages.
+- Don't add "Co-Authored-By: Claude <noreply@anthropic.com>" to commit messages.
 
 ### Pre-Push Checklist
 Before pushing code to the repository, ensure the following steps are completed:
-1. Update documentation: `bazelisk run //docs:update`
+1. Update documentation: `bazelisk run //docs:update` (or `USE_BAZEL_VERSION=7.4.1 bazelisk run //docs:update` on macOS with Bazel 8 issues)
 2. Run buildifier linter and formatter: `bazelisk run :lint` and `bazelisk run :fmt`
 3. Execute e2e tests to verify functionality
 
