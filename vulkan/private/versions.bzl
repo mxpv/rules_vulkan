@@ -4,9 +4,31 @@
 # GENERATED FILE. Do not edit.
 # Use ./tools/update_versions.py to update the list of available SDK versions
 
-LATEST_VERSION = "1.4.313.2"
+LATEST_VERSION = "1.4.321.0"
 
 VERSIONS = {
+    "1.4.321.0": {
+        "linux": {
+            "url": "https://sdk.lunarg.com/sdk/download/1.4.321.0/linux/vulkansdk-linux-x86_64-1.4.321.0.tar.xz",
+            "sha": "a60c30206108146acd9f6fdcc20df651e557f7ef7b7ed2d7f367b7bc6a5f45a8",
+        },
+        "mac": {
+            "url": "https://sdk.lunarg.com/sdk/download/1.4.321.0/mac/vulkansdk-macos-1.4.321.0.zip",
+            "sha": "d873c43acacec1e3330fb530dafd541aa5d8a5726575a98a3f70ca505fc203db",
+        },
+        "windows": {
+            "url": "https://sdk.lunarg.com/sdk/download/1.4.321.0/windows/vulkansdk-windows-X64-1.4.321.0.exe",
+            "sha": "14ebc56ef981e03a292adadd2559fbbfcd0289ec157bfd0f0d5f9fdcb40042a9",
+            "runtime_url": "https://sdk.lunarg.com/sdk/download/1.4.321.0/windows/VulkanRT-X64-1.4.321.0-Components.zip",
+            "runtime_sha": "f8ba79303face4b72a2f302f1a46e8c918995b54fbf24c0c9fc6c3d3ef525dca",
+        },
+        "warm": {
+            "url": "https://sdk.lunarg.com/sdk/download/1.4.321.0/warm/vulkansdk-windows-ARM64-1.4.321.0.exe",
+            "sha": "56a47cd99d94e86ea764bb37583248913db3615a5c04f6d81f6cc8f4d31d2dc8",
+            "runtime_url": "https://sdk.lunarg.com/sdk/download/1.4.321.0/warm/VulkanRT-ARM64-1.4.321.0-Components.zip",
+            "runtime_sha": "7dc1fd6ef4063282b02f3758988a4d35e312421e358810c556194caa2df8f872",
+        },
+    },
     "1.4.313.2": {
         "windows": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.313.2/windows/vulkansdk-windows-X64-1.4.313.2.exe",
