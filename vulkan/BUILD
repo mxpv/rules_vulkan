@@ -13,8 +13,6 @@ bzl_library(
         "defs.bzl",
         "extensions.bzl",
         "providers.bzl",
-        "rules.bzl",
-        "shader_group.bzl",
         "toolchains.bzl",
     ],
     visibility = ["//docs:__subpackages__"],
