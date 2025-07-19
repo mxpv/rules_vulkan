@@ -4,9 +4,23 @@
 # GENERATED FILE. Do not edit.
 # Use ./tools/update_versions.py to update the list of available SDK versions
 
-LATEST_VERSION = "1.4.321.0"
+LATEST_VERSION = "1.4.321.1"
 
 VERSIONS = {
+    "1.4.321.1": {
+        "linux": {
+            "url": "https://sdk.lunarg.com/sdk/download/1.4.321.1/linux/vulkansdk-linux-x86_64-1.4.321.1.tar.xz",
+            "sha": "f22a3625bd4d7a32e7a0d926ace16d5278c149e938dac63cecc00537626cbf73",
+        },
+        "windows": {
+            "url": "https://sdk.lunarg.com/sdk/download/1.4.321.1/windows/vulkansdk-windows-X64-1.4.321.1.exe",
+            "sha": "baaa4f7ca11ed3d82aa1c102b21208915485bbaa473068c763daa425cca468bd",
+        },
+        "warm": {
+            "url": "https://sdk.lunarg.com/sdk/download/1.4.321.1/warm/vulkansdk-windows-ARM64-1.4.321.1.exe",
+            "sha": "d6a6f9eceb3447acb4556a458132793201125d7877c533ce0b436fadf3005004",
+        },
+    },
     "1.4.321.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.321.0/linux/vulkansdk-linux-x86_64-1.4.321.0.tar.xz",
