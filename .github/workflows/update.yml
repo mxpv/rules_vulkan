@@ -69,6 +69,7 @@ jobs:
           # Create PR
           gh pr create \
             --title "Update Vulkan SDK versions to ${LATEST_VERSION}" \
+            --label "sdk" \
             --body "$(cat <<EOF
           ## Summary
           - Updated available Vulkan SDK versions from LunarG website
