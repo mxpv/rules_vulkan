@@ -42,9 +42,16 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Create branch with version and timestamp
-          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-          BRANCH_NAME="update-vulkan-${LATEST_VERSION}-${TIMESTAMP}"
+          # Create branch name
+          BRANCH_NAME="update-vulkan-${LATEST_VERSION}"
+          
+          # Check if branch already exists on remote
+          if git ls-remote --exit-code --heads origin "$BRANCH_NAME" >/dev/null 2>&1; then
+            echo "Branch $BRANCH_NAME already exists. Skipping PR creation."
+            exit 0
+          fi
+          
+          # Create branch
           git checkout -b "$BRANCH_NAME"
           
           # Get diff for PR body

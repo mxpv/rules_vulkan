@@ -64,6 +64,7 @@ building shader databases.
 - All public APIs must include comprehensive documentation
 - Proofread documentation for clarity and accuracy
 - Check for spelling errors and typos in code reviews
+- Avoid adding comments that describe removed code or reference past implementation details
 
 ### Commit Messages and PRs
 - Use descriptive commit messages that explain the change and its purpose
