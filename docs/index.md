@@ -224,10 +224,10 @@ This is useful for building all kind of shader databases.
 
 | Name  | Description |
 | :------------- | :------------- |
-| <a id="ShaderInfo-assembly"></a>assembly |  Path to assembly output file (if generated, HLSL-specific)    |
-| <a id="ShaderInfo-reflection"></a>reflection |  Path to reflection output file (if generated)    |
-| <a id="ShaderInfo-hash"></a>hash |  Path to hash output file (if generated, HLSL-specific)    |
-| <a id="ShaderInfo-depfile"></a>depfile |  Path to dependency output file (if generated, Slang-specific)    |
+| <a id="ShaderInfo-assembly"></a>assembly |  Assembly output file (if generated, HLSL-specific)    |
+| <a id="ShaderInfo-reflection"></a>reflection |  Reflection output file (if generated)    |
+| <a id="ShaderInfo-hash"></a>hash |  Hash output file (if generated, HLSL-specific)    |
+| <a id="ShaderInfo-depfile"></a>depfile |  Dependency output file (if generated, Slang-specific)    |
 | <a id="ShaderInfo-entry"></a>entry |  Shader entry point function name    |
 | <a id="ShaderInfo-stage"></a>stage |  Shader stage    |
 | <a id="ShaderInfo-defines"></a>defines |  List of shader defines used during compilation    |

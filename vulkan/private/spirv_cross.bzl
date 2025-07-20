@@ -53,6 +53,10 @@ def _spirv_cross_impl(ctx):
         DefaultInfo(files = depset([output_file])),
         ShaderInfo(
             entry = entry,
+            assembly = None,
+            reflection = None,
+            hash = None,
+            depfile = None,
             stage = stage,
             defines = shader_info.defines if shader_info else [],
             target = ctx.attr.backend,

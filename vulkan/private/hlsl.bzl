@@ -112,9 +112,9 @@ def _hlsl_shader_impl(ctx):
         ),
         ShaderInfo(
             entry = ctx.attr.entry,
-            assembly = asm_file.path if asm_file else None,
-            reflection = reflection_file.path if reflection_file else None,
-            hash = hash_file.path if hash_file else None,
+            assembly = asm_file if asm_file else None,
+            reflection = reflection_file if reflection_file else None,
+            hash = hash_file if hash_file else None,
             depfile = None,
             stage = _map_stage(ctx.attr.target),
             defines = ctx.attr.defines,

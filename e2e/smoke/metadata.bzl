@@ -36,15 +36,15 @@ def _shader_metadata_impl(ctx):
             # Add optional output files if they exist
             optional_outputs = {}
             if hasattr(info, "assembly") and info.assembly:
-                optional_outputs["assembly"] = info.assembly
+                optional_outputs["assembly"] = info.assembly.path
                 assembly_files.append(info.assembly)
             if hasattr(info, "reflection") and info.reflection:
-                optional_outputs["reflection"] = info.reflection
+                optional_outputs["reflection"] = info.reflection.path
                 reflection_files.append(info.reflection)
             if hasattr(info, "hash") and info.hash:
-                optional_outputs["hash"] = info.hash
+                optional_outputs["hash"] = info.hash.path
             if hasattr(info, "depfile") and info.depfile:
-                optional_outputs["depfile"] = info.depfile
+                optional_outputs["depfile"] = info.depfile.path
                 dependency_files.append(info.depfile)
 
             if optional_outputs:
@@ -73,9 +73,9 @@ def _shader_metadata_impl(ctx):
     metadata = {
         "summary": summary,
         "shaders": shader_database,
-        "reflection_files": reflection_files,
-        "assembly_files": assembly_files,
-        "dependency_files": dependency_files,
+        "reflection_files": [f.path for f in reflection_files],
+        "assembly_files": [f.path for f in assembly_files],
+        "dependency_files": [f.path for f in dependency_files],
     }
 
     out = ctx.actions.declare_file(ctx.attr.out)
