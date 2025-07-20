@@ -80,9 +80,9 @@ def _slang_shader_impl(ctx):
         ShaderInfo(
             entry = ctx.attr.entry,
             assembly = None,
-            reflection = reflection_file.path if reflection_file else None,
+            reflection = reflection_file if reflection_file else None,
             hash = None,
-            depfile = depfile_file.path if depfile_file else None,
+            depfile = depfile_file if depfile_file else None,
             stage = ctx.attr.stage,
             defines = ctx.attr.defines,
             target = ctx.attr.target,
