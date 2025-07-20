@@ -62,14 +62,15 @@ building shader databases.
 ### Code Quality
 - Write clean and idiomatic Starlark code following Bazel best practices
 - All public APIs must include comprehensive documentation
-- Proofread documentation for clarity and accuracy
+- Always proofread and reword documentation or comments as needed for clarity and correctness
 - Check for spelling errors and typos in code reviews
 - Avoid adding comments that describe removed code or reference past implementation details
 
 ### Commit Messages and PRs
 - Use descriptive commit messages that explain the change and its purpose
 - PR titles are used to generate changelog, so they must be formatted accordingly and clearly describe the feature or fix
-- Before making a commit or opening a PR, update documentation and run lints: `bazelisk run //docs:update` and `bazelisk run :fmt`
+- Before making a commit or opening a PR, ensure documentation is up to date and run lints: `bazelisk run //docs:update` and `bazelisk run :fmt`
+- Include a brief summary of changes (couple of sentences) in the commit body or PR description
 - Don't add "Generated with [Claude Code](https://claude.ai/code)" to commit messages.
 - Don't add "Co-Authored-By: Claude <noreply@anthropic.com>" to commit messages.
 
