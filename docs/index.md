@@ -77,15 +77,67 @@ load("@rules_vulkan//vulkan:defs.bzl", "shader_group")
 shader_group(<a href="#shader_group-name">name</a>, <a href="#shader_group-deps">deps</a>, <a href="#shader_group-pkg_prefix">pkg_prefix</a>)
 </pre>
 
-`shadergroup` is a rule to group multiple shaders together.
+`shader_group` is a rule to group multiple shaders together.
 
-`shadergroup` is similar to `filegroup`, but forwards providers.
+Similar to `filegroup`, but forwards providers to enable building shader libraries and databases. The motivation
+for this rule is described in this [issue](https://github.com/bazelbuild/bazel/issues/8904).
 
-Roughly the motivation for this is described in this [issue](https://github.com/bazelbuild/bazel/issues/8904).
+The rule expects dependencies from shader compiler targets such as `hlsl_shader`, `glsl_shader`, `slang_shader`,
+and `spirv_cross`. Shader groups can also depend on other shader groups, creating hierarchical structures. Each
+`shader_group` accumulates ShaderInfo structures from all its dependencies and returns a ShaderGroupInfo provider
+containing the collected shader information.
 
-There are a few use cases where this can be useful:
-- Group a few related shaders together (e.g. vertex + pixel shader).
-- Group lots of shaders to build a library or a database. Refer to `e2e/smoke` example how to approach this.
+Common use cases include:
+- Grouping related shaders together (e.g. vertex + fragment shader pair).
+- Building large shader libraries or databases. See the `e2e/smoke` example for implementation details.
+
+**Example:**
+
+```starlark
+load("@rules_vulkan//vulkan:defs.bzl", "hlsl_shader", "glsl_shader", "shader_group")
+
+hlsl_shader(
+    name = "vertex_shader",
+    src = "vertex.hlsl",
+    entry = "VSMain",
+    target = "vs_6_0",
+)
+
+glsl_shader(
+    name = "fragment_shader",
+    src = "fragment.glsl",
+    stage = "frag",
+)
+
+shader_group(
+    name = "graphics_shaders",
+    deps = [
+        ":vertex_shader",
+        ":fragment_shader",
+    ],
+    pkg_prefix = "shaders/",
+)
+```
+
+**Rules_pkg Integration:**
+
+The `shader_group` rule integrates seamlessly with `rules_pkg` for creating shader archives. When `pkg_prefix` is
+specified, the rule provides `PackageFilesInfo` that can be consumed directly by `pkg_zip` and other packaging
+rules.
+
+The shader group acts as a replacement for `pkg_files`, automatically bundling all shader outputs (compiled
+binaries, reflection data, assembly files, etc.) into the specified archive subdirectory. This eliminates the
+need to manually specify each shader output file when creating packages.
+
+```starlark
+load("@rules_pkg//:pkg.bzl", "pkg_zip")
+
+pkg_zip(
+    name = "shader_database",
+    srcs = [":graphics_shaders"],  # All shaders will be placed in shaders/ subdirectory
+    out = "shaders.zip",
+)
+```
 
 **ATTRIBUTES**
 
@@ -93,7 +145,7 @@ There are a few use cases where this can be useful:
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="shader_group-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="shader_group-deps"></a>deps |  List of shader targets to group together.<br><br>This can depend either on a shader target directly (HLSL, GLSL, or Slang) or any other `shader_group`.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
+| <a id="shader_group-deps"></a>deps |  List of shader targets to group together.<br><br>Accepts individual shader targets (HLSL, GLSL, Slang, or spirv_cross) and other `shader_group` targets for hierarchical grouping.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="shader_group-pkg_prefix"></a>pkg_prefix |  If using with `rules_pkg`, sub-directory in the destination archive   | String | optional |  `""`  |
 
 
