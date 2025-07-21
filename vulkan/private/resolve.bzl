@@ -5,7 +5,6 @@ Module to resolve download URL and checksum from the provided SDK version.
 load("@aspect_bazel_lib//lib:repo_utils.bzl", "repo_utils")
 load(":versions.bzl", "VERSIONS")
 
-
 def normalize_os(ctx):
     """
     Convert repository context to LunarG platform name using repo_utils.
