@@ -9,6 +9,7 @@ ShaderInfo = provider(
     This is useful for building all kind of shader databases.
     """,
     fields = {
+        "binary": "Binary output file containing the compiled shader bytecode",
         "assembly": "Assembly output file (if generated, HLSL-specific)",
         "reflection": "Reflection output file (if generated)",
         "hash": "Hash output file (if generated, HLSL-specific)",
