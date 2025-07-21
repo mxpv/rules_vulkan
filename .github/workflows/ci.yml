@@ -64,6 +64,9 @@ jobs:
     name: Integration Tests
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: e2e/smoke
 
     strategy:
       matrix:
@@ -76,6 +79,11 @@ jobs:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
           repository-cache: true
+      - name: Test direct binary invocation
+        run: |
+          bazelisk run @vk_sdk//:spirv_cross -- --help
+          bazelisk run @vk_sdk//:glslc -- --version
+          bazelisk run @vk_sdk//:dxc -- --version
+          bazelisk run @vk_sdk//:slangc -- -h
       - run: bazelisk run :app --verbose_failures
-        working-directory: e2e/smoke
 
