@@ -77,7 +77,7 @@ building shader databases.
 - PR titles are used to generate changelog, so they must be formatted accordingly and clearly describe the feature or fix
 - **IMPORTANT**: Before making a commit, always run formatter and linter: `bazelisk run :fmt` and `bazelisk run :lint`
 - Before opening a PR, ensure documentation is up to date: `bazelisk run //docs:update`
-- For PR descriptions, keep them concise and descriptive - limit to a couple of sentences that clearly explain the change. Avoid structured formatting such as bullet points, sections like "Summary", "Test plan", "Changes", "Usage", or other elaborate formatting.
+- **CRITICAL**: For PR descriptions, keep them concise and descriptive - limit to a couple of sentences that clearly explain the change. **NEVER** use structured formatting such as bullet points, sections like "Summary", "Test plan", "Changes", "Usage", or other elaborate formatting. Just write a simple paragraph describing what the change does.
 - Don't add "Generated with [Claude Code](https://claude.ai/code)" to commit messages.
 - Don't add "Co-Authored-By: Claude <noreply@anthropic.com>" to commit messages.
 
