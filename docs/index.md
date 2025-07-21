@@ -265,7 +265,7 @@ A collection of shader infos.
 <pre>
 load("@rules_vulkan//vulkan:defs.bzl", "ShaderInfo")
 
-ShaderInfo(<a href="#ShaderInfo-assembly">assembly</a>, <a href="#ShaderInfo-reflection">reflection</a>, <a href="#ShaderInfo-hash">hash</a>, <a href="#ShaderInfo-depfile">depfile</a>, <a href="#ShaderInfo-entry">entry</a>, <a href="#ShaderInfo-stage">stage</a>, <a href="#ShaderInfo-defines">defines</a>, <a href="#ShaderInfo-target">target</a>)
+ShaderInfo(<a href="#ShaderInfo-binary">binary</a>, <a href="#ShaderInfo-assembly">assembly</a>, <a href="#ShaderInfo-reflection">reflection</a>, <a href="#ShaderInfo-hash">hash</a>, <a href="#ShaderInfo-depfile">depfile</a>, <a href="#ShaderInfo-entry">entry</a>, <a href="#ShaderInfo-stage">stage</a>, <a href="#ShaderInfo-defines">defines</a>, <a href="#ShaderInfo-target">target</a>)
 </pre>
 
 Shader metadata returned by the shader targets during compilation.
@@ -276,6 +276,7 @@ This is useful for building all kind of shader databases.
 
 | Name  | Description |
 | :------------- | :------------- |
+| <a id="ShaderInfo-binary"></a>binary |  Binary output file containing the compiled shader bytecode    |
 | <a id="ShaderInfo-assembly"></a>assembly |  Assembly output file (if generated, HLSL-specific)    |
 | <a id="ShaderInfo-reflection"></a>reflection |  Reflection output file (if generated)    |
 | <a id="ShaderInfo-hash"></a>hash |  Hash output file (if generated, HLSL-specific)    |
