@@ -11,7 +11,7 @@ HLSL, and Slang shaders, plus spirv-cross transpilation.
 ## Common Commands
 
 ### Build and Test
-- `bazelisk test //vulkan/tests/...` - Run unit tests
+- `bazelisk test //tests/...` - Run unit tests
 - `bazelisk run :app --verbose_failures` - Run the e2e smoke test (from e2e/smoke directory)
 - `bazelisk build //...` - Build all targets
 
@@ -88,5 +88,5 @@ and providers.
 
 ## Testing
 
-The project has both unit tests (`vulkan/tests/`) and integration tests (`e2e/smoke/`). The CI runs tests across
+The project has both unit tests (`tests/`) and integration tests (`e2e/smoke/`). The CI runs tests across
 Windows, Linux, and macOS with multiple Bazel versions.
