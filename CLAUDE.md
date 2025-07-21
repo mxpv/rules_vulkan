@@ -66,6 +66,12 @@ building shader databases.
 - Check for spelling errors and typos in code reviews
 - Avoid adding comments that describe removed code or reference past implementation details
 
+### Documentation Guidelines
+- **NEVER** edit `docs/index.md` directly - it is generated automatically via `bazelisk run //docs:update`
+- Wrap all documentation at 120 characters for readability
+- Don't add trailing spaces at the end of lines
+- Update source documentation comments in `.bzl` files instead of generated docs
+
 ### Commit Messages and PRs
 - Use descriptive commit messages that explain the change and its purpose
 - PR titles are used to generate changelog, so they must be formatted accordingly and clearly describe the feature or fix
