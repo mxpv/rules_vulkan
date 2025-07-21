@@ -98,7 +98,6 @@ def _hlsl_shader_impl(ctx):
         outputs = all_files,
         arguments = [args],
         executable = sdk.dxc,
-        env = sdk.env,
         progress_message = "Compiling HLSL shader %s" % src.path,
         mnemonic = "HlslCompile",
     )
