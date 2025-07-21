@@ -78,6 +78,7 @@ def _slang_shader_impl(ctx):
             all_files = depset(all_files),
         ),
         ShaderInfo(
+            binary = compiled_file,
             entry = ctx.attr.entry,
             assembly = None,
             reflection = reflection_file if reflection_file else None,

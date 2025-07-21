@@ -111,6 +111,7 @@ def _hlsl_shader_impl(ctx):
             all_files = depset(all_files),
         ),
         ShaderInfo(
+            binary = compiled_file,
             entry = ctx.attr.entry,
             assembly = asm_file if asm_file else None,
             reflection = reflection_file if reflection_file else None,

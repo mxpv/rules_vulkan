@@ -52,6 +52,7 @@ def _spirv_cross_impl(ctx):
     return [
         DefaultInfo(files = depset([output_file])),
         ShaderInfo(
+            binary = output_file,
             entry = entry,
             assembly = None,
             reflection = None,
