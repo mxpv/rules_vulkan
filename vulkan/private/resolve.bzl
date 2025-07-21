@@ -2,29 +2,38 @@
 Module to resolve download URL and checksum from the provided SDK version.
 """
 
+load("@aspect_bazel_lib//lib:repo_utils.bzl", "repo_utils")
 load(":versions.bzl", "VERSIONS")
 
-def normalize_os(os, arch):
+
+def normalize_os(ctx):
     """
-    Convert Bazel OS string to LunarG platform name.
+    Convert repository context to LunarG platform name using repo_utils.
 
     Args:
-        os: OS name fetched from the repository context.
-        arch: Arch name.
+        ctx: Repository context.
     Returns:
         Platform name
     """
-    if os.startswith("linux"):
-        return "linux"
-    elif os.startswith("mac"):
-        return "mac"
-    elif os.startswith("win"):
-        if arch.startswith("arm"):
-            return "warm"
-        else:
-            return "windows"
-    else:
-        fail("Unsupported OS: {}".format(os))
+    platform = repo_utils.platform(ctx)
+
+    # Map repo_utils platform names (os_arch) to LunarG platform names
+    platform_mapping = {
+        "darwin_amd64": "mac",
+        "darwin_arm64": "mac",
+        "linux_amd64": "linux",
+        "linux_arm64": "linux",
+        "linux_s390x": "linux",
+        "linux_ppc64le": "linux",
+        "windows_amd64": "windows",
+        "windows_arm64": "warm",
+    }
+
+    vulkan_platform = platform_mapping.get(platform)
+    if not vulkan_platform:
+        fail("Unsupported platform: {}".format(platform))
+
+    return vulkan_platform
 
 def normalize_version(version):
     """
