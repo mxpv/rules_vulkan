@@ -13,4 +13,5 @@ bzl_library(
         "versions.bzl",
     ],
     visibility = ["//visibility:public"],
+    deps = ["@aspect_bazel_lib//lib:repo_utils"],
 )

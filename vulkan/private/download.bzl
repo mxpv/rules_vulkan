@@ -2,6 +2,7 @@
 Vulkan SDK downloader.
 """
 
+load("@aspect_bazel_lib//lib:repo_utils.bzl", "repo_utils")
 load(":resolve.bzl", "find_exact", "normalize_os", "normalize_version")
 
 def _install_linux(ctx, urls, version, attrs):
@@ -131,7 +132,7 @@ def _download_impl(ctx):
         urls = find_exact(version)
 
     # Fetch URLs for the current platform
-    platform = normalize_os(ctx.os.name, ctx.os.arch)
+    platform = normalize_os(ctx)
     urls = urls.get(platform, None)
     if not urls:
         fail("Download URLs not found for platform {} and SDK {}", platform, version)
@@ -143,11 +144,11 @@ def _download_impl(ctx):
         "{vulkan_deps}": "",  # Windows only
     }
 
-    if platform == "linux":
+    if repo_utils.is_linux(ctx):
         _install_linux(ctx, urls, version, attrs)
-    elif platform == "mac":
+    elif repo_utils.is_darwin(ctx):
         _install_macos(ctx, urls, version, attrs)
-    elif platform in ["windows", "warm"]:
+    elif repo_utils.is_windows(ctx):
         _install_windows(ctx, urls, version, attrs)
     else:
         fail("Unsupported OS: {}".format(platform))
