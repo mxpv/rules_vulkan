@@ -67,6 +67,7 @@ jobs:
     defaults:
       run:
         working-directory: e2e/smoke
+        shell: bash
 
     strategy:
       matrix:
