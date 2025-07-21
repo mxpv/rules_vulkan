@@ -76,7 +76,6 @@ native_binary(
         "@platforms//os:windows": {
             "PATH": "{sdk_root}/Bin",
         },
-        # Required by slangc on Linux
         "@platforms//os:linux": {
             "LD_LIBRARY_PATH": "{sdk_root}/lib",
         },
@@ -99,6 +98,17 @@ native_binary(
 vulkan_toolchain(
     name = "vulkan_sdk_{os}",
     dxc = ":dxc",
+    env = select({
+        # Required by dxc and slangc on Windows
+        "@platforms//os:windows": {
+            "PATH": "{sdk_root}/Bin",
+        },
+        # Required by slangc on Linux
+        "@platforms//os:linux": {
+            "LD_LIBRARY_PATH": "{sdk_root}/lib",
+        },
+        "//conditions:default": {},
+    }),
     glslc = ":glslc",
     slangc = ":slangc",
     spirv_cross = ":spirv_cross",

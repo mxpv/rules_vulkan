@@ -65,6 +65,7 @@ def _slang_shader_impl(ctx):
         outputs = all_files,
         arguments = [args],
         executable = sdk.slangc,
+        env = sdk.env,
         progress_message = "Compiling Slang shader %s" % ", ".join([f.short_path for f in ctx.files.srcs]),
         mnemonic = "SlangCompile",
     )
