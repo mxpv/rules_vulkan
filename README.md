@@ -83,6 +83,24 @@ native_binary(
 
 ```
 
+### ⚡ Direct Binary Invocation
+
+You can invoke SDK binaries directly using their pre-configured targets:
+
+```bash
+# Run spirv-cross directly
+bazelisk run @vk_sdk//:spirv_cross -- --help
+
+# Run glslc directly
+bazelisk run @vk_sdk//:glslc -- --version
+
+# Run dxc directly
+bazelisk run @vk_sdk//:dxc -- --version
+
+# Run slangc directly
+bazelisk run @vk_sdk//:slangc -- -h
+```
+
 Refer to `e2e` project [here](./e2e/smoke/BUILD) for a more complete setup.
 
 ## License

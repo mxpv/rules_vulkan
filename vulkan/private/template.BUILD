@@ -50,6 +50,12 @@ native_binary(
         "@platforms//os:windows": "sdk/Bin/dxc.exe",
         "//conditions:default": "sdk/bin/dxc",
     }),
+    env = select({
+        "@platforms//os:windows": {
+            "PATH": "{sdk_root}/Bin",
+        },
+        "//conditions:default": {},
+    }),
 )
 
 native_binary(
@@ -65,6 +71,16 @@ native_binary(
     src = select({
         "@platforms//os:windows": "sdk/Bin/slangc.exe",
         "//conditions:default": "sdk/bin/slangc",
+    }),
+    env = select({
+        "@platforms//os:windows": {
+            "PATH": "{sdk_root}/Bin",
+        },
+        # Required by slangc on Linux
+        "@platforms//os:linux": {
+            "LD_LIBRARY_PATH": "{sdk_root}/lib",
+        },
+        "//conditions:default": {},
     }),
 )
 
@@ -83,17 +99,6 @@ native_binary(
 vulkan_toolchain(
     name = "vulkan_sdk_{os}",
     dxc = ":dxc",
-    env = select({
-        # Required by dxc and slangc on Windows
-        "@platforms//os:windows": {
-            "PATH": "{sdk_root}/Bin",
-        },
-        # Required by slangc on Linux
-        "@platforms//os:linux": {
-            "LD_LIBRARY_PATH": "{sdk_root}/lib",
-        },
-        "//conditions:default": {},
-    }),
     glslc = ":glslc",
     slangc = ":slangc",
     spirv_cross = ":spirv_cross",
