@@ -74,6 +74,7 @@ building shader databases.
 
 ### Commit Messages and PRs
 - Use descriptive commit messages that explain the change and its purpose
+- Wrap commit message bodies at 80 characters for readability
 - PR titles are used to generate changelog, so they must be formatted accordingly and clearly describe the feature or fix
 - **IMPORTANT**: Before making a commit, always run formatter and linter: `bazelisk run :fmt` and `bazelisk run :lint`
 - Before opening a PR, ensure documentation is up to date: `bazelisk run //docs:update`
