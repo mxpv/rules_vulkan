@@ -1,5 +1,5 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
-load("@gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
+load("@gazelle//:def.bzl", "gazelle", "gazelle_binary")
 
 exports_files(["LICENSE"])
 
@@ -18,7 +18,7 @@ gazelle(
 
 gazelle_binary(
     name = "gazelle_bin",
-    languages = DEFAULT_LANGUAGES + [
+    languages = [
         "@bazel_skylib_gazelle_plugin//bzl",
     ],
 )
