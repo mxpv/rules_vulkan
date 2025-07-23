@@ -25,8 +25,28 @@ jobs:
           repository-cache: true
       - run: bazelisk run :lint
 
+  gazelle:
+    name: Gazelle
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+      - name: Check Gazelle files are up to date
+        run: |
+          bazelisk run :gazelle
+          if ! git diff --exit-code; then
+            echo "ERROR: Gazelle files are out of date. Please run 'bazelisk run :gazelle' and commit the changes."
+            exit 1
+          fi
+
   docs:
-    name: Verify Docs
+    name: Docs
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
