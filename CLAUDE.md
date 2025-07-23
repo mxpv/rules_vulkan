@@ -84,8 +84,9 @@ building shader databases.
 ### Pre-Push Checklist
 Before pushing code to the repository, ensure the following steps are completed:
 1. Update documentation: `bazelisk run //docs:update`
-2. Run buildifier linter and formatter: `bazelisk run :lint` and `bazelisk run :fmt`
-3. Execute e2e tests to verify functionality
+2. Update Gazelle-generated bzl_library targets: `bazelisk run :gazelle`
+3. Run buildifier linter and formatter: `bazelisk run :lint` and `bazelisk run :fmt`
+4. Execute e2e tests to verify functionality
 
 ## Documentation
 
