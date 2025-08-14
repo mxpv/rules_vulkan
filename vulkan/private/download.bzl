@@ -27,6 +27,7 @@ def _install_macos(ctx, urls, version, attrs):
     ctx.download_and_extract(
         urls["url"],
         sha256 = urls["sha"],
+        output = "installer",
     )
 
     # Install Vulkan components from terminal
@@ -43,7 +44,7 @@ def _install_macos(ctx, urls, version, attrs):
         ctx.report_progress("Running installer...")
         ctx.execute(
             [
-                "./vulkansdk-macOS-{0}.app/Contents/MacOS/vulkansdk-macOS-{0}".format(version),
+                "./installer/vulkansdk-macOS-{0}.app/Contents/MacOS/vulkansdk-macOS-{0}".format(version),
                 "--root",
                 ctx.path("unpack"),  # Warning: The installation path cannot be relative, please specify an absolute path.
                 "--accept-licenses",
