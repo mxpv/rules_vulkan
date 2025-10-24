@@ -41,10 +41,7 @@ DOWNLOAD_URL = "https://sdk.lunarg.com/sdk/download/{version}/{platform}/{file}"
 def make_sdk_name(plat, ver):
     match plat:
         case "linux":
-            if version_tuple(ver) <= (1, 3, 250, 1):
-                return f"vulkansdk-linux-x86_64-{ver}.tar.gz"
-            else:
-                return "vulkan_sdk.tar.xz"
+            return "vulkan_sdk.tar.xz"
         case "mac":
             if version_tuple(ver) <= (1, 3, 290, 0):
                 return f"vulkansdk-macos-{ver}.dmg"
