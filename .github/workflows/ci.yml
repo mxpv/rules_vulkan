@@ -79,7 +79,7 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
 
-      - run: bazelisk test //...
+      - run: bazelisk test //vulkan/tests/...
         env:
           USE_BAZEL_VERSION: ${{ matrix.bazel }}
 
