@@ -136,7 +136,7 @@ def _download_impl(ctx):
     platform = normalize_os(ctx)
     urls = urls.get(platform, None)
     if not urls:
-        fail("Download URLs not found for platform {} and SDK {}", platform, version)
+        fail("Download URLs not found for platform {} and SDK {}".format(platform, version))
 
     attrs = {
         "{os}": "",

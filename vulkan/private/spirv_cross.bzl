@@ -51,6 +51,9 @@ def _spirv_cross_impl(ctx):
 
     return [
         DefaultInfo(files = depset([output_file])),
+        OutputGroupInfo(
+            all_files = depset([output_file]),
+        ),
         ShaderInfo(
             binary = output_file,
             entry = entry,
@@ -98,4 +101,5 @@ spirv_cross = rule(
             doc = "Additional arguments to pass to the spirv-cross binary",
         ),
     },
+    provides = [ShaderInfo],
 )
