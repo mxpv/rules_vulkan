@@ -5,7 +5,7 @@ A rule to compile GLSL shaders.
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
 
-def _hlsl_shader_impl(ctx):
+def _glsl_shader_impl(ctx):
     sdk = ctx.toolchains["//vulkan:toolchain_type"].info
 
     compiled_file = ctx.actions.declare_file(ctx.label.name + ".out")
@@ -75,7 +75,7 @@ def _hlsl_shader_impl(ctx):
     ]
 
 glsl_shader = rule(
-    implementation = _hlsl_shader_impl,
+    implementation = _glsl_shader_impl,
     doc = """
     Rule to compile GLSL shader.
     """,
