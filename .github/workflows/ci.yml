@@ -68,7 +68,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        bazel: [7.6.1, 8.3.1]
+        bazel: [7.7.1, 8.4.2, 9.0.0rc3]
 
     steps:
       - uses: actions/checkout@v2
