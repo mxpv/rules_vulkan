@@ -18,6 +18,7 @@ HLSL, and Slang shaders, plus spirv-cross transpilation.
 ### Linting and Formatting
 - `bazelisk run :lint` - Check Bazel file formatting (lint mode)
 - `bazelisk run :fmt` - Format Bazel files with buildifier
+- `bazelisk run :gazelle` - Update Gazelle-generated bzl_library targets
 
 ### Documentation
 - `bazelisk run //docs:update` - Update generated documentation
@@ -37,24 +38,28 @@ and installation. Available SDK versions are maintained in `vulkan/private/versi
 `tools/update_versions.py`). The `versions.bzl` file contains a list of known Vulkan SDK versions available on the
 LunarG website. Use `tools/update_versions.py` to fetch available versions and rebuild `versions.bzl`.
 
-**Shader Compilation Rules**: 
+**Shader Compilation Rules**:
 - `glsl_shader` - Compiles GLSL shaders using glslc
 - `hlsl_shader` - Compiles HLSL shaders using DirectXShaderCompiler (dxc)
 - `slang_shader` - Compiles Slang shaders using slangc
 - `spirv_cross` - Transpiles SPIR-V to other shader languages
+- `shader_group` - Groups multiple shaders together for packaging and metadata aggregation
 
 **Toolchain System**: Uses Bazel toolchains to provide compiler binaries (dxc, glslc, slangc, spirv-cross) from the
 downloaded SDK.
 
 **Providers and Info**: `ShaderInfo` and `ShaderGroupInfo` providers carry metadata about compiled shaders for
-building shader databases.
+building shader databases. `VulkanInfo` provider carries toolchain binaries (dxc, glslc, slangc, spirv-cross) and
+environment configuration.
 
 ### File Structure
 
 - `vulkan/defs.bzl` - Main public API exports
-- `vulkan/private/` - Implementation details for each shader compiler
+- `vulkan/providers.bzl` - Provider definitions (ShaderInfo, ShaderGroupInfo, VulkanInfo)
 - `vulkan/extensions.bzl` - Module extension for SDK management
 - `vulkan/toolchains.bzl` - Toolchain definitions
+- `vulkan/private/` - Implementation details for each shader compiler
+- `vulkan/settings/` - Build settings for compiler-specific options (dxc_opts, glslc_opts, slangc_opts)
 - `e2e/smoke/` - Integration test showcasing all features
 
 ## Guidelines
@@ -97,4 +102,5 @@ and providers.
 ## Testing
 
 The project has both unit tests (`vulkan/tests/`) and integration tests (`e2e/smoke/`). The CI runs tests across
-Windows, Linux, and macOS with multiple Bazel versions.
+Windows, Linux, and macOS with multiple Bazel versions (7.x, 8.x, and 9.x). BCR presubmit tests validate the module
+works correctly when published to the Bazel Central Registry.
