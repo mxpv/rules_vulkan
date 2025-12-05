@@ -88,16 +88,9 @@ native_binary(
 You can invoke SDK binaries directly using their pre-configured targets:
 
 ```bash
-# Run spirv-cross directly
 bazelisk run @vk_sdk//:spirv_cross -- --help
-
-# Run glslc directly
 bazelisk run @vk_sdk//:glslc -- --version
-
-# Run dxc directly
 bazelisk run @vk_sdk//:dxc -- --version
-
-# Run slangc directly
 bazelisk run @vk_sdk//:slangc -- -h
 ```
 
