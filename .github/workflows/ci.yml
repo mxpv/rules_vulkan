@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - uses: bazel-contrib/setup-bazel@0.15.0
         with:
           bazelisk-cache: true
@@ -31,7 +31,7 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - uses: bazel-contrib/setup-bazel@0.15.0
         with:
           bazelisk-cache: true
@@ -51,7 +51,7 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - uses: bazel-contrib/setup-bazel@0.15.0
         with:
           bazelisk-cache: true
@@ -72,7 +72,7 @@ jobs:
         bazel: [7.7.1, 8.4.2, 9.0.0rc3]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - uses: bazel-contrib/setup-bazel@0.15.0
         with:
           bazelisk-cache: true
@@ -98,7 +98,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - uses: bazel-contrib/setup-bazel@0.15.0
         with:
           bazelisk-cache: true
