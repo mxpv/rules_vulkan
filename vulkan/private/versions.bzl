@@ -4,9 +4,15 @@
 # GENERATED FILE. Do not edit.
 # Use ./tools/update_versions.py to update the list of available SDK versions
 
-LATEST_VERSION = "1.4.335.0"
+LATEST_VERSION = "1.4.335.1"
 
 VERSIONS = {
+    "1.4.335.1": {
+        "mac": {
+            "url": "https://sdk.lunarg.com/sdk/download/1.4.335.1/mac/vulkansdk-macos-1.4.335.1.zip",
+            "sha": "0d24d7527149eb41947a7093036026b0540a10d28d46162a3e6f652e892aa104",
+        },
+    },
     "1.4.335.0": {
         "linux": {
             "url": "https://sdk.lunarg.com/sdk/download/1.4.335.0/linux/vulkansdk-linux-x86_64-1.4.335.0.tar.xz",
