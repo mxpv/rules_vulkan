@@ -1,0 +1,18 @@
+module(name = "gazelle_plugin")
+
+bazel_dep(name = "rules_vulkan", version = "0.1")
+local_path_override(
+    module_name = "rules_vulkan",
+    path = "../..",
+)
+
+bazel_dep(name = "gazelle", version = "0.47.0")
+
+vulkan_sdk = use_extension("@rules_vulkan//vulkan:extensions.bzl", "vulkan_sdk")
+vulkan_sdk.toolchain(
+    name = "vk_sdk",
+    version = "1.4.313",
+)
+use_repo(vulkan_sdk, "vk_sdk")
+
+register_toolchains("@vk_sdk//:all")
