@@ -7,6 +7,7 @@ import json
 import urllib.request
 import urllib.error
 import pprint
+import time
 
 VERSIONS_URL = "https://vulkan.lunarg.com/sdk/versions.json"
 PLATFORMS = ["linux", "mac", "windows", "warm"]
@@ -69,20 +70,39 @@ def make_rt_name(plat, ver):
 
     return template.format(ver)
 
-def query(ver, plat, file):
+def query(ver, plat, file, max_retries=3, initial_delay=1.0):
     print(f"Fetching checksum for {ver} on {plat} for file {file}...")
 
     url = CHECKSUM_URL.format(version=ver, platform=plat, file=file)
     print(f"  URL: {url}")
 
-    # Query checksum URL.
-    try:
-        with urllib.request.urlopen(url) as resp:
-            data = json.loads(resp.read().decode())
-    except urllib.error.HTTPError as e:
-        if e.code == 404:
-            return None
-        raise
+    # Query checksum URL with retry logic for rate limiting
+    for attempt in range(max_retries):
+        try:
+            # Add a small delay before each request to avoid rate limiting
+            if attempt > 0:
+                delay = initial_delay * (2 ** attempt)
+                print(f"  Retry {attempt + 1}/{max_retries} after {delay}s delay...")
+                time.sleep(delay)
+
+            with urllib.request.urlopen(url) as resp:
+                data = json.loads(resp.read().decode())
+                break
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                # 404 means the package doesn't exist, no point retrying
+                return None
+            elif e.code == 403:
+                # 403 might be rate limiting, retry with backoff
+                if attempt < max_retries - 1:
+                    print(f"  Got 403 (rate limit?), retrying...")
+                    continue
+                else:
+                    print(f"  Got 403 after {max_retries} attempts, skipping...")
+                    return None
+            else:
+                raise
+
     print(f"  Result: {data}")
 
     if isinstance(data, dict) and data.get("ok") is False and data.get("title") == "Not Found":
@@ -97,6 +117,9 @@ def query(ver, plat, file):
 output = {}
 for ver in versions:
     for plat in PLATFORMS:
+        # Add a small delay between requests to avoid rate limiting
+        time.sleep(0.5)
+
         result = query(ver, plat, make_sdk_name(plat, ver))
 
         # Skip if no such package
@@ -112,6 +135,7 @@ for ver in versions:
 
         # Check runtime packages on Windows.
         if plat == "windows" or plat == "warm":
+            time.sleep(0.5)
             result = query(ver, plat, make_rt_name(plat, ver))
             if result:
                 url, sha = result
