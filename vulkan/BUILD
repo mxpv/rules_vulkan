@@ -27,7 +27,6 @@ bzl_library(
         "//vulkan/private:shader_group",
         "//vulkan/private:slang",
         "//vulkan/private:spirv_cross",
-        "//vulkan/private:versions",
     ],
 )
 

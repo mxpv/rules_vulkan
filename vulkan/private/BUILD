@@ -1,5 +1,7 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
+exports_files(["versions.json"])
+
 bzl_library(
     name = "bzl_lib",
     srcs = [
@@ -10,7 +12,6 @@ bzl_library(
         "shader_group.bzl",
         "slang.bzl",
         "spirv_cross.bzl",
-        "versions.bzl",
     ],
     visibility = ["//visibility:public"],
     deps = ["@aspect_bazel_lib//lib:repo_utils"],
@@ -76,18 +77,11 @@ bzl_library(
 )
 
 bzl_library(
-    name = "versions",
-    srcs = ["versions.bzl"],
-    visibility = ["//vulkan:__subpackages__"],
-)
-
-bzl_library(
     name = "resolve",
     srcs = ["resolve.bzl"],
     visibility = ["//vulkan:__subpackages__"],
     deps = [
         ":bzl_lib",
-        ":versions",
         "@aspect_bazel_lib//lib:repo_utils",
     ],
 )

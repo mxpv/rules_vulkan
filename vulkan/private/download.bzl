@@ -130,7 +130,7 @@ def _download_impl(ctx):
     urls = ctx.attr.urls
     if not urls:
         # Fetch URLs for known SDK versions
-        urls = find_exact(version)
+        urls = find_exact(ctx, version)
 
     # Fetch URLs for the current platform
     platform = normalize_os(ctx)
