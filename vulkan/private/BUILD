@@ -4,15 +4,6 @@ exports_files(["versions.json"])
 
 bzl_library(
     name = "bzl_lib",
-    srcs = [
-        "download.bzl",
-        "glsl.bzl",
-        "hlsl.bzl",
-        "resolve.bzl",
-        "shader_group.bzl",
-        "slang.bzl",
-        "spirv_cross.bzl",
-    ],
     visibility = ["//visibility:public"],
     deps = ["@aspect_bazel_lib//lib:repo_utils"],
 )

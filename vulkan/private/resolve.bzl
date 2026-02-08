@@ -17,6 +17,7 @@ def load_versions(ctx):
     """
     versions_json = ctx.read(Label("//vulkan/private:versions.json"))
     versions_data = json.decode(versions_json)
+
     # Filter out metadata keys (e.g., "_latest_version") - only return actual SDK versions
     return {k: v for k, v in versions_data.items() if not k.startswith("_")}
 
