@@ -13,7 +13,8 @@ VERSIONS_URL = "https://vulkan.lunarg.com/sdk/versions.json"
 PLATFORMS = ["linux", "mac", "windows", "warm"]
 
 # Fetch list of available Vulkan SDK versions
-with urllib.request.urlopen(VERSIONS_URL) as response:
+req = urllib.request.Request(VERSIONS_URL, headers={'User-Agent': 'Mozilla/5.0'})
+with urllib.request.urlopen(req) as response:
     versions = json.loads(response.read().decode())
 
 print("Available versions:")
@@ -34,7 +35,7 @@ PLATFORMS = [
 
 # Retrieve checksums.
 # See "Get the SHA hash of the SDK file" in https://vulkan.lunarg.com/content/view/latest-sdk-version-api
-CHECKSUM_URL = "https://sdk.lunarg.com/sdk/sha/{version}/{platform}/{file}.json"
+CHECKSUM_URL = "https://sdk.lunarg.com/sdk/sha/{version}/{platform}/{file}.json?Human=true"
 DOWNLOAD_URL = "https://sdk.lunarg.com/sdk/download/{version}/{platform}/{file}"
 
 # Make package name for download.
@@ -85,7 +86,8 @@ def query(ver, plat, file, max_retries=3, initial_delay=1.0):
                 print(f"  Retry {attempt + 1}/{max_retries} after {delay}s delay...")
                 time.sleep(delay)
 
-            with urllib.request.urlopen(url) as resp:
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req) as resp:
                 data = json.loads(resp.read().decode())
                 break
         except urllib.error.HTTPError as e:
@@ -114,8 +116,35 @@ def query(ver, plat, file, max_retries=3, initial_delay=1.0):
 
     return url, sha
 
-output = {}
-for ver in versions:
+VERSIONS_JSON_PATH = "vulkan/private/versions.json"
+
+# Load existing versions from JSON
+with open(VERSIONS_JSON_PATH, "r") as f:
+    output = json.load(f)
+    print(f"Loaded {len(output)} existing versions from {VERSIONS_JSON_PATH}")
+
+# Filter out metadata keys when comparing versions
+current_versions = {k: v for k, v in output.items() if not k.startswith("_")}
+
+# Determine which versions need to be fetched
+new_versions = [v for v in versions if v not in current_versions]
+removed_versions = [v for v in current_versions.keys() if v not in versions]
+
+if removed_versions:
+    print(f"\nRemoving {len(removed_versions)} versions no longer available:")
+    for ver in removed_versions:
+        print(f"  - {ver}")
+        del current_versions[ver]
+
+if new_versions:
+    print(f"\nFetching {len(new_versions)} new versions:")
+    for ver in new_versions:
+        print(f"  - {ver}")
+else:
+    print("\nNo new versions to fetch")
+
+# Only fetch checksums for new versions
+for ver in new_versions:
     for plat in PLATFORMS:
         # Add a small delay between requests to avoid rate limiting
         time.sleep(0.5)
@@ -128,7 +157,7 @@ for ver in versions:
 
         url, sha = result
 
-        output.setdefault(ver, {})[plat] = {
+        current_versions.setdefault(ver, {})[plat] = {
             "url": url,
             "sha": sha,
         }
@@ -139,41 +168,18 @@ for ver in versions:
             result = query(ver, plat, make_rt_name(plat, ver))
             if result:
                 url, sha = result
-                output[ver][plat].update({
+                current_versions[ver][plat].update({
                     "runtime_url": url,
                     "runtime_sha": sha,
                 })
 
+# Sort by version descending and add metadata
+ordered_output = {k: current_versions[k] for k in sorted(current_versions, reverse=True)}
+ordered_output["_latest_version"] = latest_version
 
-# Sort top-level version keys descending, keep nested dicts as-is
-ordered_output = {k: output[k] for k in sorted(output, reverse=True)}
-
-def format_dict(data, indent_level=0):
-    """Format a dictionary in Starlark format."""
-    if not data:
-        return "{}"
-
-    indent = "    " * indent_level
-    next_indent = "    " * (indent_level + 1)
-
-    lines = ["{"]
-
-    for key, value in data.items():
-        if isinstance(value, dict):
-            formatted_value = format_dict(value, indent_level + 1)
-            lines.append(f'{next_indent}"{key}": {formatted_value},')
-        else:
-            lines.append(f'{next_indent}"{key}": "{value}",')
-    
-    lines.append(f"{indent}}}")
-    return "\n".join(lines)
-
-with open("vulkan/private/versions.bzl", "w") as f:
-    f.write('"""List of SDK packages currently available for download on LunarG.\n"""\n\n')
-    f.write("# GENERATED FILE. Do not edit.\n")
-    f.write("# Use ./tools/update_versions.py to update the list of available SDK versions\n\n")
-    f.write(f'LATEST_VERSION = "{latest_version}"\n\n')
-    f.write("VERSIONS = ")
-    f.write(format_dict(ordered_output))
-    f.write("\n")
+# Save to JSON file
+with open(VERSIONS_JSON_PATH, "w") as f:
+    json.dump(ordered_output, f, indent=2)
+    print(f"\nSaved {len(current_versions)} versions to {VERSIONS_JSON_PATH}")
+    print(f"Latest version: {latest_version}")
 

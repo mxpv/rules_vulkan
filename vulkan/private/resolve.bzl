@@ -3,7 +3,22 @@ Module to resolve download URL and checksum from the provided SDK version.
 """
 
 load("@aspect_bazel_lib//lib:repo_utils.bzl", "repo_utils")
-load(":versions.bzl", "VERSIONS")
+
+def load_versions(ctx):
+    """Load versions from versions.json file.
+
+    This function reads and parses the versions.json file using the repository context.
+
+    Args:
+        ctx: Repository context (only available in repository rules).
+
+    Returns:
+        A dictionary of SDK versions with their download URLs and checksums.
+    """
+    versions_json = ctx.read(Label("//vulkan/private:versions.json"))
+    versions_data = json.decode(versions_json)
+    # Filter out metadata keys (e.g., "_latest_version") - only return actual SDK versions
+    return {k: v for k, v in versions_data.items() if not k.startswith("_")}
 
 def normalize_os(ctx):
     """
@@ -48,18 +63,20 @@ def normalize_version(version):
 
     return version
 
-def find_exact(version):
+def find_exact(ctx, version):
     """
     Find exact record in the VERSIONS table from the provided version and OS/arch retrieved from the `ctx`
 
     Args:
+        ctx: Repository context.
         version: exact version string to fetch info.
 
     Returns:
         A dictionary with URLs for each supported platform.
 	Note: LunarG may release patch releases for certain platforms, so some platform entries might be missing.
     """
-    platforms = VERSIONS.get(version, None)
+    versions = load_versions(ctx)
+    platforms = versions.get(version, None)
     if not platforms:
         fail("Unsupported Vulkan SDK version: {}".format(version))
 
