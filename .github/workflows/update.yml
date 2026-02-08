@@ -24,57 +24,42 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet vulkan/private/versions.bzl; then
+          if git diff --quiet vulkan/private/versions.json; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "No changes detected in versions.bzl"
+            echo "No changes detected in versions.json"
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "Changes detected in versions.bzl"
+            echo "Changes detected in versions.json"
           fi
       
       - name: Create Pull Request
         if: steps.changes.outputs.has_changes == 'true'
         run: |
-          # Get latest Vulkan version from updated file
-          LATEST_VERSION=$(grep 'LATEST_VERSION = ' vulkan/private/versions.bzl | sed 's/LATEST_VERSION = "\(.*\)"/\1/')
-          
-          # Configure git
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          
-          # Create branch name
-          BRANCH_NAME="update-vulkan-${LATEST_VERSION}"
-          
-          # Check if branch already exists on remote
+          # Get diff for PR body and branch name
+          DIFF=$(git diff vulkan/private/versions.json)
+          HASH=$(echo "$DIFF" | sha256sum | cut -c1-8)
+          BRANCH_NAME="update-vulkan-${HASH}"
+
+          # Do not create PRs with the same contents.
           if git ls-remote --exit-code --heads origin "$BRANCH_NAME" >/dev/null 2>&1; then
             echo "Branch $BRANCH_NAME already exists. Skipping PR creation."
             exit 0
           fi
-          
-          # Create branch
+
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
           git checkout -b "$BRANCH_NAME"
-          
-          # Get diff for PR body
-          DIFF=$(git diff vulkan/private/versions.bzl)
-          
-          # Commit changes
-          git add vulkan/private/versions.bzl
-          git commit -m "Update Vulkan SDK versions to ${LATEST_VERSION}
-          
-          Automated update of available Vulkan SDK versions from LunarG."
-          
-          # Push branch
+          git add vulkan/private/versions.json
+          git commit -m "Update Vulkan SDK versions"
           git push origin "$BRANCH_NAME"
-          
-          # Create PR
+
           gh pr create \
-            --title "Update Vulkan SDK versions to ${LATEST_VERSION}" \
+            --title "Update Vulkan SDK versions" \
             --label "sdk" \
             --body "$(cat <<EOF
-          ## Summary
-          - Updated available Vulkan SDK versions from LunarG website
-          - Latest version: ${LATEST_VERSION}
-          
+          Updated available Vulkan SDK versions from LunarG website.
+
           ## Changes
           \`\`\`diff
           ${DIFF}
