@@ -233,7 +233,7 @@ vulkan_toolchain(<a href="#vulkan_toolchain-name">name</a>, <a href="#vulkan_too
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="vulkan_toolchain-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="vulkan_toolchain-dxc"></a>dxc |  Path to dxc   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
-| <a id="vulkan_toolchain-env"></a>env |  Environment to be passed to executables.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
+| <a id="vulkan_toolchain-env"></a>env |  Environment to be passed to executables.   | <a href="https://bazel.build/rules/lib/core/dict">Dictionary: String -> String</a> | optional |  `{}`  |
 | <a id="vulkan_toolchain-glslc"></a>glslc |  Path to glslc   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 | <a id="vulkan_toolchain-slangc"></a>slangc |  Path to slangc   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 | <a id="vulkan_toolchain-spirv_cross"></a>spirv_cross |  Path to spirv_cross   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
@@ -309,7 +309,7 @@ These rely on command line installation described in "Getting started" docs on L
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="download_sdk-name"></a>name |  A unique name for this repository.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="download_sdk-build_file"></a>build_file |  -   | <a href="https://bazel.build/concepts/labels">Label</a> | optional |  `"@rules_vulkan//vulkan/private:template.BUILD"`  |
-| <a id="download_sdk-urls"></a>urls |  URLs and SHA256 checksum for each platform.<br><br>Refer to the module extension doc for specifics.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | required |  |
+| <a id="download_sdk-urls"></a>urls |  URLs and SHA256 checksum for each platform.<br><br>Refer to the module extension doc for specifics.   | <a href="https://bazel.build/rules/lib/core/dict">Dictionary: String -> String</a> | required |  |
 | <a id="download_sdk-version"></a>version |  Vulkan SDK version to download and install.<br><br>This expects a version in the format of `1.4.313.0` or `1.4.313`. When 3 components are provided, `.0` will be appended automatically to make it 4 components.   | String | required |  |
 | <a id="download_sdk-windows_skip_runtime"></a>windows_skip_runtime |  Do not download and install Vulkan runtime package (e.g. `vulkan-1.dll` dependency) on Windows.<br><br>When `True`, the downloader will put `vulkan-1.dll` into the repository root directory.<br><br>This is useful if there is a system-wide Vulkan runtime already installed, otherwise this might lead to link/runtime issues when building CC targets.   | Boolean | optional |  `False`  |
 
