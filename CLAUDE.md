@@ -25,8 +25,9 @@ HLSL, and Slang shaders, plus spirv-cross transpilation.
 - `bazelisk run //docs:update_test` - Verify documentation is up to date
 
 ### SDK Version Updates
-- `python tools/update_versions.py` - Fetch latest Vulkan SDK versions and update versions.bzl (outputs properly formatted code)
-- Check for changes in versions.bzl - if there are changes, create a PR with the updates
+- `python tools/update_versions.py` - Fetch latest Vulkan SDK versions and update versions.json incrementally
+- The script only queries new versions not already in versions.json to avoid rate limiting
+- Check for changes in versions.json - if there are changes, create a PR with the updates
 - If no changes, report "no new versions available" and specify the latest currently available version
 
 ## Architecture
@@ -34,9 +35,11 @@ HLSL, and Slang shaders, plus spirv-cross transpilation.
 ### Core Components
 
 **Vulkan SDK Management**: The `download_sdk` rule and `vulkan_sdk` module extension handle automatic SDK download
-and installation. Available SDK versions are maintained in `vulkan/private/versions.bzl` (updated via
-`tools/update_versions.py`). The `versions.bzl` file contains a list of known Vulkan SDK versions available on the
-LunarG website. Use `tools/update_versions.py` to fetch available versions and rebuild `versions.bzl`.
+and installation. Available SDK versions are maintained in `vulkan/private/versions.json` (updated via
+`tools/update_versions.py`). The JSON file contains a list of known Vulkan SDK versions available on the LunarG
+website with their download URLs and checksums. Repository rules read this file directly using `ctx.read()`. Use
+`tools/update_versions.py` to incrementally fetch new versions - the script only queries versions not already present
+to avoid rate limiting.
 
 **Shader Compilation Rules**:
 - `glsl_shader` - Compiles GLSL shaders using glslc
