@@ -58,7 +58,7 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
 
-      - run: bazelisk run //docs:update_test
+      - run: bazelisk run //docs:update_test --@protobuf//bazel/toolchains:prefer_prebuilt_protoc
 
   tests:
     name: Unit Tests
