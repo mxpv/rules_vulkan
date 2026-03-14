@@ -3,10 +3,6 @@ load("@rules_cc//cc:cc_import.bzl", "cc_import")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_vulkan//vulkan:toolchains.bzl", "vulkan_toolchain")
 
-# Globs are evaluated at loading time before select() is resolved, so all platform
-# patterns are listed together with allow_empty = True to avoid failures on platforms
-# where some patterns don't match. See https://github.com/bazelbuild/bazel/issues/25361
-
 package(default_visibility = ["//visibility:public"])
 
 # Export SDK files to allow external wrappers.
