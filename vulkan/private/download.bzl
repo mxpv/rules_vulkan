@@ -5,6 +5,97 @@ Vulkan SDK downloader.
 load("@aspect_bazel_lib//lib:repo_utils.bzl", "repo_utils")
 load(":resolve.bzl", "find_exact", "normalize_os", "normalize_version")
 
+# Shared attributes between download_sdk rule and the module extension tag class.
+DOWNLOAD_ATTRS = {
+    "version": attr.string(
+        mandatory = True,
+        doc = """
+            Vulkan SDK version to download and install.
+
+            This expects a version in the format of `1.4.313.0` or `1.4.313`.
+            When 3 components are provided, `.0` will be appended automatically to make it 4 components.
+            """,
+    ),
+    "urls": attr.string_dict(
+        doc = """
+            Custom URLs and SHA256 checksums for the Vulkan SDK.
+
+            This allows using a custom mirror for Vulkan SDKs instead of LunarG. When not specified, the SDK
+            is downloaded from the default LunarG mirrors using the bundled `versions.json`.
+
+            A separate download URL and SHA256 checksum is required for each platform. LunarG currently uses
+            the following platform keys:
+            - `windows` - Windows x86-64
+            - `warm` - Windows ARM64
+            - `mac` - macOS
+            - `linux` - Linux
+
+            Each entry must provide `url` and `sha` fields. On Windows platforms, `runtime_url` and
+            `runtime_sha` can be used to provide URLs for the Vulkan runtime package.
+
+            Example:
+            ```bazel
+            custom_urls = {
+                "linux": {
+                    "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/linux/vulkansdk-linux-x86_64-1.4.313.0.tar.xz",
+                    "sha": "4e957b66ade85eeaee95932aa7e3b45aea64db373c58a5eaefc8228cc71445c2",
+                },
+                "mac": {
+                    "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/mac/vulkansdk-macos-1.4.313.0.zip",
+                    "sha": "782a966ef4d5d68acaa933ff45215df2e34f286df8f6077270202f218110dc20",
+                },
+                "windows": {
+                    "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/windows/vulkansdk-windows-X64-1.4.313.0.exe",
+                    "sha": "b643ca8ab4aea5c47b9c4e021a0b33b3a13871bf1d8131e162a9e48c257c4694",
+                    "runtime_url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/windows/VulkanRT-X64-1.4.313.0-Components.zip",
+                    "runtime_sha": "e8d37913185142270a2bc1b3e1f8f498a4edf47405fddda666f2f38b30ca944b",
+                },
+                "warm": {
+                    "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/warm/vulkansdk-windows-ARM64-1.4.313.0.exe",
+                    "sha": "b19a8683df982d302fec07c110962153f02a2e5cf1e5118ff72d8532aa5fc567",
+                    "runtime_url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/warm/VulkanRT-ARM64-1.4.313.0-Components.zip",
+                    "runtime_sha": "6335a8d6b7ab85861025c2546f5f52384ff18a6d9346d350c2a0bf3b7524829a",
+                },
+            }
+            ```
+            """,
+    ),
+    "windows_components": attr.string_list(
+        default = [],
+        doc = """
+            Optional Vulkan SDK components to install on Windows.
+
+            These are passed to the installer between `--confirm-command install` and `copy_only=1`.
+
+            Known components: `com.lunarg.vulkan.sdl2`, `com.lunarg.vulkan.glm`, `com.lunarg.vulkan.volk`,
+            `com.lunarg.vulkan.vma`, `com.lunarg.vulkan.debug`.
+            """,
+    ),
+    "macos_components": attr.string_list(
+        default = [],
+        doc = """
+            Optional Vulkan SDK components to install on macOS.
+
+            These are passed to the installer after `--confirm-command install`.
+
+            Known components: `com.lunarg.vulkan.usr`, `com.lunarg.vulkan.sdl2`, `com.lunarg.vulkan.glm`,
+            `com.lunarg.vulkan.volk`, `com.lunarg.vulkan.vma`, `com.lunarg.vulkan.ios`,
+            `com.lunarg.vulkan.kosmic`.
+            """,
+    ),
+    "windows_skip_runtime": attr.bool(
+        default = False,
+        doc = """
+            Do not download and install Vulkan runtime package (e.g. `vulkan-1.dll` dependency) on Windows.
+
+            When `True`, the downloader will not put `vulkan-1.dll` into the repository root directory.
+
+            This is useful if there is a system-wide Vulkan runtime already installed, otherwise this
+            might lead to link/runtime issues when building CC targets.
+            """,
+    ),
+}
+
 def _install_linux(ctx, urls, version, attrs):
     ctx.report_progress("Downloading and unpacking tarball...")
     ctx.download_and_extract(
@@ -42,21 +133,16 @@ def _install_macos(ctx, urls, version, attrs):
     # This is not ideal and might need to be revisited in future, but it works.
     if not ctx.path("sdk").exists:
         ctx.report_progress("Running installer...")
-        ctx.execute(
-            [
-                "./installer/vulkansdk-macOS-{0}.app/Contents/MacOS/vulkansdk-macOS-{0}".format(version),
-                "--root",
-                ctx.path("unpack"),  # Warning: The installation path cannot be relative, please specify an absolute path.
-                "--accept-licenses",
-                "--default-answer",
-                "--confirm-command",
-                "install",
-                # Optional components to install.
-                # TODO: Make optional components configurable.
-                "com.lunarg.vulkan.vma",
-            ],
-            quiet = False,
-        )
+        cmd = [
+            "./installer/vulkansdk-macOS-{0}.app/Contents/MacOS/vulkansdk-macOS-{0}".format(version),
+            "--root",
+            ctx.path("unpack"),  # Warning: The installation path cannot be relative, please specify an absolute path.
+            "--accept-licenses",
+            "--default-answer",
+            "--confirm-command",
+            "install",
+        ] + ctx.attr.macos_components
+        ctx.execute(cmd, quiet = False)
 
         ctx.symlink("unpack/macOS/", "sdk")
 
@@ -118,7 +204,7 @@ def _install_windows(ctx, urls, version, attrs):
     # See https://vulkan.lunarg.com/doc/sdk/latest/windows/getting_started.html
     ctx.report_progress("Installing components...")
 
-    ctx.execute([
+    cmd = [
         "cmd.exe",
         "/c",
         "installer.exe",
@@ -128,13 +214,15 @@ def _install_windows(ctx, urls, version, attrs):
         "--accept-licenses",
         "--default-answer",
         "--confirm-command install",
+    ] + ctx.attr.windows_components + [
         # For completely unattended installation and modifications,
         # the command prompt must be run as administrator.
         # There is an option to only copy the SDK files and not perform any operations to the registry
         # such as setting up new layers, creating shortcuts, and adjustments to the system path.
         # For the copy only option, append copy_only=1 to the end of the command line installer executable.
         "copy_only=1",
-    ], quiet = False)
+    ]
+    ctx.execute(cmd, quiet = False)
 
     attrs.update({
         "{os}": "windows",
@@ -188,35 +276,7 @@ download_sdk = repository_rule(
     - https://vulkan.lunarg.com/doc/view/1.3.283.0/mac/getting_started.html
 
     """,
-    attrs = {
-        "urls": attr.string_dict(
-            mandatory = True,
-            doc = """
-            URLs and SHA256 checksum for each platform.
-
-            Refer to the module extension doc for specifics.
-            """,
-        ),
-        "version": attr.string(
-            mandatory = True,
-            doc = """
-	    Vulkan SDK version to download and install.
-
-	    This expects a version in the format of `1.4.313.0` or `1.4.313`.
-	    When 3 components are provided, `.0` will be appended automatically to make it 4 components.
-            """,
-        ),
-        "windows_skip_runtime": attr.bool(
-            default = False,
-            doc = """
-            Do not download and install Vulkan runtime package (e.g. `vulkan-1.dll` dependency) on Windows.
-
-            When `True`, the downloader will put `vulkan-1.dll` into the repository root directory.
-
-            This is useful if there is a system-wide Vulkan runtime already installed, otherwise this
-            might lead to link/runtime issues when building CC targets.
-            """,
-        ),
+    attrs = dict(DOWNLOAD_ATTRS, **{
         "build_file": attr.label(default = Label("//vulkan/private:template.BUILD")),
-    },
+    }),
 )

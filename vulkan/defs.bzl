@@ -2,7 +2,7 @@
 Definitions for the Vulkan SDK Bazel rules.
 """
 
-load("//vulkan/private:download.bzl", _download_sdk = "download_sdk")
+load("//vulkan/private:download.bzl", _DOWNLOAD_ATTRS = "DOWNLOAD_ATTRS", _download_sdk = "download_sdk")
 load("//vulkan/private:glsl.bzl", _glsl_shader = "glsl_shader")
 load("//vulkan/private:hlsl.bzl", _hlsl_shader = "hlsl_shader")
 load("//vulkan/private:shader_group.bzl", _shader_group = "shader_group")
@@ -11,6 +11,7 @@ load("//vulkan/private:spirv_cross.bzl", _spirv_cross = "spirv_cross")
 load(":providers.bzl", _ShaderGroupInfo = "ShaderGroupInfo", _ShaderInfo = "ShaderInfo")
 load(":toolchains.bzl", _vulkan_toolchain = "vulkan_toolchain")
 
+DOWNLOAD_ATTRS = _DOWNLOAD_ATTRS
 download_sdk = _download_sdk
 
 hlsl_shader = _hlsl_shader
