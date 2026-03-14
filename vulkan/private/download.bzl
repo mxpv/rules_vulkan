@@ -110,7 +110,6 @@ def _install_linux(ctx, urls, version, attrs):
     attrs.update({
         "{os}": "linux",
         "{sdk_root}": str(ctx.path("sdk")),
-        "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
     })
 
 def _install_macos(ctx, urls, version, attrs):
@@ -149,7 +148,6 @@ def _install_macos(ctx, urls, version, attrs):
     attrs.update({
         "{os}": "macos",
         "{sdk_root}": str(ctx.path("sdk")),
-        "{lib_vulkan}": "sdk/lib/libvulkan*.dylib",
     })
 
 def _install_windows(ctx, urls, version, attrs):
@@ -175,8 +173,6 @@ def _install_windows(ctx, urls, version, attrs):
                 "" if is_arm else "x64",  # on x64 there is an additional x64 subdirectory
             ),
         )
-
-        attrs.update({"{vulkan_deps}": "\":vulkan_dll\""})
 
     # The Qt IFW installer registers in "Installed apps" even with copy_only=1.
     # Running the install command multiple times creates duplicate entries in
@@ -227,8 +223,6 @@ def _install_windows(ctx, urls, version, attrs):
     attrs.update({
         "{os}": "windows",
         "{sdk_root}": str(ctx.path("sdk")),
-        "{include_path}": "sdk/Include",
-        "{lib_vulkan}": "sdk/Lib/vulkan*.lib",
     })
 
 def _download_impl(ctx):
@@ -251,9 +245,7 @@ def _download_impl(ctx):
 
     attrs = {
         "{os}": "",
-        "{include_path}": "sdk/include",
-        "{lib_vulkan}": "sdk/lib/libvulkan*.so*",
-        "{vulkan_deps}": "",  # Windows only
+        "{sdk_root}": "",
     }
 
     if repo_utils.is_linux(ctx):
