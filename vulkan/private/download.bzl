@@ -100,9 +100,13 @@ def _install_windows(ctx, urls, version, attrs):
     # rerunning the installer.
     sdk_path = str(ctx.path("sdk")).replace("/", "\\")
     unreg = ctx.execute([
-        "reg", "query",
+        "reg",
+        "query",
         "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
-        "/s", "/f", sdk_path, "/d",
+        "/s",
+        "/f",
+        sdk_path,
+        "/d",
     ])
     if unreg.return_code == 0:
         ctx.report_progress("Removing stale registry entries...")
