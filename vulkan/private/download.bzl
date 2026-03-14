@@ -92,6 +92,25 @@ def _install_windows(ctx, urls, version, attrs):
 
         attrs.update({"{vulkan_deps}": "\":vulkan_dll\""})
 
+    # The Qt IFW installer registers in "Installed apps" even with copy_only=1.
+    # Running the install command multiple times creates duplicate entries in
+    # "Installed apps" all pointing to the same directory. Manually removing one
+    # entry causes the remaining entries to become broken. To prevent this, delete
+    # stale registry entries pointing to the current install directory before
+    # rerunning the installer.
+    sdk_path = str(ctx.path("sdk")).replace("/", "\\")
+    unreg = ctx.execute([
+        "reg", "query",
+        "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+        "/s", "/f", sdk_path, "/d",
+    ])
+    if unreg.return_code == 0:
+        ctx.report_progress("Removing stale registry entries...")
+        for line in unreg.stdout.split("\n"):
+            line = line.strip()
+            if line.startswith("HKEY_"):
+                ctx.execute(["reg", "delete", line, "/f"])
+
     # See https://vulkan.lunarg.com/doc/sdk/latest/windows/getting_started.html
     ctx.report_progress("Installing components...")
 
