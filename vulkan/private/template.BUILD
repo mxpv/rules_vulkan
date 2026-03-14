@@ -6,7 +6,7 @@ load("@rules_vulkan//vulkan:toolchains.bzl", "vulkan_toolchain")
 package(default_visibility = ["//visibility:public"])
 
 # Export SDK files to allow external wrappers.
-exports_files(glob(["sdk/bin/**"]))
+exports_files(glob(["sdk/**"]))
 
 _SDK_ENV = select({
     "@platforms//os:windows": {
