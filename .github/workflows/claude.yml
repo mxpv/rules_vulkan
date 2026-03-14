@@ -46,7 +46,9 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           additional_permissions: |
             actions: read
-          model: "claude-opus-4-20250514"
           use_sticky_comment: true
-          allowed_tools: "Bash,View,GlobTool,GrepTool,BatchTool"
+
+          # Allow file operations and Bazel builds for code changes and PRs
+          claude_args: |
+            --allowedTools "Bash,Edit,Read,Write,Glob,Grep"
 
