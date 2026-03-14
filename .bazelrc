@@ -1,0 +1,2 @@
+# Use prebuilt protoc instead of compiling from source (speeds up stardoc builds).
+common --@protobuf//bazel/toolchains:prefer_prebuilt_protoc
