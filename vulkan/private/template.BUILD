@@ -3,22 +3,30 @@ load("@rules_cc//cc:cc_import.bzl", "cc_import")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_vulkan//vulkan:toolchains.bzl", "vulkan_toolchain")
 
+# Globs are evaluated at loading time before select() is resolved, so all platform
+# patterns are listed together with allow_empty = True to avoid failures on platforms
+# where some patterns don't match. See https://github.com/bazelbuild/bazel/issues/25361
+
 package(default_visibility = ["//visibility:public"])
 
 # Export SDK files to allow external wrappers.
-exports_files(glob(
-    [
-        "sdk/bin/**",
-        "sdk/Bin/**",
-    ],
-    allow_empty = True,
-))
+exports_files(glob(["sdk/bin/**"]))
+
+_SDK_ENV = select({
+    "@platforms//os:windows": {
+        "PATH": "{sdk_root}/Bin",
+    },
+    "@platforms//os:linux": {
+        "LD_LIBRARY_PATH": "{sdk_root}/lib",
+    },
+    "//conditions:default": {},
+})
 
 filegroup(
     name = "headers",
     srcs = glob([
-        "{include_path}/**/*.h",
-        "{include_path}/**/*.hpp",
+        "sdk/include/**/*.h",
+        "sdk/include/**/*.hpp",
     ]),
 )
 
@@ -34,10 +42,23 @@ cc_import(
 cc_library(
     name = "vulkan",
     # buildifier: disable=constant-glob
-    srcs = glob(["{lib_vulkan}"]),
+    srcs = glob(
+        [
+            # Linux
+            "sdk/lib/libvulkan*.so*",
+            # macOS
+            "sdk/lib/libvulkan*.dylib",
+            # Windows
+            "sdk/lib/vulkan*.lib",
+        ],
+        allow_empty = True,
+    ),
     hdrs = [":headers"],
-    includes = ["{include_path}"],
-    deps = [{vulkan_deps}],
+    includes = ["sdk/include"],
+    deps = select({
+        "@platforms//os:windows": [":vulkan_dll"],
+        "//conditions:default": [],
+    }),
 )
 
 #
@@ -50,12 +71,7 @@ native_binary(
         "@platforms//os:windows": "sdk/Bin/dxc.exe",
         "//conditions:default": "sdk/bin/dxc",
     }),
-    env = select({
-        "@platforms//os:windows": {
-            "PATH": "{sdk_root}/Bin",
-        },
-        "//conditions:default": {},
-    }),
+    env = _SDK_ENV,
 )
 
 native_binary(
@@ -72,15 +88,7 @@ native_binary(
         "@platforms//os:windows": "sdk/Bin/slangc.exe",
         "//conditions:default": "sdk/bin/slangc",
     }),
-    env = select({
-        "@platforms//os:windows": {
-            "PATH": "{sdk_root}/Bin",
-        },
-        "@platforms//os:linux": {
-            "LD_LIBRARY_PATH": "{sdk_root}/lib",
-        },
-        "//conditions:default": {},
-    }),
+    env = _SDK_ENV,
 )
 
 native_binary(
@@ -98,17 +106,7 @@ native_binary(
 vulkan_toolchain(
     name = "vulkan_sdk_{os}",
     dxc = ":dxc",
-    env = select({
-        # Required by dxc and slangc on Windows
-        "@platforms//os:windows": {
-            "PATH": "{sdk_root}/Bin",
-        },
-        # Required by slangc on Linux
-        "@platforms//os:linux": {
-            "LD_LIBRARY_PATH": "{sdk_root}/lib",
-        },
-        "//conditions:default": {},
-    }),
+    env = _SDK_ENV,
     glslc = ":glslc",
     slangc = ":slangc",
     spirv_cross = ":spirv_cross",
