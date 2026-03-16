@@ -259,6 +259,20 @@ def _download_impl(ctx):
 
     ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = attrs)
 
+    # Generate paths.bzl with SDK paths for consumers.
+    if repo_utils.is_windows(ctx):
+        layer_path = attrs["{sdk_root}"] + "/Bin"
+    else:
+        layer_path = attrs["{sdk_root}"] + "/share/vulkan/explicit_layer.d"
+
+    ctx.file("paths.bzl", content = "\n".join([
+        '"""Auto-generated SDK paths."""',
+        "",
+        'VULKAN_SDK = "{}"'.format(attrs["{sdk_root}"]),
+        'VALIDATION_LAYER_PATH = "{}"'.format(layer_path),
+        "",
+    ]))
+
 download_sdk = repository_rule(
     implementation = _download_impl,
     doc = """
