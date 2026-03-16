@@ -14,13 +14,10 @@ vulkan_sdk = use_extension("@rules_vulkan//vulkan:extensions.bzl", "vulkan_sdk")
 vulkan_sdk.toolchain(
     name = "vk_sdk",
     macos_components = [
-        "com.lunarg.vulkan.glm",
         "com.lunarg.vulkan.volk",
-        "com.lunarg.vulkan.ios",
     ],
     version = "1.4.313",
     windows_components = [
-        "com.lunarg.vulkan.glm",
         "com.lunarg.vulkan.volk",
         "com.lunarg.vulkan.debug",
     ],
