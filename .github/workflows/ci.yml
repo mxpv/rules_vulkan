@@ -104,6 +104,9 @@ jobs:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
           repository-cache: true
+      - name: Install Vulkan software driver
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y mesa-vulkan-drivers
       - name: Test direct binary invocation
         run: |
           bazelisk run @vk_sdk//:spirv_cross -- --help
