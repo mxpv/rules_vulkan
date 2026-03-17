@@ -265,7 +265,7 @@ def _download_impl(ctx):
     if repo_utils.is_windows(ctx):
         layer_path = sdk_root + "/Bin"
         icd_path = ""
-    elif repo_utils.is_macos(ctx):
+    elif repo_utils.is_darwin(ctx):
         layer_path = sdk_root + "/share/vulkan/explicit_layer.d"
         icd_path = sdk_root + "/share/vulkan/icd.d/MoltenVK_icd.json"
     else:
