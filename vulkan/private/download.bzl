@@ -259,18 +259,25 @@ def _download_impl(ctx):
 
     ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = attrs)
 
-    # Generate env.bzl with SDK paths and environment variables to unlock access to validation layers.
+    # Generate env.bzl with SDK paths and environment variables to unlock access to validation layers
+    # and the ICD (Installable Client Driver) loader.
     sdk_root = attrs["{sdk_root}"]
     if repo_utils.is_windows(ctx):
         layer_path = sdk_root + "/Bin"
+        icd_path = ""
+    elif repo_utils.is_macos(ctx):
+        layer_path = sdk_root + "/share/vulkan/explicit_layer.d"
+        icd_path = sdk_root + "/share/vulkan/icd.d/MoltenVK_icd.json"
     else:
         layer_path = sdk_root + "/share/vulkan/explicit_layer.d"
+        icd_path = ""
 
     ctx.file("env.bzl", content = "\n".join([
         '"""Auto-generated SDK environment."""',
         "",
         'VULKAN_SDK = "{}"'.format(sdk_root),
         'VALIDATION_LAYER_PATH = "{}"'.format(layer_path),
+        'VK_DRIVER_FILES = "{}"'.format(icd_path),
         "",
     ]))
 

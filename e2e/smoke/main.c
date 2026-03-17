@@ -38,6 +38,22 @@ int main() {
         return 1;
     }
 
-    printf("Validation layers OK\n");
+    VkInstanceCreateInfo create_info = {
+        .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+        .enabledLayerCount = 1,
+        .ppEnabledLayerNames = (const char*[]){
+            "VK_LAYER_KHRONOS_validation",
+        },
+    };
+
+    VkInstance instance;
+    res = vkCreateInstance(&create_info, NULL, &instance);
+    if (res != VK_SUCCESS) {
+        printf("Failed to create Vulkan instance (error %d)\n", res);
+        return 1;
+    }
+
+    printf("Vulkan instance created OK\n");
+    vkDestroyInstance(instance, NULL);
     return 0;
 }
