@@ -259,16 +259,17 @@ def _download_impl(ctx):
 
     ctx.template("BUILD", ctx.attr.build_file, executable = False, substitutions = attrs)
 
-    # Generate paths.bzl with SDK paths for consumers.
+    # Generate env.bzl with SDK paths and environment variables to unlock access to validation layers.
+    sdk_root = attrs["{sdk_root}"]
     if repo_utils.is_windows(ctx):
-        layer_path = attrs["{sdk_root}"] + "/Bin"
+        layer_path = sdk_root + "/Bin"
     else:
-        layer_path = attrs["{sdk_root}"] + "/share/vulkan/explicit_layer.d"
+        layer_path = sdk_root + "/share/vulkan/explicit_layer.d"
 
-    ctx.file("paths.bzl", content = "\n".join([
-        '"""Auto-generated SDK paths."""',
+    ctx.file("env.bzl", content = "\n".join([
+        '"""Auto-generated SDK environment."""',
         "",
-        'VULKAN_SDK = "{}"'.format(attrs["{sdk_root}"]),
+        'VULKAN_SDK = "{}"'.format(sdk_root),
         'VALIDATION_LAYER_PATH = "{}"'.format(layer_path),
         "",
     ]))
