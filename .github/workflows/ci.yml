@@ -125,5 +125,4 @@ jobs:
         working-directory: e2e/smoke
         run: |
           bazelisk build :app --verbose_failures
-          runas /trustlevel:0x20000 "bazelisk run :app"
-
+          call ..\..\.github\workflows\app_wrapper.cmd
