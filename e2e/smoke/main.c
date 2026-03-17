@@ -38,7 +38,7 @@ int main() {
         return 1;
     }
 
-    // Portability enumeration is required on macOS where MoltenVK is a portability driver.
+    // Portability enumeration is required for MoltenVK on macOS.
     VkInstanceCreateInfo create_info = {
         .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
         .flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR,
