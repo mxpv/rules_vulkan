@@ -72,6 +72,7 @@ environment configuration.
 - All public APIs must include comprehensive documentation
 - Always proofread and reword documentation or comments as needed for clarity and correctness
 - Check for spelling errors and typos in code reviews
+- Preserve existing comments during refactorings unless they no longer apply
 - Avoid adding comments that describe removed code or reference past implementation details
 
 ### Documentation Guidelines
