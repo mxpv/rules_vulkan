@@ -38,19 +38,21 @@ int main() {
         return 1;
     }
 
-    // Portability enumeration is required for MoltenVK on macOS.
     VkInstanceCreateInfo create_info = {
         .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-        .flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR,
         .enabledLayerCount = 1,
         .ppEnabledLayerNames = (const char*[]){
             "VK_LAYER_KHRONOS_validation",
         },
-        .enabledExtensionCount = 1,
-        .ppEnabledExtensionNames = (const char*[]){
-            VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
-        },
     };
+
+#ifdef __APPLE__
+    // Portability enumeration is required for MoltenVK on macOS.
+    const char* portability_ext = VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME;
+    create_info.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+    create_info.enabledExtensionCount = 1;
+    create_info.ppEnabledExtensionNames = &portability_ext;
+#endif
 
     VkInstance instance;
     res = vkCreateInstance(&create_info, NULL, &instance);
