@@ -1,21 +1,13 @@
 @echo off
-setlocal EnableDelayedExpansion
+setlocal
 
-set LOG=%TEMP%\bazel_smoke_win.log
-set STATUS=%TEMP%\bazel_smoke_win.status
-
-del "%LOG%" "%STATUS%" 2>nul
-
-runas /trustlevel:0x20000 ^
-  "cmd.exe /v:on /c \"cd /d %CD% && bazelisk run :app > \"%LOG%\" 2>&1 & echo !errorlevel! > \"%STATUS%\"\""
-
-if not exist "%STATUS%" (
-  echo runas failed to produce a status file
-  if exist "%LOG%" type "%LOG%"
+set PSEXEC=%ProgramData%\chocolatey\bin\PsExec.exe
+if not exist "%PSEXEC%" (
+  echo ERROR: PsExec.exe not found in Chocolatey bin.
   exit /b 1
 )
 
-type "%LOG%"
-set /p EXIT_CODE=<"%STATUS%"
+"%PSEXEC%" -accepteula -l -w "%CD%" cmd.exe /v:on /c "bazelisk run :app"
+set EXIT_CODE=%ERRORLEVEL%
 
 exit /b %EXIT_CODE%
