@@ -34,22 +34,27 @@ int main() {
     free(layers);
 
     if (!has_validation) {
-#if defined(_WIN32) || defined(__CYGWIN__)
+#ifdef _WIN32
         // On Windows CI, runners execute as elevated (high-integrity) processes.
         // The Vulkan loader ignores VK_ADD_LAYER_PATH for elevated processes,
         // making validation layers undiscoverable without registry modifications.
+        //
+        // TODO: Figure out how to de-elevate privileges on CI.
+        // TODO: Install software Vulkan driver on CI.
         printf("WARNING: VK_LAYER_KHRONOS_validation not found, skipping\n");
+        return 0;
 #else
         printf("ERROR: VK_LAYER_KHRONOS_validation not found\n");
         return 1;
 #endif
     }
 
-    const char* validation_layer = "VK_LAYER_KHRONOS_validation";
     VkInstanceCreateInfo create_info = {
         .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-        .enabledLayerCount = has_validation ? 1 : 0,
-        .ppEnabledLayerNames = has_validation ? &validation_layer : NULL,
+        .enabledLayerCount = 1,
+        .ppEnabledLayerNames = (const char*[]){
+            "VK_LAYER_KHRONOS_validation",
+        },
     };
 
 #ifdef __APPLE__
