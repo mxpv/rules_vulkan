@@ -119,14 +119,3 @@ jobs:
           bazelisk run @vk_sdk//:slangc -- -h
       - name: Run e2e smoke test
         run: bazelisk run :app --verbose_failures
-        if: runner.os != 'Windows'
-      # On Windows, GitHub Actions runners are elevated (high-integrity) processes.
-      # The Vulkan loader ignores VK_ADD_LAYER_PATH on elevated processes for security,
-      # so we drop elevation before running the app to allow layer discovery via env vars.
-      - name: Run e2e smoke test (Windows)
-        if: runner.os == 'Windows'
-        shell: cmd
-        working-directory: e2e/smoke
-        run: |
-          bazelisk build :app --verbose_failures
-          call ..\..\.github\workflows\app_wrapper.cmd
