@@ -104,10 +104,6 @@ jobs:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
           repository-cache: true
-      - name: Install Sysinternals tools
-        if: runner.os == 'Windows'
-        shell: powershell
-        run: choco install -y --no-progress sysinternals
       - name: Install Vulkan software driver
         if: runner.os == 'Linux'
         run: sudo apt-get install -y mesa-vulkan-drivers
