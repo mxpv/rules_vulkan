@@ -34,11 +34,13 @@ int main() {
     free(layers);
 
     if (!has_validation) {
-        printf("ERROR: VK_LAYER_KHRONOS_validation not found\n");
-#ifndef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__)
         // On Windows CI, runners execute as elevated (high-integrity) processes.
         // The Vulkan loader ignores VK_ADD_LAYER_PATH for elevated processes,
         // making validation layers undiscoverable without registry modifications.
+        printf("WARNING: VK_LAYER_KHRONOS_validation not found, skipping\n");
+#else
+        printf("ERROR: VK_LAYER_KHRONOS_validation not found\n");
         return 1;
 #endif
     }
