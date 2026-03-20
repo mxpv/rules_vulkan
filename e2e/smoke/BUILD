@@ -97,19 +97,28 @@ pkg_zip(
     compression_level = 0,  # Don't compress, just bundle files.
 )
 
+_VULKAN_ENV = {
+    "VULKAN_SDK": VULKAN_SDK,
+    "VK_ADD_LAYER_PATH": VALIDATION_LAYER_PATH,
+} | select({
+    "@platforms//os:macos": {"VK_DRIVER_FILES": MOLTENVK_ICD},
+    "@platforms//os:linux": {"LD_LIBRARY_PATH": VULKAN_SDK + "/lib"},
+    "//conditions:default": {},
+})
+
 cc_binary(
     name = "app",
     srcs = ["main.c"],
     data = [
         ":database",
     ],
-    env = {
-        "VULKAN_SDK": VULKAN_SDK,
-        "VK_ADD_LAYER_PATH": VALIDATION_LAYER_PATH,
-    } | select({
-        "@platforms//os:macos": {"VK_DRIVER_FILES": MOLTENVK_ICD},
-        "@platforms//os:linux": {"LD_LIBRARY_PATH": VULKAN_SDK + "/lib"},
-        "//conditions:default": {},
-    }),
+    env = _VULKAN_ENV,
     deps = ["@vk_sdk//:vulkan"],
+)
+
+cc_binary(
+    name = "volk_app",
+    srcs = ["volk_test.c"],
+    env = _VULKAN_ENV,
+    deps = ["@vk_sdk//:volk"],
 )
