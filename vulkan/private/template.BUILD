@@ -34,9 +34,31 @@ cc_import(
     ],
 )
 
+#
+# Volk
+#
+
+cc_import(
+    name = "volk_lib",
+    static_library = select({
+        "@platforms//os:windows": "sdk/Lib/volk.lib",
+        "//conditions:default": "sdk/lib/libvolk.a",
+    }),
+)
+
+cc_library(
+    name = "volk",
+    hdrs = glob(["sdk/include/volk/**/*.h"]),
+    includes = ["sdk/include"],
+    deps = [
+        ":volk_lib",
+        ":vulkan_lib",
+    ],
+)
+
 # This uses workaround from https://github.com/bazelbuild/bazel/issues/4748
 cc_library(
-    name = "vulkan",
+    name = "vulkan_lib",
     # buildifier: disable=constant-glob
     srcs = glob(
         [
@@ -45,7 +67,7 @@ cc_library(
             # macOS
             "sdk/lib/libvulkan*.dylib",
             # Windows
-            "sdk/lib/vulkan*.lib",
+            "sdk/Lib/vulkan*.lib",
         ],
         allow_empty = True,
     ),
@@ -55,6 +77,11 @@ cc_library(
         "@platforms//os:windows": [":vulkan_dll"],
         "//conditions:default": [],
     }),
+)
+
+alias(
+    name = "vulkan",
+    actual = ":vulkan_lib",
 )
 
 #
