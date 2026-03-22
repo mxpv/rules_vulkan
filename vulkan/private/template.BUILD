@@ -27,6 +27,17 @@ filegroup(
 )
 
 #
+# VMA
+#
+
+cc_library(
+    name = "vma_headers",
+    hdrs = glob(["sdk/include/vma/**/*.h"]),
+    includes = ["sdk/include"],
+    deps = [":vulkan_headers"],
+)
+
+#
 # Volk
 #
 
