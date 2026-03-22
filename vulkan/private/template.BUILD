@@ -26,8 +26,10 @@ filegroup(
     ]),
 )
 
+# buildifier: disable=no-effect
 {vma_target}
 
+# buildifier: disable=no-effect
 {volk_target}
 
 #
