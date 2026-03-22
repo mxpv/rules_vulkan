@@ -119,6 +119,15 @@ cc_binary(
 cc_binary(
     name = "volk_app",
     srcs = ["volk_test.c"],
-    env = _VULKAN_ENV,
+    env = select({
+        "@platforms//os:linux": {"LD_LIBRARY_PATH": VULKAN_SDK + "/lib"},
+        "//conditions:default": {},
+    }),
+    # Volk loads the Vulkan loader at runtime via dlopen("libvulkan.dylib").
+    # Add the SDK lib directory to rpath so the dynamic linker can find it.
+    linkopts = select({
+        "@platforms//os:macos": ["-Wl,-rpath," + VULKAN_SDK + "/lib"],
+        "//conditions:default": [],
+    }),
     deps = ["@vk_sdk//:volk"],
 )

@@ -26,33 +26,40 @@ filegroup(
     ]),
 )
 
+#
+# Volk
+#
+
+cc_library(
+    name = "volk",
+    srcs = select({
+        "@platforms//os:windows": ["sdk/Lib/volk.lib"],
+        "//conditions:default": ["sdk/lib/libvolk.a"],
+    }),
+    hdrs = glob(["sdk/include/volk/**/*.h"]),
+    includes = ["sdk/include"],
+    deps = [":vulkan_headers"],
+)
+
+#
+# Vulkan loader
+#
+
+cc_library(
+    name = "vulkan_headers",
+    hdrs = glob([
+        "sdk/include/vk_video/**/*.h",
+        "sdk/include/vulkan/**/*.h",
+        "sdk/include/vulkan/**/*.hpp",
+    ]),
+    includes = ["sdk/include"],
+)
+
 cc_import(
     name = "vulkan_dll",
     shared_library = "vulkan-1.dll",
     target_compatible_with = [
         "@platforms//os:windows",
-    ],
-)
-
-#
-# Volk
-#
-
-cc_import(
-    name = "volk_lib",
-    static_library = select({
-        "@platforms//os:windows": "sdk/Lib/volk.lib",
-        "//conditions:default": "sdk/lib/libvolk.a",
-    }),
-)
-
-cc_library(
-    name = "volk",
-    hdrs = glob(["sdk/include/volk/**/*.h"]),
-    includes = ["sdk/include"],
-    deps = [
-        ":volk_lib",
-        ":vulkan_lib",
     ],
 )
 
@@ -71,9 +78,7 @@ cc_library(
         ],
         allow_empty = True,
     ),
-    hdrs = [":headers"],
-    includes = ["sdk/include"],
-    deps = select({
+    deps = [":vulkan_headers"] + select({
         "@platforms//os:windows": [":vulkan_dll"],
         "//conditions:default": [],
     }),
