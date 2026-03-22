@@ -32,7 +32,10 @@ filegroup(
 
 cc_library(
     name = "vma_headers",
-    hdrs = glob(["sdk/include/vma/**/*.h"]),
+    hdrs = glob(
+        ["sdk/include/vma/**/*.h"],
+        allow_empty = True,
+    ),
     includes = ["sdk/include"],
     deps = [":vulkan_headers"],
 )
