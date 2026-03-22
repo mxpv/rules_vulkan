@@ -225,6 +225,43 @@ def _install_windows(ctx, urls, version, attrs):
         "{sdk_root}": str(ctx.path("sdk")),
     })
 
+_VMA_TARGET = """\
+cc_library(
+    name = "vma_headers",
+    hdrs = glob(["sdk/include/vma/**/*.h"]),
+    includes = ["sdk/include"],
+    deps = [":vulkan_headers"],
+)"""
+
+_VOLK_TARGET = """\
+cc_library(
+    name = "volk",
+    srcs = select({
+        "@platforms//os:windows": ["sdk/Lib/volk.lib"],
+        "//conditions:default": ["sdk/lib/libvolk.a"],
+    }),
+    hdrs = glob(["sdk/include/volk/**/*.h"]),
+    includes = ["sdk/include"],
+    deps = [":vulkan_headers"],
+)"""
+
+def _add_optional_targets(attrs, components, is_linux = False):
+    """Populates optional VMA and volk target substitutions based on requested components.
+
+    On Linux, both targets are always included since the tarball bundles them. On Windows and macOS,
+    they are only included when the corresponding installer component is requested.
+
+    Args:
+        attrs: Template substitution dict to update.
+        components: List of component identifiers requested for the current platform.
+        is_linux: If True, all optional targets are included unconditionally.
+    """
+    if is_linux or "com.lunarg.vulkan.vma" in components:
+        attrs["{vma_target}"] = _VMA_TARGET
+
+    if is_linux or "com.lunarg.vulkan.volk" in components:
+        attrs["{volk_target}"] = _VOLK_TARGET
+
 def _download_impl(ctx):
     version = ctx.attr.version
     if not version:
@@ -246,14 +283,19 @@ def _download_impl(ctx):
     attrs = {
         "{os}": "",
         "{sdk_root}": "",
+        "{vma_target}": "",
+        "{volk_target}": "",
     }
 
     if repo_utils.is_linux(ctx):
         _install_linux(ctx, urls, version, attrs)
+        _add_optional_targets(attrs, [], is_linux = True)
     elif repo_utils.is_darwin(ctx):
         _install_macos(ctx, urls, version, attrs)
+        _add_optional_targets(attrs, ctx.attr.macos_components)
     elif repo_utils.is_windows(ctx):
         _install_windows(ctx, urls, version, attrs)
+        _add_optional_targets(attrs, ctx.attr.windows_components)
     else:
         fail("Unsupported OS: {}".format(platform))
 

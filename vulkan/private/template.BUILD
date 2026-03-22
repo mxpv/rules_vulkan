@@ -26,34 +26,9 @@ filegroup(
     ]),
 )
 
-#
-# VMA
-#
+{vma_target}
 
-cc_library(
-    name = "vma_headers",
-    hdrs = glob(
-        ["sdk/include/vma/**/*.h"],
-        allow_empty = True,
-    ),
-    includes = ["sdk/include"],
-    deps = [":vulkan_headers"],
-)
-
-#
-# Volk
-#
-
-cc_library(
-    name = "volk",
-    srcs = select({
-        "@platforms//os:windows": ["sdk/Lib/volk.lib"],
-        "//conditions:default": ["sdk/lib/libvolk.a"],
-    }),
-    hdrs = glob(["sdk/include/volk/**/*.h"]),
-    includes = ["sdk/include"],
-    deps = [":vulkan_headers"],
-)
+{volk_target}
 
 #
 # Vulkan loader
