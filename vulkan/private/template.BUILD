@@ -26,14 +26,6 @@ filegroup(
     ]),
 )
 
-cc_import(
-    name = "vulkan_dll",
-    shared_library = "vulkan-1.dll",
-    target_compatible_with = [
-        "@platforms//os:windows",
-    ],
-)
-
 #
 # Volk
 #
@@ -48,11 +40,20 @@ cc_import(
 
 cc_library(
     name = "volk",
-    hdrs = glob(["sdk/include/volk/**/*.h"]),
+    hdrs = [":headers"],
     includes = ["sdk/include"],
-    deps = [
-        ":volk_lib",
-        ":vulkan_lib",
+    deps = [":volk_lib"],
+)
+
+#
+# Vulkan loader
+#
+
+cc_import(
+    name = "vulkan_dll",
+    shared_library = "vulkan-1.dll",
+    target_compatible_with = [
+        "@platforms//os:windows",
     ],
 )
 
