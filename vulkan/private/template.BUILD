@@ -79,7 +79,7 @@ cc_import(
 
 # This uses workaround from https://github.com/bazelbuild/bazel/issues/4748
 cc_library(
-    name = "vulkan_lib",
+    name = "vulkan",
     # buildifier: disable=constant-glob
     srcs = glob(
         [
@@ -96,11 +96,6 @@ cc_library(
         "@platforms//os:windows": [":vulkan_dll"],
         "//conditions:default": [],
     }),
-)
-
-alias(
-    name = "vulkan",
-    actual = ":vulkan_lib",
 )
 
 #
