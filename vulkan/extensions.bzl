@@ -2,14 +2,14 @@
 Module extension to manage Vulkan SDKs.
 """
 
-load("//vulkan:defs.bzl", "DOWNLOAD_ATTRS", "download_sdk")
+load("//vulkan:defs.bzl", "INSTALL_ATTRS", "install_sdk")
 
 def _vulkan_sdk_impl(ctx):
     for mod in ctx.modules:
         for tag in mod.tags.toolchain:
             name = tag.name
-            kwargs = {k: getattr(tag, k) for k in DOWNLOAD_ATTRS}
-            download_sdk(
+            kwargs = {k: getattr(tag, k) for k in INSTALL_ATTRS}
+            install_sdk(
                 name = name if name else "vulkan_sdk_{}".format(tag.version),
                 **kwargs
             )
@@ -19,7 +19,7 @@ def _vulkan_sdk_impl(ctx):
     )
 
 _toolchain_tag = tag_class(
-    attrs = dict(DOWNLOAD_ATTRS, **{
+    attrs = dict(INSTALL_ATTRS, **{
         "name": attr.string(
             doc = """
             Optional repository name alias.

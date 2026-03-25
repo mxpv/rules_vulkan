@@ -11,6 +11,7 @@ stardoc(
         "hlsl_shader",
         "slang_shader",
         "spirv_cross",
+        "install_sdk",
         "download_sdk",
         "shader_group",
 

@@ -1,12 +1,12 @@
 """
-Vulkan SDK downloader.
+Vulkan SDK installer.
 """
 
 load("@aspect_bazel_lib//lib:repo_utils.bzl", "repo_utils")
 load(":resolve.bzl", "find_exact", "normalize_os", "normalize_version")
 
-# Shared attributes between download_sdk rule and the module extension tag class.
-DOWNLOAD_ATTRS = {
+# Shared attributes between install_sdk rule and the module extension tag class.
+INSTALL_ATTRS = {
     "version": attr.string(
         mandatory = True,
         doc = """
@@ -262,7 +262,7 @@ def _add_optional_targets(attrs, components, is_linux = False):
     if is_linux or "com.lunarg.vulkan.volk" in components:
         attrs["{volk_target}"] = _VOLK_TARGET
 
-def _download_impl(ctx):
+def _install_impl(ctx):
     version = ctx.attr.version
     if not version:
         fail("Vulkan SDK version must be specified")
@@ -320,16 +320,19 @@ def _download_impl(ctx):
         "",
     ]))
 
-download_sdk = repository_rule(
-    implementation = _download_impl,
+install_sdk = repository_rule(
+    implementation = _install_impl,
     doc = """
-    A rule to handle download and unpack of the SDK for each major platform (Windows, Linux, MacOS).
+    Downloads and installs the Vulkan SDK for the current platform (Windows, Linux, macOS).
 
     These rely on command line installation described in "Getting started" docs on LunarG.
     - https://vulkan.lunarg.com/doc/view/1.3.283.0/mac/getting_started.html
-
     """,
-    attrs = dict(DOWNLOAD_ATTRS, **{
+    attrs = dict(INSTALL_ATTRS, **{
         "build_file": attr.label(default = Label("//vulkan/private:template.BUILD")),
     }),
 )
+
+# Backwards-compatible aliases.
+DOWNLOAD_ATTRS = INSTALL_ATTRS
+download_sdk = install_sdk

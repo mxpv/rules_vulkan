@@ -9,8 +9,8 @@ bzl_library(
 )
 
 bzl_library(
-    name = "download",
-    srcs = ["download.bzl"],
+    name = "install",
+    srcs = ["install.bzl"],
     visibility = ["//vulkan:__subpackages__"],
     deps = [
         ":bzl_lib",

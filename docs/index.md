@@ -298,7 +298,7 @@ download_sdk(<a href="#download_sdk-name">name</a>, <a href="#download_sdk-build
              <a href="#download_sdk-windows_skip_runtime">windows_skip_runtime</a>)
 </pre>
 
-A rule to handle download and unpack of the SDK for each major platform (Windows, Linux, MacOS).
+Downloads and installs the Vulkan SDK for the current platform (Windows, Linux, macOS).
 
 These rely on command line installation described in "Getting started" docs on LunarG.
 - https://vulkan.lunarg.com/doc/view/1.3.283.0/mac/getting_started.html
@@ -315,5 +315,35 @@ These rely on command line installation described in "Getting started" docs on L
 | <a id="download_sdk-version"></a>version |  Vulkan SDK version to download and install.<br><br>This expects a version in the format of `1.4.313.0` or `1.4.313`. When 3 components are provided, `.0` will be appended automatically to make it 4 components.   | String | required |  |
 | <a id="download_sdk-windows_components"></a>windows_components |  Optional Vulkan SDK components to install on Windows.<br><br>These are passed to the installer between `--confirm-command install` and `copy_only=1`.<br><br>Known components: `com.lunarg.vulkan.sdl2`, `com.lunarg.vulkan.glm`, `com.lunarg.vulkan.volk`, `com.lunarg.vulkan.vma`, `com.lunarg.vulkan.debug`.   | List of strings | optional |  `[]`  |
 | <a id="download_sdk-windows_skip_runtime"></a>windows_skip_runtime |  Do not download and install Vulkan runtime package (e.g. `vulkan-1.dll` dependency) on Windows.<br><br>When `True`, the downloader will not put `vulkan-1.dll` into the repository root directory.<br><br>This is useful if there is a system-wide Vulkan runtime already installed, otherwise this might lead to link/runtime issues when building CC targets.   | Boolean | optional |  `False`  |
+
+
+<a id="install_sdk"></a>
+
+## install_sdk
+
+<pre>
+load("@rules_vulkan//vulkan:defs.bzl", "install_sdk")
+
+install_sdk(<a href="#install_sdk-name">name</a>, <a href="#install_sdk-build_file">build_file</a>, <a href="#install_sdk-macos_components">macos_components</a>, <a href="#install_sdk-urls">urls</a>, <a href="#install_sdk-version">version</a>, <a href="#install_sdk-windows_components">windows_components</a>,
+            <a href="#install_sdk-windows_skip_runtime">windows_skip_runtime</a>)
+</pre>
+
+Downloads and installs the Vulkan SDK for the current platform (Windows, Linux, macOS).
+
+These rely on command line installation described in "Getting started" docs on LunarG.
+- https://vulkan.lunarg.com/doc/view/1.3.283.0/mac/getting_started.html
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="install_sdk-name"></a>name |  A unique name for this repository.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="install_sdk-build_file"></a>build_file |  -   | <a href="https://bazel.build/concepts/labels">Label</a> | optional |  `"@rules_vulkan//vulkan/private:template.BUILD"`  |
+| <a id="install_sdk-macos_components"></a>macos_components |  Optional Vulkan SDK components to install on macOS.<br><br>These are passed to the installer after `--confirm-command install`.<br><br>Known components: `com.lunarg.vulkan.usr`, `com.lunarg.vulkan.sdl2`, `com.lunarg.vulkan.glm`, `com.lunarg.vulkan.volk`, `com.lunarg.vulkan.vma`, `com.lunarg.vulkan.ios`, `com.lunarg.vulkan.kosmic`.   | List of strings | optional |  `[]`  |
+| <a id="install_sdk-urls"></a>urls |  Custom URLs and SHA256 checksums for the Vulkan SDK.<br><br>This allows using a custom mirror for Vulkan SDKs instead of LunarG. When not specified, the SDK is downloaded from the default LunarG mirrors using the bundled `versions.json`.<br><br>A separate download URL and SHA256 checksum is required for each platform. LunarG currently uses the following platform keys: - `windows` - Windows x86-64 - `warm` - Windows ARM64 - `mac` - macOS - `linux` - Linux<br><br>Each entry must provide `url` and `sha` fields. On Windows platforms, `runtime_url` and `runtime_sha` can be used to provide URLs for the Vulkan runtime package.<br><br>Example: <pre><code class="language-bazel">custom_urls = {&#10;    "linux": {&#10;        "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/linux/vulkansdk-linux-x86_64-1.4.313.0.tar.xz",&#10;        "sha": "4e957b66ade85eeaee95932aa7e3b45aea64db373c58a5eaefc8228cc71445c2",&#10;    },&#10;    "mac": {&#10;        "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/mac/vulkansdk-macos-1.4.313.0.zip",&#10;        "sha": "782a966ef4d5d68acaa933ff45215df2e34f286df8f6077270202f218110dc20",&#10;    },&#10;    "windows": {&#10;        "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/windows/vulkansdk-windows-X64-1.4.313.0.exe",&#10;        "sha": "b643ca8ab4aea5c47b9c4e021a0b33b3a13871bf1d8131e162a9e48c257c4694",&#10;        "runtime_url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/windows/VulkanRT-X64-1.4.313.0-Components.zip",&#10;        "runtime_sha": "e8d37913185142270a2bc1b3e1f8f498a4edf47405fddda666f2f38b30ca944b",&#10;    },&#10;    "warm": {&#10;        "url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/warm/vulkansdk-windows-ARM64-1.4.313.0.exe",&#10;        "sha": "b19a8683df982d302fec07c110962153f02a2e5cf1e5118ff72d8532aa5fc567",&#10;        "runtime_url": "https://sdk.lunarg.com/sdk/download/1.4.313.0/warm/VulkanRT-ARM64-1.4.313.0-Components.zip",&#10;        "runtime_sha": "6335a8d6b7ab85861025c2546f5f52384ff18a6d9346d350c2a0bf3b7524829a",&#10;    },&#10;}</code></pre>   | <a href="https://bazel.build/rules/lib/core/dict">Dictionary: String -> String</a> | optional |  `{}`  |
+| <a id="install_sdk-version"></a>version |  Vulkan SDK version to download and install.<br><br>This expects a version in the format of `1.4.313.0` or `1.4.313`. When 3 components are provided, `.0` will be appended automatically to make it 4 components.   | String | required |  |
+| <a id="install_sdk-windows_components"></a>windows_components |  Optional Vulkan SDK components to install on Windows.<br><br>These are passed to the installer between `--confirm-command install` and `copy_only=1`.<br><br>Known components: `com.lunarg.vulkan.sdl2`, `com.lunarg.vulkan.glm`, `com.lunarg.vulkan.volk`, `com.lunarg.vulkan.vma`, `com.lunarg.vulkan.debug`.   | List of strings | optional |  `[]`  |
+| <a id="install_sdk-windows_skip_runtime"></a>windows_skip_runtime |  Do not download and install Vulkan runtime package (e.g. `vulkan-1.dll` dependency) on Windows.<br><br>When `True`, the downloader will not put `vulkan-1.dll` into the repository root directory.<br><br>This is useful if there is a system-wide Vulkan runtime already installed, otherwise this might lead to link/runtime issues when building CC targets.   | Boolean | optional |  `False`  |
 
 
