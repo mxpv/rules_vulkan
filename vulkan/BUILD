@@ -21,7 +21,7 @@ bzl_library(
         ":providers",
         ":toolchains",
         "//vulkan/private:bzl_lib",
-        "//vulkan/private:download",
+        "//vulkan/private:install",
         "//vulkan/private:glsl",
         "//vulkan/private:hlsl",
         "//vulkan/private:shader_group",
