@@ -2,7 +2,7 @@
 Definitions for the Vulkan SDK Bazel rules.
 """
 
-load("//vulkan/private:install.bzl", _DOWNLOAD_ATTRS = "DOWNLOAD_ATTRS", _INSTALL_ATTRS = "INSTALL_ATTRS", _download_sdk = "download_sdk", _install_sdk = "install_sdk")
+load("//vulkan/private:install.bzl", _INSTALL_ATTRS = "INSTALL_ATTRS", _install_sdk = "install_sdk")
 load("//vulkan/private:glsl.bzl", _glsl_shader = "glsl_shader")
 load("//vulkan/private:hlsl.bzl", _hlsl_shader = "hlsl_shader")
 load("//vulkan/private:shader_group.bzl", _shader_group = "shader_group")
@@ -15,8 +15,8 @@ INSTALL_ATTRS = _INSTALL_ATTRS
 install_sdk = _install_sdk
 
 # Backwards-compatible aliases.
-DOWNLOAD_ATTRS = _DOWNLOAD_ATTRS
-download_sdk = _download_sdk
+DOWNLOAD_ATTRS = _INSTALL_ATTRS
+download_sdk = _install_sdk
 
 hlsl_shader = _hlsl_shader
 slang_shader = _slang_shader
