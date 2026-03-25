@@ -332,7 +332,3 @@ install_sdk = repository_rule(
         "build_file": attr.label(default = Label("//vulkan/private:template.BUILD")),
     }),
 )
-
-# Backwards-compatible aliases.
-DOWNLOAD_ATTRS = INSTALL_ATTRS
-download_sdk = install_sdk
