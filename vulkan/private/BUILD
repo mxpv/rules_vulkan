@@ -20,12 +20,6 @@ bzl_library(
 )
 
 bzl_library(
-    name = "common",
-    srcs = ["common.bzl"],
-    visibility = ["//vulkan:__subpackages__"],
-)
-
-bzl_library(
     name = "glsl",
     srcs = ["glsl.bzl"],
     visibility = ["//vulkan:__subpackages__"],
@@ -84,4 +78,10 @@ bzl_library(
         ":bzl_lib",
         "@aspect_bazel_lib//lib:repo_utils",
     ],
+)
+
+bzl_library(
+    name = "common",
+    srcs = ["common.bzl"],
+    visibility = ["//vulkan:__subpackages__"],
 )
