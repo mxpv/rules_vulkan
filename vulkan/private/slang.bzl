@@ -34,8 +34,9 @@ def _slang_shader_impl(ctx):
     for define in ctx.attr.defines:
         args.add("-D", define)
 
-    for path in ctx.attr.includes:
-        args.add("-I", path)
+    hdr_dirs = {hdr.dirname: True for hdr in ctx.files.hdrs}
+    for dir in hdr_dirs:
+        args.add("-I", dir)
 
     # Emit reflection data to a file
     reflection_file = None
@@ -112,9 +113,6 @@ slang_shader = rule(
         ),
         "entry": attr.string(
             doc = "Entry point name",
-        ),
-        "includes": attr.string_list(
-            doc = "Add a path to CLI to be used to search #include or #import operations",
         ),
         "hdrs": attr.label_list(
             allow_files = True,

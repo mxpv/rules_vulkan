@@ -47,8 +47,9 @@ def _hlsl_shader_impl(ctx):
     for define in ctx.attr.defines:
         args.add("-D", define)
 
-    for path in ctx.attr.includes:
-        args.add("-I", path)
+    hdr_dirs = {hdr.dirname: True for hdr in ctx.files.hdrs}
+    for dir in hdr_dirs:
+        args.add("-I", dir)
 
     # Specify HLSL version
     if ctx.attr.hlsl:
@@ -146,9 +147,6 @@ hlsl_shader = rule(
         ),
         "defines": attr.string_list(
             doc = "List of macro defines",
-        ),
-        "includes": attr.string_list(
-            doc = "List of directories to be added to the CLI to search for include files",
         ),
         "hdrs": attr.label_list(
             allow_files = True,

@@ -22,8 +22,9 @@ def _glsl_shader_impl(ctx):
     for define in ctx.attr.defines:
         args.add(define, format = "-D%s")
 
-    for path in ctx.attr.includes:
-        args.add("-I", path)
+    hdr_dirs = {hdr.dirname: True for hdr in ctx.files.hdrs}
+    for dir in hdr_dirs:
+        args.add("-I", dir)
 
     if ctx.attr.std:
         args.add(ctx.attr.std, format = "-std=%s")
@@ -88,9 +89,6 @@ glsl_shader = rule(
         "stage": attr.string(
             mandatory = True,
             doc = "Shader stage (vertex, vert, fragment, frag, etc)",
-        ),
-        "includes": attr.string_list(
-            doc = "Add directory to include search path to CLI",
         ),
         "hdrs": attr.label_list(
             allow_files = True,
