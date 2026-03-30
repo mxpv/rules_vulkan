@@ -4,6 +4,7 @@ A rule to compile HLSL shaders using DirectXShaderCompiler (dxc).
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
+load("//vulkan/private:common.bzl", "resolve_includes")
 
 # Normalize stage names
 # See https://github.com/KhronosGroup/SPIRV-Cross/blob/d8e3e2b141b8c8a167b2e3984736a6baacff316c/main.cpp#L1151
@@ -47,9 +48,8 @@ def _hlsl_shader_impl(ctx):
     for define in ctx.attr.defines:
         args.add("-D", define)
 
-    hdr_dirs = {hdr.dirname: True for hdr in ctx.files.hdrs}
-    for dir in hdr_dirs:
-        args.add("-I", dir)
+    for include in resolve_includes(ctx):
+        args.add("-I", include)
 
     # Specify HLSL version
     if ctx.attr.hlsl:
@@ -147,6 +147,9 @@ hlsl_shader = rule(
         ),
         "defines": attr.string_list(
             doc = "List of macro defines",
+        ),
+        "includes": attr.string_list(
+            doc = "List of include directories, resolved relative to the package",
         ),
         "hdrs": attr.label_list(
             allow_files = True,

@@ -4,6 +4,7 @@ A rule to compile Slang shaders.
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
+load("//vulkan/private:common.bzl", "resolve_includes")
 
 def _slang_shader_impl(ctx):
     sdk = ctx.toolchains["//vulkan:toolchain_type"].info
@@ -34,9 +35,8 @@ def _slang_shader_impl(ctx):
     for define in ctx.attr.defines:
         args.add("-D", define)
 
-    hdr_dirs = {hdr.dirname: True for hdr in ctx.files.hdrs}
-    for dir in hdr_dirs:
-        args.add("-I", dir)
+    for include in resolve_includes(ctx):
+        args.add("-I", include)
 
     # Emit reflection data to a file
     reflection_file = None
@@ -113,6 +113,9 @@ slang_shader = rule(
         ),
         "entry": attr.string(
             doc = "Entry point name",
+        ),
+        "includes": attr.string_list(
+            doc = "List of include directories, resolved relative to the package",
         ),
         "hdrs": attr.label_list(
             allow_files = True,

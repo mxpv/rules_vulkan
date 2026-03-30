@@ -20,10 +20,17 @@ bzl_library(
 )
 
 bzl_library(
+    name = "common",
+    srcs = ["common.bzl"],
+    visibility = ["//vulkan:__subpackages__"],
+)
+
+bzl_library(
     name = "glsl",
     srcs = ["glsl.bzl"],
     visibility = ["//vulkan:__subpackages__"],
     deps = [
+        ":common",
         "//vulkan:providers",
         "@bazel_skylib//rules:common_settings",
     ],
@@ -34,6 +41,7 @@ bzl_library(
     srcs = ["hlsl.bzl"],
     visibility = ["//vulkan:__subpackages__"],
     deps = [
+        ":common",
         "//vulkan:providers",
         "@bazel_skylib//rules:common_settings",
     ],
@@ -55,6 +63,7 @@ bzl_library(
     srcs = ["slang.bzl"],
     visibility = ["//vulkan:__subpackages__"],
     deps = [
+        ":common",
         "//vulkan:providers",
         "@bazel_skylib//rules:common_settings",
     ],

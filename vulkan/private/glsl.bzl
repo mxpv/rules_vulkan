@@ -4,6 +4,7 @@ A rule to compile GLSL shaders.
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//vulkan:providers.bzl", "ShaderInfo")
+load("//vulkan/private:common.bzl", "resolve_includes")
 
 def _glsl_shader_impl(ctx):
     sdk = ctx.toolchains["//vulkan:toolchain_type"].info
@@ -22,9 +23,8 @@ def _glsl_shader_impl(ctx):
     for define in ctx.attr.defines:
         args.add(define, format = "-D%s")
 
-    hdr_dirs = {hdr.dirname: True for hdr in ctx.files.hdrs}
-    for dir in hdr_dirs:
-        args.add("-I", dir)
+    for include in resolve_includes(ctx):
+        args.add("-I", include)
 
     if ctx.attr.std:
         args.add(ctx.attr.std, format = "-std=%s")
@@ -89,6 +89,9 @@ glsl_shader = rule(
         "stage": attr.string(
             mandatory = True,
             doc = "Shader stage (vertex, vert, fragment, frag, etc)",
+        ),
+        "includes": attr.string_list(
+            doc = "List of include directories, resolved relative to the package",
         ),
         "hdrs": attr.label_list(
             allow_files = True,
