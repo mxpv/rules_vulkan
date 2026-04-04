@@ -14,14 +14,12 @@ def _slang_shader_impl(ctx):
     all_files = [compiled_file]
 
     args = ctx.actions.args()
-    args.add_all([
-        "-profile",
-        ctx.attr.profile,
-        "-target",
-        ctx.attr.target,
-        "-o",
-        compiled_file,
-    ])
+    if ctx.attr.profile:
+        args.add("-profile", ctx.attr.profile)
+    if ctx.attr.target:
+        args.add("-target", ctx.attr.target)
+
+    args.add("-o", compiled_file)
 
     if ctx.attr.stage:
         args.add("-stage", ctx.attr.stage)
@@ -152,11 +150,9 @@ slang_shader = rule(
             doc = "Stage of an entry point function (vertex, pixel, compute, etc)",
         ),
         "profile": attr.string(
-            mandatory = True,
             doc = "Shader profile for code generation (sm_6_6, vs_6_6, glsl_460, etc)",
         ),
         "target": attr.string(
-            mandatory = True,
             doc = "Format in which code should be generated (hlsl, dxil, dxil-asm, glsl, spirv, metal, metallib, etc)",
         ),
         "lang": attr.string(
