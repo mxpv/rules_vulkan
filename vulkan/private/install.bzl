@@ -164,12 +164,19 @@ def _install_windows(ctx, urls, version, attrs):
         is_arm = ctx.os.arch.startswith("arm")
 
         ctx.report_progress("Downloading runtime...")
+        rt_url = urls["runtime_url"]
+
+        # The runtime version may differ from the SDK version (e.g. dot
+        # releases like 1.4.341.1 reuse the 1.4.341.0 runtime).  Extract
+        # the version that appears in the zip's directory name from the URL.
+        rt_filename = rt_url.rsplit("/", 1)[-1]  # e.g. VulkanRT-X64-1.4.341.0-Components.zip
+        rt_dirname = rt_filename.removesuffix(".zip")  # VulkanRT-X64-1.4.341.0-Components
+
         ctx.download_and_extract(
-            urls["runtime_url"],
+            rt_url,
             sha256 = urls["runtime_sha"],
-            strip_prefix = "VulkanRT-{}-{}-Components\\{}".format(
-                "ARM64" if is_arm else "X64",
-                version,
+            strip_prefix = "{}\\{}".format(
+                rt_dirname,
                 "" if is_arm else "x64",  # on x64 there is an additional x64 subdirectory
             ),
         )
@@ -203,13 +210,14 @@ def _install_windows(ctx, urls, version, attrs):
     cmd = [
         "cmd.exe",
         "/c",
-        "installer.exe",
+        str(ctx.path("installer.exe")),
         "--root",
         ctx.path("sdk"),
         "--verbose",
         "--accept-licenses",
         "--default-answer",
-        "--confirm-command install",
+        "--confirm-command",
+        "install",
     ] + ctx.attr.windows_components + [
         # For completely unattended installation and modifications,
         # the command prompt must be run as administrator.
