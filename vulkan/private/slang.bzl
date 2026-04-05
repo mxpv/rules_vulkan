@@ -85,7 +85,7 @@ def _slang_shader_impl(ctx):
             depfile = depfile_file if depfile_file else None,
             stage = ctx.attr.stage,
             defines = ctx.attr.defines,
-            target = ctx.attr.target,
+            target = ctx.attr.target if ctx.attr.target else None,
         ),
     ]
 
@@ -153,7 +153,9 @@ slang_shader = rule(
             doc = "Shader profile for code generation (sm_6_6, vs_6_6, glsl_460, etc)",
         ),
         "target": attr.string(
-            doc = "Format in which code should be generated (hlsl, dxil, dxil-asm, glsl, spirv, metal, metallib, etc)",
+            doc = """Format in which code should be generated (hlsl, dxil, dxil-asm, glsl, spirv, metal, metallib, etc).
+            This field is optional when compiling to a Slang IR module with `-emit-ir`. When omitted, the `target`
+            field in `ShaderInfo` will be `None`.""",
         ),
         "lang": attr.string(
             doc = "Set source language for the shader (slang, hlsl, glsl, cpp, etc)",
