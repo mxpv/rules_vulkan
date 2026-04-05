@@ -62,6 +62,12 @@ def make_sdk_name(plat, ver):
         case _:
             raise ValueError(f"Unknown platform: {plat}")
 
+def base_version(ver):
+    """Return the .0 base version for a dot release (e.g. 1.4.341.1 -> 1.4.341.0)."""
+    parts = ver.split(".")
+    parts[-1] = "0"
+    return ".".join(parts)
+
 def make_rt_name(plat, ver):
     template = "VulkanRT-X64-{}-Components.zip" if plat == "windows" else "VulkanRT-ARM64-{}-Components.zip"
     if version_tuple(ver) <= (1, 4, 309, 0) and plat == "windows":
@@ -163,9 +169,17 @@ for ver in new_versions:
         }
 
         # Check runtime packages on Windows.
+        # Dot releases (e.g. 1.4.341.1) typically don't ship their own
+        # runtime, so fall back to the .0 base version's runtime.
         if plat == "windows" or plat == "warm":
             time.sleep(0.5)
             result = query(ver, plat, make_rt_name(plat, ver))
+            if not result:
+                base = base_version(ver)
+                if base != ver:
+                    print(f"  Falling back to runtime from {base}...")
+                    time.sleep(0.5)
+                    result = query(base, plat, make_rt_name(plat, base))
             if result:
                 url, sha = result
                 current_versions[ver][plat].update({
