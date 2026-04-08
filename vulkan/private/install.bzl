@@ -150,7 +150,7 @@ def _install_macos(ctx, urls, version, attrs):
         "{sdk_root}": str(ctx.path("sdk")),
     })
 
-def _install_windows(ctx, urls, version, attrs):
+def _install_windows(ctx, urls, _version, attrs):
     ctx.report_progress("Downloading installer...")
     ctx.download(
         urls["url"],
