@@ -12,9 +12,12 @@ hlsl_shader(
     asm = "hello_hlsl.asm",  # Output assembly code
     defines = ["USE_VULKAN"],
     entry = "CSMain",
-    hlsl = "2021",
-    opts = ["-Ges"],  # Additional compiler options.
-    spirv = True,
+    opts = [
+        "-HV",
+        "2021",
+        "-Ges",
+        "-spirv",
+    ],
     target = "cs_6_0",
 )
 

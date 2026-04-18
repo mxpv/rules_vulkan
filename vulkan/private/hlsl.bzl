@@ -31,7 +31,11 @@ def _map_stage(target):
 def _hlsl_shader_impl(ctx):
     sdk = ctx.toolchains["//vulkan:toolchain_type"].info
 
-    ext = ".spv" if ctx.attr.spirv else ".cso"
+    extra_opts = ctx.attr._extra_opts[BuildSettingInfo].value
+
+    # Output extension follows the backend: `.spv` when `-spirv` is passed, `.cso` otherwise.
+    spirv = "-spirv" in ctx.attr.opts or "-spirv" in extra_opts
+    ext = ".spv" if spirv else ".cso"
     compiled_file = ctx.actions.declare_file(ctx.label.name + ext)
     all_files = [compiled_file]
 
@@ -50,10 +54,6 @@ def _hlsl_shader_impl(ctx):
 
     for include in resolve_includes(ctx):
         args.add("-I", include)
-
-    # Specify HLSL version
-    if ctx.attr.hlsl:
-        args.add("-HV", ctx.attr.hlsl)
 
     # Specify root signature from #define
     if ctx.attr.def_root_sig:
@@ -80,15 +80,11 @@ def _hlsl_shader_impl(ctx):
         args.add("-Fsh", hash_file)
         all_files.append(hash_file)
 
-    if ctx.attr.spirv:
-        args.add("-spirv")
-
     # Append user-defined extra arguments
     args.add_all(ctx.attr.opts)
 
     # Append build settings options.
-    extra_opts = ctx.attr._extra_opts[BuildSettingInfo].value
-    args.add_all(extra_opts, uniquify = True)
+    args.add_all(extra_opts)
 
     # Specify input shader source file
     src = ctx.file.src
@@ -129,7 +125,9 @@ hlsl_shader = rule(
     doc = """
     Rule to compile HLSL shaders using DirectXShaderCompiler.
 
-    The target will output <name>.cso or <name>.spv (when targeting spirv) file with bytecode output.
+    The target outputs `<name>.cso` by default, or `<name>.spv` when `-spirv` is passed via `opts` or the global
+    `//vulkan/settings:dxc_opts` build setting. Pass other DXC flags the same way — e.g. `-HV 2021` for HLSL version,
+    `-enable-16bit-types`, etc.
     """,
     attrs = {
         "src": attr.label(
@@ -179,17 +177,18 @@ hlsl_shader = rule(
             inputs so that Bazel tracks them as dependencies and triggers rebuilds when they change.
             """,
         ),
-        "hlsl": attr.string(
-            doc = "HLSL version to use (2016, 2017, 2018, 2021)",
-        ),
         "def_root_sig": attr.string(
             doc = "Read root signature from a #define (-rootsig-define <value>)",
         ),
-        "spirv": attr.bool(
-            doc = "Generate SPIR-V code",
-        ),
         "opts": attr.string_list(
-            doc = "Additional arguments to pass to the DXC compiler",
+            doc = """Additional arguments to pass to the DXC compiler.
+
+            Pass `-spirv` here (or globally via `//vulkan/settings:dxc_opts`) to emit SPIR-V; the rule detects the
+            flag and selects the `.spv` output extension accordingly. Otherwise the rule emits `.cso` (DXIL).
+
+            Flags from `//vulkan/settings:dxc_opts` are appended after these, so the global build setting takes
+            precedence on conflicting flags.
+            """,
         ),
         "asm": attr.string(
             doc = "Output assembly code listing file to the specified path (-Fc <file>)",

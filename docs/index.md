@@ -24,7 +24,7 @@ Rule to compile GLSL shader.
 | <a id="glsl_shader-hdrs"></a>hdrs |  List of header file dependencies for shader compilation.<br><br>Each unique directory containing a header file automatically generates a `-I` flag, so the compiler can find headers included by filename (e.g. `#include "common.h"`). These files are also added as action inputs so that Bazel tracks them as dependencies and triggers rebuilds when they change.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="glsl_shader-defines"></a>defines |  List of macro defines   | List of strings | optional |  `[]`  |
 | <a id="glsl_shader-includes"></a>includes |  List of include search directories, resolved relative to the package.<br><br>Each entry produces two `-I` flags:<br><br>- Source tree path (e.g. `foo/bar/common`) — for headers checked into the repository, when the include   path you need differs from the directory that `hdrs` would auto-derive. For example, with a header at   `pkg/common/nested/helper.h` and `#include "nested/helper.h"`, `hdrs` auto-derives   `-I pkg/common/nested` but you actually need `-I pkg/common`. Adding `includes = ["common"]` provides   that. - Bin directory path (e.g. `bazel-out/.../bin/foo/bar/common`) — same as above, but for headers generated   by other rules (e.g. `genrule`), which are placed under the output directory rather than the source   tree.<br><br>Paths are constructed by joining the package path with the entry value (e.g. an entry `"common"` in package `foo/bar` resolves to `foo/bar/common`).<br><br>Use this when the auto-derived paths from `hdrs` are not sufficient — for example, when the `#include` directive uses a path prefix that differs from the header file's immediate directory (e.g. `#include "subdir/header.h"` where the header is at `pkg/subdir/header.h` and `-I pkg` is needed).   | List of strings | optional |  `[]`  |
-| <a id="glsl_shader-opts"></a>opts |  Additional arguments to pass to the compiler   | List of strings | optional |  `[]`  |
+| <a id="glsl_shader-opts"></a>opts |  Additional arguments to pass to the compiler.<br><br>Flags from `//vulkan/settings:glslc_opts` are appended after these, so the global build setting takes precedence on conflicting flags.   | List of strings | optional |  `[]`  |
 | <a id="glsl_shader-stage"></a>stage |  Shader stage (vertex, vert, fragment, frag, etc)   | String | required |  |
 | <a id="glsl_shader-std"></a>std |  Version and profile for GLSL input files.<br><br>Possible values are concatenations of version and profile, e.g. `310es`, `450core`, etc.   | String | optional |  `""`  |
 | <a id="glsl_shader-target_env"></a>target_env |  Set the target client environment, and the semantics of warnings and errors.<br><br>An optional suffix can specify the client version.   | String | optional |  `""`  |
@@ -38,13 +38,15 @@ Rule to compile GLSL shader.
 <pre>
 load("@rules_vulkan//vulkan:defs.bzl", "hlsl_shader")
 
-hlsl_shader(<a href="#hlsl_shader-name">name</a>, <a href="#hlsl_shader-src">src</a>, <a href="#hlsl_shader-hdrs">hdrs</a>, <a href="#hlsl_shader-asm">asm</a>, <a href="#hlsl_shader-def_root_sig">def_root_sig</a>, <a href="#hlsl_shader-defines">defines</a>, <a href="#hlsl_shader-entry">entry</a>, <a href="#hlsl_shader-hash">hash</a>, <a href="#hlsl_shader-hlsl">hlsl</a>, <a href="#hlsl_shader-includes">includes</a>, <a href="#hlsl_shader-opts">opts</a>, <a href="#hlsl_shader-reflect">reflect</a>,
-            <a href="#hlsl_shader-spirv">spirv</a>, <a href="#hlsl_shader-target">target</a>)
+hlsl_shader(<a href="#hlsl_shader-name">name</a>, <a href="#hlsl_shader-src">src</a>, <a href="#hlsl_shader-hdrs">hdrs</a>, <a href="#hlsl_shader-asm">asm</a>, <a href="#hlsl_shader-def_root_sig">def_root_sig</a>, <a href="#hlsl_shader-defines">defines</a>, <a href="#hlsl_shader-entry">entry</a>, <a href="#hlsl_shader-hash">hash</a>, <a href="#hlsl_shader-includes">includes</a>, <a href="#hlsl_shader-opts">opts</a>, <a href="#hlsl_shader-reflect">reflect</a>,
+            <a href="#hlsl_shader-target">target</a>)
 </pre>
 
 Rule to compile HLSL shaders using DirectXShaderCompiler.
 
-The target will output <name>.cso or <name>.spv (when targeting spirv) file with bytecode output.
+The target outputs `<name>.cso` by default, or `<name>.spv` when `-spirv` is passed via `opts` or the global
+`//vulkan/settings:dxc_opts` build setting. Pass other DXC flags the same way — e.g. `-HV 2021` for HLSL version,
+`-enable-16bit-types`, etc.
 
 **ATTRIBUTES**
 
@@ -59,11 +61,9 @@ The target will output <name>.cso or <name>.spv (when targeting spirv) file with
 | <a id="hlsl_shader-defines"></a>defines |  List of macro defines   | List of strings | optional |  `[]`  |
 | <a id="hlsl_shader-entry"></a>entry |  Entry point name   | String | optional |  `"main"`  |
 | <a id="hlsl_shader-hash"></a>hash |  Output shader hash to the specified file (-Fsh <file>)   | String | optional |  `""`  |
-| <a id="hlsl_shader-hlsl"></a>hlsl |  HLSL version to use (2016, 2017, 2018, 2021)   | String | optional |  `""`  |
 | <a id="hlsl_shader-includes"></a>includes |  List of include search directories, resolved relative to the package.<br><br>Each entry produces two `-I` flags:<br><br>- Source tree path (e.g. `foo/bar/common`) — for headers checked into the repository, when the include   path you need differs from the directory that `hdrs` would auto-derive. For example, with a header at   `pkg/common/nested/helper.h` and `#include "nested/helper.h"`, `hdrs` auto-derives   `-I pkg/common/nested` but you actually need `-I pkg/common`. Adding `includes = ["common"]` provides   that. - Bin directory path (e.g. `bazel-out/.../bin/foo/bar/common`) — same as above, but for headers generated   by other rules (e.g. `genrule`), which are placed under the output directory rather than the source   tree.<br><br>Paths are constructed by joining the package path with the entry value (e.g. an entry `"common"` in package `foo/bar` resolves to `foo/bar/common`).<br><br>Use this when the auto-derived paths from `hdrs` are not sufficient — for example, when the `#include` directive uses a path prefix that differs from the header file's immediate directory (e.g. `#include "subdir/header.h"` where the header is at `pkg/subdir/header.h` and `-I pkg` is needed).   | List of strings | optional |  `[]`  |
-| <a id="hlsl_shader-opts"></a>opts |  Additional arguments to pass to the DXC compiler   | List of strings | optional |  `[]`  |
+| <a id="hlsl_shader-opts"></a>opts |  Additional arguments to pass to the DXC compiler.<br><br>Pass `-spirv` here (or globally via `//vulkan/settings:dxc_opts`) to emit SPIR-V; the rule detects the flag and selects the `.spv` output extension accordingly. Otherwise the rule emits `.cso` (DXIL).<br><br>Flags from `//vulkan/settings:dxc_opts` are appended after these, so the global build setting takes precedence on conflicting flags.   | List of strings | optional |  `[]`  |
 | <a id="hlsl_shader-reflect"></a>reflect |  Output reflection to the specified file (-Fre <file>)   | String | optional |  `""`  |
-| <a id="hlsl_shader-spirv"></a>spirv |  Generate SPIR-V code   | Boolean | optional |  `False`  |
 | <a id="hlsl_shader-target"></a>target |  Target profile (e.g., cs_6_0, ps_6_0, etc.)   | String | required |  |
 
 
@@ -176,7 +176,7 @@ Rule to compile Slang shaders.
 | <a id="slang_shader-entry"></a>entry |  Entry point name   | String | optional |  `""`  |
 | <a id="slang_shader-includes"></a>includes |  List of include search directories, resolved relative to the package.<br><br>Each entry produces two `-I` flags:<br><br>- Source tree path (e.g. `foo/bar/common`) — for headers checked into the repository, when the include   path you need differs from the directory that `hdrs` would auto-derive. For example, with a header at   `pkg/common/nested/helper.h` and `#include "nested/helper.h"`, `hdrs` auto-derives   `-I pkg/common/nested` but you actually need `-I pkg/common`. Adding `includes = ["common"]` provides   that. - Bin directory path (e.g. `bazel-out/.../bin/foo/bar/common`) — same as above, but for headers generated   by other rules (e.g. `genrule`), which are placed under the output directory rather than the source   tree.<br><br>Paths are constructed by joining the package path with the entry value (e.g. an entry `"common"` in package `foo/bar` resolves to `foo/bar/common`).<br><br>Use this when the auto-derived paths from `hdrs` are not sufficient — for example, when the `#include` directive uses a path prefix that differs from the header file's immediate directory (e.g. `#include "subdir/header.h"` where the header is at `pkg/subdir/header.h` and `-I pkg` is needed).   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-lang"></a>lang |  Set source language for the shader (slang, hlsl, glsl, cpp, etc)   | String | optional |  `""`  |
-| <a id="slang_shader-opts"></a>opts |  Additional arguments to pass to the compiler   | List of strings | optional |  `[]`  |
+| <a id="slang_shader-opts"></a>opts |  Additional arguments to pass to the compiler.<br><br>Flags from `//vulkan/settings:slangc_opts` are appended after these, so the global build setting takes precedence on conflicting flags.   | List of strings | optional |  `[]`  |
 | <a id="slang_shader-profile"></a>profile |  Shader profile for code generation (sm_6_6, vs_6_6, glsl_460, etc)   | String | optional |  `""`  |
 | <a id="slang_shader-reflect"></a>reflect |  Emit reflection data in JSON format to a file   | String | optional |  `""`  |
 | <a id="slang_shader-stage"></a>stage |  Stage of an entry point function (vertex, pixel, compute, etc)   | String | optional |  `""`  |

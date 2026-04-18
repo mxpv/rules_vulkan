@@ -56,7 +56,7 @@ hlsl_shader(
     src = "shader.hlsl",
     entry = "CSMain",
     target = "cs_6_0",
-    spirv = True,
+    opts = ["-spirv"],
     hdrs = [":common_headers"],
 )
 

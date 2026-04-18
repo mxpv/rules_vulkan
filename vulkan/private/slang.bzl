@@ -54,7 +54,7 @@ def _slang_shader_impl(ctx):
 
     # Append build settings options.
     extra_opts = ctx.attr._extra_opts[BuildSettingInfo].value
-    args.add_all(extra_opts, uniquify = True)
+    args.add_all(extra_opts)
 
     # Input shader source file
     args.add_all(ctx.files.srcs)
@@ -161,7 +161,11 @@ slang_shader = rule(
             doc = "Set source language for the shader (slang, hlsl, glsl, cpp, etc)",
         ),
         "opts": attr.string_list(
-            doc = "Additional arguments to pass to the compiler",
+            doc = """Additional arguments to pass to the compiler.
+
+            Flags from `//vulkan/settings:slangc_opts` are appended after these, so the global build setting takes
+            precedence on conflicting flags.
+            """,
         ),
         "_extra_opts": attr.label(
             default = "//vulkan/settings:slangc_opts",
