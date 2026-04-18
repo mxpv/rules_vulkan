@@ -84,6 +84,11 @@ native_binary(
 
 ```
 
+> [!WARNING]
+> This project is under active development and no API stability is guaranteed until `1.0`. Expect breaking changes
+> during upgrades. Breaking changes are marked with the
+> [`breaking`](https://github.com/mxpv/rules_vulkan/pulls?q=is%3Apr+label%3Abreaking+is%3Aclosed) label on pull requests.
+
 ### ⚡ Direct Binary Invocation
 
 You can invoke SDK binaries directly using their pre-configured targets:
