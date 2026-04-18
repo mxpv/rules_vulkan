@@ -40,7 +40,7 @@ def _glsl_shader_impl(ctx):
 
     # Append build settings options.
     extra_opts = ctx.attr._extra_opts[BuildSettingInfo].value
-    args.add_all(extra_opts, uniquify = True)
+    args.add_all(extra_opts)
 
     # Specify shader inputs.
     src = ctx.file.src
@@ -147,7 +147,11 @@ glsl_shader = rule(
             """,
         ),
         "opts": attr.string_list(
-            doc = "Additional arguments to pass to the compiler",
+            doc = """Additional arguments to pass to the compiler.
+
+            Flags from `//vulkan/settings:glslc_opts` are appended after these, so the global build setting takes
+            precedence on conflicting flags.
+            """,
         ),
         "_extra_opts": attr.label(
             default = "//vulkan/settings:glslc_opts",
