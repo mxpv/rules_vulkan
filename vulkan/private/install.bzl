@@ -96,6 +96,31 @@ INSTALL_ATTRS = {
     ),
 }
 
+def _exec(ctx, cmd):
+    """Runs cmd and fails the repo rule on non-zero exit, dumping captured output to the log.
+
+    When the bundled installer fails (e.g. LunarG HTTP is unreachable), `ctx.execute` does not
+    mark the repo as broken on its own — so the rule keeps running, writes a BUILD file, creates
+    a dangling `sdk` symlink, and Bazel records the fetch as successful. The user then sees a
+    confusing downstream error (e.g. an empty-glob failure in the generated BUILD file).
+
+    Calling `fail()` on non-zero exit both surfaces the captured stdout/stderr and tells Bazel
+    the fetch failed, so the next build re-runs the rule from scratch.
+    """
+    result = ctx.execute(cmd)
+    if result.return_code != 0:
+        fail("\n".join([
+            "",
+            "Command exited with code {}:".format(result.return_code),
+            "  $ " + " ".join([str(c) for c in cmd]),
+            "",
+            "--- stdout ---",
+            result.stdout,
+            "--- stderr ---",
+            result.stderr,
+        ]))
+    return result
+
 def _install_linux(ctx, urls, version, attrs):
     ctx.report_progress("Downloading and unpacking tarball...")
     ctx.download_and_extract(
@@ -141,7 +166,13 @@ def _install_macos(ctx, urls, version, attrs):
             "--confirm-command",
             "install",
         ] + ctx.attr.macos_components
-        ctx.execute(cmd, quiet = False)
+        _exec(ctx, cmd)
+
+        # The Qt IFW installer sometimes exits 0 even when it produced nothing (e.g. when all
+        # requested components fail to resolve — it prints "No components available" and returns
+        # success). Verify the expected output landed before trusting the install.
+        if not ctx.path("unpack/macOS").exists:
+            fail("Vulkan SDK installer exited 0 but produced no output at unpack/macOS.")
 
         ctx.symlink("unpack/macOS/", "sdk")
 
@@ -226,7 +257,7 @@ def _install_windows(ctx, urls, _version, attrs):
         # For the copy only option, append copy_only=1 to the end of the command line installer executable.
         "copy_only=1",
     ]
-    ctx.execute(cmd, quiet = False)
+    _exec(ctx, cmd)
 
     attrs.update({
         "{os}": "windows",
