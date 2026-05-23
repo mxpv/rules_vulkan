@@ -1,4 +1,10 @@
 {
+  "1.4.350.1": {
+    "linux": {
+      "url": "https://sdk.lunarg.com/sdk/download/1.4.350.1/linux/vulkansdk-linux-x86_64-1.4.350.1.tar.xz",
+      "sha": "6cce33c7e5383814150c5041820769d93c65a1fd883002e5949b067045a07daa"
+    }
+  },
   "1.4.350.0": {
     "linux": {
       "url": "https://sdk.lunarg.com/sdk/download/1.4.350.0/linux/vulkansdk-linux-x86_64-1.4.350.0.tar.xz",
@@ -335,5 +341,5 @@
       "runtime_sha": "dc1fd3cfb004bbe05f7d3ef069f72199f2291f0dee7ce352104147b98af00ef6"
     }
   },
-  "_latest_version": "1.4.350.0"
+  "_latest_version": "1.4.350.1"
 }
