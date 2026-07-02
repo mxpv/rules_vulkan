@@ -76,6 +76,37 @@ cc_library(
 )
 
 #
+# Slang compiler library
+#
+
+cc_import(
+    name = "slang_dll",
+    interface_library = "sdk/Lib/slang.lib",
+    shared_library = "sdk/Bin/slang.dll",
+    target_compatible_with = [
+        "@platforms//os:windows",
+    ],
+)
+
+cc_library(
+    name = "slang",
+    # buildifier: disable=constant-glob
+    srcs = glob(
+        [
+            # Linux
+            "sdk/lib/libslang.so",
+            # macOS
+            "sdk/lib/libslang-compiler.*.dylib",
+        ],
+        allow_empty = True,
+    ),
+    deps = select({
+        "@platforms//os:windows": [":slang_dll"],
+        "//conditions:default": [],
+    }),
+)
+
+#
 # SDK compilers and tools
 #
 
