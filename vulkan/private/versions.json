@@ -1,4 +1,26 @@
 {
+  "1.4.363.1": {
+    "linux": {
+      "url": "https://sdk.lunarg.com/sdk/download/1.4.363.1/linux/vulkansdk-linux-x86_64-1.4.363.1.tar.xz",
+      "sha": "b7867d8ca658563813af666f34b93db87f1b1c7d9d69d97e924c210c7ba33eb8"
+    },
+    "mac": {
+      "url": "https://sdk.lunarg.com/sdk/download/1.4.363.1/mac/vulkansdk-macos-1.4.363.1.zip",
+      "sha": "a65c707cf0a32bf8c2ca6b9af1985b7af61dbadfc19b352dae51a323f3a547a6"
+    },
+    "windows": {
+      "url": "https://sdk.lunarg.com/sdk/download/1.4.363.1/windows/vulkansdk-windows-X64-1.4.363.1.exe",
+      "sha": "c02932bd9a968b22d404536108adaacac908c081cd6b0113f5bfefc523dd0a6a",
+      "runtime_url": "https://sdk.lunarg.com/sdk/download/1.4.363.0/windows/VulkanRT-X64-1.4.363.0-Components.zip",
+      "runtime_sha": "a25a927aa8b9f0371048f1861cf88ac3b9bc9b1fb332c42d897c8ab32695769a"
+    },
+    "warm": {
+      "url": "https://sdk.lunarg.com/sdk/download/1.4.363.1/warm/vulkansdk-windows-ARM64-1.4.363.1.exe",
+      "sha": "29d925e3ee4793f9c3977f34389ccb0273c0347bfacf2f08dd70104d6d096ceb",
+      "runtime_url": "https://sdk.lunarg.com/sdk/download/1.4.363.0/warm/VulkanRT-ARM64-1.4.363.0-Components.zip",
+      "runtime_sha": "fede2cc8b62e55d3b0607019e1f8ca612bc663ae9301be5de10a52329a552271"
+    }
+  },
   "1.4.363.0": {
     "linux": {
       "url": "https://sdk.lunarg.com/sdk/download/1.4.363.0/linux/vulkansdk-linux-x86_64-1.4.363.0.tar.xz",
@@ -349,5 +371,5 @@
       "runtime_sha": "15e5a663de34e93b456cb6d6b84faa1b7e275e9f6da9ec39c234916e94af0797"
     }
   },
-  "_latest_version": "1.4.363.0"
+  "_latest_version": "1.4.363.1"
 }
